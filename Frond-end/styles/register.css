@@ -1,0 +1,133 @@
+.reg-main{
+    height: 100vh;
+    position: relative;
+}
+
+.reg-section{
+    position: absolute;
+    top: 35%;
+    left: 50%;
+    transform: translate(-50%, -40%);
+    display: flex;
+    flex-direction: column;
+    width: 40vw;
+    height: 80vh;
+}
+
+.reg-section form{
+    -webkit-animation-name: slideInLeft;
+  animation-name: slideInLeft;
+  -webkit-animation-duration: 1s;
+  animation-duration: 1s;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+  }
+  @-webkit-keyframes slideInLeft {
+  0% {
+  -webkit-transform: translateX(-100%);
+  transform: translateX(-100%);
+  visibility: visible;
+  }
+  100% {
+  -webkit-transform: translateX(0);
+  transform: translateX(0);
+  }
+  }
+  @keyframes slideInLeft {
+  0% {
+  -webkit-transform: translateX(-100%);
+  transform: translateX(-100%);
+  visibility: visible;
+  }
+  100% {
+  -webkit-transform: translateX(0);
+  transform: translateX(0);
+  }
+}
+
+.reg-section .img-ctn{
+    margin: 0 auto;
+    width: 60%;
+    height: 300px;
+    border-radius: 20px;
+    overflow: hidden;
+    margin-bottom: 12px;
+    -webkit-animation-name: zoomIn;
+  animation-name: zoomIn;
+  -webkit-animation-duration: 1s;
+  animation-duration: 1s;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+  }
+  @-webkit-keyframes zoomIn {
+  0% {
+  opacity: 0;
+  -webkit-transform: scale3d(.3, .3, .3);
+  transform: scale3d(.3, .3, .3);
+  }
+  50% {
+  opacity: 1;
+  }
+  }
+  @keyframes zoomIn {
+  0% {
+  opacity: 0;
+  -webkit-transform: scale3d(.3, .3, .3);
+  transform: scale3d(.3, .3, .3);
+  }
+  50% {
+  opacity: 1;
+  }
+}
+
+.img-ctn img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+
+
+@media(min-width:2000px){
+    * {
+        font-size: 28px;
+    }
+    .reg-section .img-ctn{
+        width: 60%;
+    }
+}
+
+@media(max-width:800px){
+    .reg-section{
+        width: 80vw;
+    }
+}
+
+@media(max-width: 500px){
+    #register-btn{
+        width: 80%;
+    }
+}
+
+@media(max-height:600px){
+    .reg-section .img-ctn{
+        display: none;
+    }
+}
+
+@media(max-height:450px){
+    .reg-main{
+        height: 100vh;
+        position: inherit;
+    }
+    .reg-section{
+        position: inherit;
+        top: initial;
+        left:  initial;
+        transform: none;
+        margin: 0 auto;
+        height: 60vh;
+    }
+
+   
+}

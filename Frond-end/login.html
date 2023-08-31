@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./styles/reset.css" />
+    
+    <link rel="stylesheet" href="./styles/style.css" />
+
+    <title>Детска кухня Плевен</title>
+  </head>
+  <body>
+    <header>
+      <nav class="navigation">
+        <ul class="nav-items" role="list">
+          <li class="nav-item"><a href="./index.html">Начало</a></li>
+          <li class="nav-item"><a href="./about-us.html">За нас</a></li>
+          <li class="nav-item"><a href="">Е-кухня</a></li>
+          <li class="nav-item"><a href="./menus.html">Седмично меню</a></li>
+          <li class="nav-item">
+            <a href="./healthy.html">Съвети на здравословно хранене</a>
+          </li>
+          <li class="nav-item"><a href="./contacts.html">Контакти</a></li>
+          <li class="nav-item"><a href="./register.html">Регистрирай се</a></li>
+          <!-- <li class="nav-item"><a href="">Администратор</a></li> -->
+        </ul>
+      </nav>
+
+      <div class="responsive-wrapper">
+        <button id="nav-btn" onclick="toggle()">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+
+        <nav class="nav-ctn">
+          <h4>Детска кухня</h4>
+          <ul class="nav-items-resp" role="list">
+            <li class="nav-item-resp"><a href="./index.html">Начало</a></li>
+            <li class="nav-item-resp"><a href="./about-us.html">За нас</a></li>
+            <li class="nav-item-resp"><a href="">Е-кухня</a></li>
+            <li class="nav-item-resp">
+              <a href="./menus.html">Седмично меню</a>
+            </li>
+            <li class="nav-item-resp">
+              <a href="./healthy.html">Съвети на здравословно хранене</a>
+            </li>
+            <li class="nav-item-resp">
+              <a href="./contacts.html">Контакти</a>
+            </li>
+            <li class="nav-item-resp">
+              <a href="./register.html">Регистрирай се</a>
+            </li>
+            <!-- <li class="nav-item-resp"><a href="">Администратор</a></li> -->
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <main class="reg-main">
+      <section class="reg-section">
+        <div class="img-ctn">
+          <img src="./Resources/Pic/hero.jpg" alt="" />
+        </div>
+        <form action="">
+          <label for="login-email">Email</label>
+          <input
+            type="email"
+            placeholder="Въведете e-mail"
+            name="email"
+            id="login-email"
+          />
+
+         
+          <label for="login-pass">Парола</label>
+          <input
+            type="password"
+            placeholder="Въведете парола"
+            name="password"
+            id="login-pass"
+          />
+
+        
+
+          <button type="submit" id="register-btn" class="main-btn">Влез в профил</button>
+        </form>
+      </section>
+    </main>
+
+    <script src="./js/togleFunctions.js"></script>
+  </body>
+</html>

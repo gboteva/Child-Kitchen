@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./styles/reset.css" />
+    <link rel="stylesheet" href="./styles/style.css" />
+
+    <title>Детска кухня Плевен</title>
+  </head>
+  <body id="e-kitchen">
+    <header>
+      <nav class="navigation">
+        <ul class="nav-items" role="list">
+          <li class="nav-item"><a href="./index.html">Начало</a></li>
+          <li class="nav-item"><a href="./about-us.html">За нас</a></li>
+          <li class="nav-item"><a href="./e-kitchen.html">Е-кухня</a></li>
+          <li class="nav-item"><a href="./menus.html">Седмично меню</a></li>
+          <li class="nav-item">
+            <a href="./healthy.html">Съвети на здравословно хранене</a>
+          </li>
+          <li class="nav-item"><a href="./contacts.html">Контакти</a></li>
+          <li class="nav-item"><a href="./register.html">Регистрирай се</a></li>
+          <li class="nav-item"><a href="./admin.html">Администратор</a></li>
+        </ul>
+      </nav>
+
+      <div class="responsive-wrapper">
+        <button id="nav-btn" onclick="toggle()">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+
+        <nav class="nav-ctn">
+          <h4>Детска кухня</h4>
+          <ul class="nav-items-resp" role="list">
+            <li class="nav-item-resp"><a href="./index.html">Начало</a></li>
+            <li class="nav-item-resp"><a href="./about-us.html">За нас</a></li>
+            <li class="nav-item-resp"><a href="./e-kitchen.html">Е-кухня</a></li>
+            <li class="nav-item-resp">
+              <a href="./menus.html">Седмично меню</a>
+            </li>
+            <li class="nav-item-resp">
+              <a href="./healthy.html">Съвети на здравословно хранене</a>
+            </li>
+            <li class="nav-item-resp">
+              <a href="./contacts.html">Контакти</a>
+            </li>
+            <li class="nav-item-resp">
+              <a href="./register.html">Регистрирай се</a>
+            </li>
+            <li class="nav-item-resp"><a href="./admin.html">Администратор</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <h3 class="add-menu-title">Добави или редактирай меню</h3>
+
+      <section class="weekly-menu">
+
+        <div class="menu-ctn shadow-ctn">
+          
+          <form action="">
+            <label for="date">Избери дата</label>
+            <input type="date" />
+
+            <label for="ageGroup">Избери възрастова група</label>
+            <select name="ageGroup" id="ageGroup">
+              <option value="littleKids" selected>10 МЕСЕЦА - 1 ГОДИНА</option>
+              <option value="bigKids">1 ГОДИНА - 3 ГОДИНИ</option>
+            </select>
+
+            <label for="first-food"> Избери супа </label>
+            <select name="firstFood" id="first-food">
+              <option value="">СУПА ОТ ПУЕШКО МЕСО</option>
+              <option value="">СУПА ОТ КАРТОФИ И МОРКОВИ</option>
+              <option value="">СУПА ОТ ТИКВИЧККИ СЪС ЗАСТРОЙКА</option>
+              <option value="">СУПА ОТ ДОМАТИ С КАРТОФИ</option>
+              <option value="">СУПА ОТ ЗЕЛЕН ФАСУЛ СЪС ЗАСТРОЙКА</option>
+              <option value="">СУПА ОТ РИБА И ЗЕЛЕНЧУЦИ</option>
+              <option value="">СУПА ОТ ДОМАТИ С КАРТОФИ</option>
+            </select>
+
+            <label for="main-food"> Избери основно </label>
+            <select name="mainFood" id="main-food">
+              <option value="">ТИКВИЧКИ С ОРИЗ</option>
+              <option value="">РИБА НА ПАРА; ПЮРЕ ОТ ЛЕЩА</option>
+              <option value="">КЮФТЕ С БЯЛ СОС</option>
+              <option value="">ПУЕШКО МЕСО С ГРАХ</option>
+              <option value="">ПИЛЕШКО МЕСО С КАРТОФИ</option>
+              <option value="">ЛЕЩА СЪС ЗЕЛЕНЧУЦИ</option>
+              <option value="">КУС-КУС СЪС ЗАЕШКО МЕСО И ЗЕЛЕНЧУЦИ</option>
+            </select>
+
+            <label for="dessert-food"> Избери десерт </label>
+            <select name="dessertFood" id="dessert-food">
+              <option value="">МЛЕЧЕН МУС ОТ НЕКТАРИНИ </option>
+              <option value="">КУС-КУС С МЛЯКО И ЯЙЦА</option>
+              <option value="">КРЕМ КАКАО</option>
+              <option value="">ПШЕНИЦА С МЛЯКО </option>
+              <option value="">МЛЕЧЕН КИСЕЛ ОТ ПЪПЕШ</option>
+              <option value="">ОРИЗ С ПЪПЕШ</option>
+              <option value="">КИСЕЛ ОТ ПРАСКОВИ С ПРЕХОДНО МЛЯКО</option>
+            </select>
+
+            <button class="main-btn">Добави</button>
+          </form>
+        </div>
+
+        <div class="check-list shadow-ctn">
+          <p>Възрастова група: 10месеца - 1 година</p>
+          <ul>
+            <li>Добавено меню за <span id="added-date">28.08.2023</span> <span id="status">OK</span></li>
+            <li>Добавено меню за <span id="added-date">29.08.2023</span> <span id="status">OK</span></li>
+            <li>Добавено меню за <span id="added-date">30.08.2023</span> <span id="status">OK</span></li>
+            <li>Добавено меню за <span id="added-date">31.08.2023</span> <span id="status">OK</span></li>
+            <li>Добавено меню за <span id="added-date">01.09.2023</span> <span id="status">OK</span></li>
+          </ul>
+
+          <p>Възрастова група: 1 година - 3 години</p>
+          <ul>
+            <li>Добавено меню за <span id="added-date">28.08.2023</span> <span id="status">OK</span></li>
+            <li>Добавено меню за <span id="added-date">29.08.2023</span> <span id="status">OK</span></li>
+            <li>Добавено меню за <span id="added-date">30.08.2023</span> <span id="status">OK</span></li>
+            <li>Добавено меню за <span id="added-date">31.08.2023</span> <span id="status">OK</span></li>
+            <li>Добавено меню за <span id="added-date">01.09.2023</span> <span id="status">OK</span></li>
+          </ul>
+        </div>
+
+      </section>
+
+    </main>
+
+    <script src="./js/togleFunctions.js"></script>
+  </body>
+</html>

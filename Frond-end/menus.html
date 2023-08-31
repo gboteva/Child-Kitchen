@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./styles/reset.css" />
+    <link rel="stylesheet" href="./styles/style.css" />
+
+    <title>Детска кухня Плевен</title>
+  </head>
+  <body class="menu-body">
+    <header>
+      <nav class="navigation">
+        <ul class="nav-items" role="list">
+          <li class="nav-item"><a href="./index.html">Начало</a></li>
+          <li class="nav-item"><a href="./about-us.html">За нас</a></li>
+          <li class="nav-item"><a href="./e-kitchen.html">Е-кухня</a></li>
+          <li class="nav-item"><a href="./menus.html">Седмично меню</a></li>
+          <li class="nav-item">
+            <a href="./healthy.html">Съвети на здравословно хранене</a>
+          </li>
+          <li class="nav-item"><a href="./contacts.html">Контакти</a></li>
+          <li class="nav-item"><a href="./register.html">Регистрирай се</a></li>
+          <!-- <li class="nav-item"><a href="">Администратор</a></li> -->
+        </ul>
+      </nav>
+
+      <div class="responsive-wrapper">
+        <button id="nav-btn" onclick="toggle()">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+
+        <nav class="nav-ctn">
+          <h4>Детска кухня</h4>
+          <ul class="nav-items-resp" role="list">
+            <li class="nav-item-resp"><a href="./index.html">Начало</a></li>
+            <li class="nav-item-resp"><a href="./about-us.html">За нас</a></li>
+            <li class="nav-item-resp"><a href="./e-kitchen.html">Е-кухня</a></li>
+            <li class="nav-item-resp">
+              <a href="./menus.html">Седмично меню</a>
+            </li>
+            <li class="nav-item-resp">
+              <a href="./healthy.html">Съвети на здравословно хранене</a>
+            </li>
+            <li class="nav-item-resp"><a href="./contacts.html">Контакти</a></li>
+            <li class="nav-item-resp"><a href="./register.html">Регистрирай се</a></li>
+            <!-- <li class="nav-item-resp"><a href="">Администратор</a></li> -->
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <main >
+      <div class="menu-info">
+        <p><strong>ВНИМАНИЕ:</strong> Детска кухня си запазва правото на промени в менюто при необходимост!</p>
+        <p><strong>ВНИМАНИЕ:</strong> Менютата за алергичните деца се изготвят индивидуално и не се показват в системата!</p>
+      </div>
+
+      <div class="menu-main">
+      <section class="kids">
+            <h3>10 МЕСЕЦА - 1 ГОДИНА</h3>
+            <ul role="list" class="shadow-ctn">
+                    <li>
+                        <div class="food">
+                            <div class="date"><span>Понеделник, 24.07.2023 г.</div>
+                            <div>Супа: <span>СУПА С ПУЕШКО МЕСО</span><br><div class="allergens">Алергени: <span id="allergens"></span></div></div>
+                            <div>Основно: <span>ЗЕЛЕНЧУКОВО ПЮРЕ С ИЗВАРА</span><br><div class="allergens">Алергени: <span id="allergens"></span></div></div>
+                            <div>Десерт: <span>КИСЕЛ ОТ ПРАСКОВИ С ПРЕХОДНО МЛЯКО</span><br><div class="allergens">Алергени: <span id="allergens"></span></div></div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="food">
+                            <div class="date"><span>Вторник, 25.07.2023 г.</div>
+                            <div>Супа: <span>СУПА ОТ КАРТОФИ И МОРКОВИ</span><br><div class="allergens">Алергени: <span id="allergens"></span></div></div>
+                            <div>Основно: <span>ПЮРЕ ОТ РИБА И ЗЕЛЕНЧУЦИ </span><br><div class="allergens">Алергени: <span id="allergens"></span></div></div>
+                            <div>Десерт: <span>ОРИЗ С ПЪПЕШ</span><br><div class="allergens">Алергени: <span id="allergens"></span></div></div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="food">
+                            <div class="date"><span>Сряда, 26.07.2023 г.</div>
+                            <div>Супа: <span>СУПА ОТ ТИКВИЧККИ СЪС ЗАСТРОЙКА</span><br><div class="allergens">Алергени: <span id="allergens"></span></div></div>
+                            <div>Основно: <span>ПЮРЕ ОТ ТЕЛЕШКО МЕСО И ГРАХ</span><br><div class="allergens">Алергени: <span id="allergens"></span></div></div>
+                            <div>Десерт: <span>ПЛОДОВО ПЮРЕ С ИЗВАРА </span><br><div class="allergens">Алергени: <span id="allergens"></span></div></div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="food">
+                            <div class="date"><span>Четвъртък, 27.07.2023 г.</div>
+                            <div>Супа: <span>СУПА ОТ ДОМАТИ С КАРТОФИ </span><br><div class="allergens">Алергени: <span id="allergens"></span></div></div>
+                            <div>Основно: <span>ПЮРЕ ОТ ПУЕШКО МЕСО И ОРИЗ</span><br><div class="allergens">Алергени: <span id="allergens"></span></div></div>
+                            <div>Десерт: <span>КИСЕЛ ОТ КАЙСИИ С ПРЕХОДНО МЛЯКО </span><br><div class="allergens">Алергени: <span id="allergens"></span></div></div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="food">
+                            <div class="date"><span>Петък, 28.07.2023 г.</div>
+                            <div>Супа: <span>СУПА ОТ ЗЕЛЕН ФАСУЛ СЪС ЗАСТРОЙКА</span><br><div class="allergens">Алергени: <span id="allergens"></span></div></div>
+                            <div>Основно: <span>ПЮРЕ ОТ ПИЛЕШКО МЕСО И ЗЕЛЕНЧУЦИ </span><br><div class="allergens">Алергени: <span id="allergens"></span></div></div>
+                            <div>Десерт: <span>ПЛОДОВА КАША ОТ ГРИС </span><br><div class="allergens">Алергени: <span id="allergens"></span></div></div>
+                        </div>
+                    </li>
+
+            </ul>
+      </section>
+
+      <section class="kids">
+        <h3>1 ГОДИНА - 3 ГОДИНИ</h3>
+        <ul role="list" class="shadow-ctn">
+                <li>
+                    <div class="food">
+                        <div class="date"><span>Понеделник, 24.07.2023 г.</div>
+                        <div>Супа: <span>СУПА ОТ ПУЕШКО МЕСО </span><br><div class="allergens">Алергени: <span id="allergens"></span></div></div>
+                        <div>Основно: <span>ТИКВИЧКИ С ОРИЗ </span><br><div class="allergens">Алергени: <span id="allergens"></span></div></div>
+                        <div>Десерт: <span>МЛЕЧЕН МУС ОТ НЕКТАРИНИ </span><br><div class="allergens">Алергени: <span id="allergens"></span></div></div>
+                    </div>
+                </li>
+                <li>
+                    <div class="food">
+                        <div class="date"><span>Вторник, 25.07.2023 г.</div>
+                        <div>Супа: <span>СУПА ОТ КАРТОФИ И МОРКОВИ</span><br><div class="allergens">Алергени: <span id="allergens"></span></div></div>
+                        <div>Основно: <span>РИБА НА ПАРА; ПЮРЕ ОТ ЛЕЩА </span><br><div class="allergens">Алергени: <span id="allergens"></span></div></div>
+                        <div>Десерт: <span>КУС-КУС С МЛЯКО И ЯЙЦА</span><br><div class="allergens">Алергени: <span id="allergens"></span></div></div>
+                    </div>
+                </li>
+                <li>
+                    <div class="food">
+                        <div class="date"><span>Сряда, 26.07.2023 г.</div>
+                        <div>Супа: <span>СУПА ОТ ТИКВИЧКИ СЪС ЗАСТРОЙКА</span> <br><div class="allergens">Алергени: <span id="allergens"></span></div></div>
+                        <div>Основно: <span>КЮФТЕ С БЯЛ СОС</span><br><div class="allergens">Алергени: <span id="allergens"></span></div></div>
+                        <div>Десерт: <span>КРЕМ КАКАО </span><br><div class="allergens">Алергени: <span id="allergens"></span></div></div>
+                    </div>
+                </li>
+                <li>
+                    <div class="food">
+                        <div class="date"><span>Четвъртък, 27.07.2023 г.</div>
+                        <div>Супа: <span>СУПА ОТ ДОМАТИ С КАРТОФИ  </span> <br><div class="allergens">Алергени: <span id="allergens"></span></div></div>
+                        <div>Основно: <span>ПУЕШКО МЕСО С ГРАХ</span><br><div class="allergens">Алергени: <span id="allergens"></span></div></div>
+                        <div>Десерт: <span>ПШЕНИЦА С МЛЯКО  </span><br><div class="allergens">Алергени: <span id="allergens"></span></div></div>
+                    </div>
+                </li>
+                <li>
+                    <div class="food">
+                        <div class="date"><span>Петък, 28.07.2023 г.</div>
+                        <div>Супа: <span>СУПА ОТ ЗЕЛЕН ФАСУЛ СЪС ЗАСТРОЙКА</span><br><div class="allergens">Алергени: <span id="allergens"></span></div></div>
+                        <div>Основно: <span>ПИЛЕШКО МЕСО С КАРТОФИ </span><br><div class="allergens">Алергени: <span id="allergens"></span></div></div>
+                        <div>Десерт: <span>МЛЕЧЕН КИСЕЛ ОТ ПЪПЕШ </span><br><div class="allergens">Алергени: <span id="allergens"></span></div></div>
+                    </div>
+                </li>
+
+        </ul>
+     </section>
+
+    </div>
+    </main>
+
+    <script src="./js/togleFunctions.js"></script>
+  </body>
+</html>

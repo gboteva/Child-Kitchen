@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./styles/reset.css" />
+    <link rel="stylesheet" href="./styles/style.css" />
+
+    <title>Детска кухня Плевен</title>
+  </head>
+  <body id="e-kitchen">
+    <header>
+      <nav class="navigation">
+        <ul class="nav-items" role="list">
+          <li class="nav-item"><a href="./index.html">Начало</a></li>
+          <li class="nav-item"><a href="./e-kitchen.html">Е-кухня</a></li>
+          <li class="nav-item"><a href="./menus.html">Седмично меню</a></li>
+          <li class="nav-item"><a href="./contacts.html">Контакти</a></li>
+          <li class="nav-item"><a href="./profile.html">Профил</a></li>
+          <!-- <li class="nav-item"><a href="">Администратор</a></li> -->
+        </ul>
+      </nav>
+
+      <div class="responsive-wrapper">
+        <button id="nav-btn" onclick="toggle()">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+
+        <nav class="nav-ctn">
+          <h4>Детска кухня</h4>
+          <ul class="nav-items-resp" role="list">
+            <li class="nav-item-resp"><a href="./index.html">Начало</a></li>
+            <li class="nav-item-resp"><a href="./e-kitchen.html">Е-кухня</a></li>
+            <li class="nav-item-resp">
+              <a href="./menus.html">Седмично меню</a>
+            </li>
+            <li class="nav-item-resp">
+              <a href="./contacts.html">Контакти</a>
+            </li>
+            <li class="nav-item-resp"><a href="./profile.html">Профил</a></li>
+            <!-- <li class="nav-item-resp"><a href="">Администратор</a></li> -->
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+    
+        <article class="add-kidd">
+          <h4>Добави дете</h4>
+          <form action="" id="add-kid">
+            <label for="add-kid-name">Име на дете</label>
+            <input
+              type="text"
+              name="kid-name"
+              id="add-kid-name"
+              placeholder="Въведете трите имена на детето"
+            />
+            <label for="add-kid-age">Дата на раждане</label>
+            <input type="date" id="add-kid-age">
+
+            <label for="add-kid-alergy"
+              >Изберете алергии, каквито има Вашето дете:</label
+            >
+
+            <div class="allergies">
+              <fieldset>
+                <input
+                  type="checkbox"
+                  id="allergy-gluten"
+                  name="allergy"
+                  value="gluten"
+                />
+                Глутен
+                <br />
+                <input
+                  type="checkbox"
+                  id="allergy-egg"
+                  name="allergy"
+                  value="egg"
+                />
+                Яйца
+                <br />
+                <input
+                  type="checkbox"
+                  id="allergy-milk"
+                  name="allergy"
+                  value="milk"
+                />
+                Мляко и млечни продукти
+                <br />
+                <input
+                  type="checkbox"
+                  id="allergy-lactose"
+                  name="allergy"
+                  value="lactose"
+                />
+                Лактоза
+                <br />
+                <input
+                  type="checkbox"
+                  id="allergy-gluten-bird"
+                  name="allergy"
+                  value="birdMeat"
+                />
+                Птиче месо
+              </fieldset>
+              <fieldset>
+                <input
+                  type="checkbox"
+                  id="allergy-veal"
+                  name="allergy"
+                  value="veal"
+                />
+                Телешко месо
+                <br />
+                <input
+                  type="checkbox"
+                  id="allergy-fish"
+                  name="allergy"
+                  value="fish"
+                />
+                Риба
+                <br />
+                <input
+                  type="checkbox"
+                  id="allergy-other"
+                  name="allergy"
+                  value="other"
+                />
+                Друго
+                <br />
+                <input
+                  type="checkbox"
+                  id="allergy-none"
+                  name="allergy"
+                  value="none"
+                />
+                Няма
+              </fieldset>
+            </div>
+
+            <p>
+              <strong>
+                Забележка: Алергиите ще бъдат проверени за съответствие с
+                медицинската бележка на детето!
+              </strong>
+            </p>
+
+            <form action="" enctype="multipart/form-data">
+              <!-- <input  type="hidden" id="id" name="routeId"> -->
+
+              <div class="upload-wrapper">
+                <div class="image-ctn">
+                  <input type="hidden" id="id" name="medical" />
+              
+                  <div class="image-upload">
+                    <label for="picture">
+                      <img src="./Resources/Pic/medicalList.jpg" alt="" />
+                    </label>
+                    <input
+                      style="display: none"
+                      id="picture"
+                      type="file"
+                      name="picture"
+                    />
+                  </div>
+
+                  <button class="large main-btn">Качи мед.бележка</button>
+                </div>
+
+                <div class="image-ctn">
+                    <input type="hidden" id="id" name="medical" />
+                
+                    <div class="image-upload">
+                      <label for="picture">
+                        <img src="./Resources/Pic/Birth-Certificate.jpg" alt="" />
+                      </label>
+                      <input
+                        style="display: none"
+                        id="picture"
+                        type="file"
+                        name="picture"
+                      />
+                    </div>
+  
+                    <button class="large main-btn">Качи акт за раждане</button>
+                  </div>
+              </div>
+
+              <label for="private-data"
+                >Съгласявам се Детска кухня да обработва лични ми данни</label
+              >
+              <input type="checkbox" name="private-data" id="private-data" />
+
+              <button class="main-btn">ЗАПАЗИ</button>
+            </form>
+          </form>
+        </article>
+      </div>
+    </main>
+
+    <script src="./js/togleFunctions.js"></script>
+  </body>
+</html>

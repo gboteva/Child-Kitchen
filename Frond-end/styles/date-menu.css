@@ -1,0 +1,56 @@
+.see-menu{
+    display: flex;
+    justify-content: space-evenly;
+    gap: 30px;
+}
+
+.see-menu .menu-ctn{
+    width: 30%
+}
+
+.see-menu .check-list{
+    text-align: center;
+}
+
+.see-menu .check-list .food div{
+    margin-bottom: 12px;
+    text-align: left;
+}
+
+.see-menu .check-list .food div:first-child{
+    font-weight: bold;
+    text-align: center;
+}
+
+.menu-ctn, .check-list{
+    -webkit-animation-name: fadeInDown;
+  animation-name: fadeInDown;
+  -webkit-animation-duration: 1s;
+  animation-duration: 1s;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+  }
+  @-webkit-keyframes fadeInDown {
+  0% {
+  opacity: 0;
+  -webkit-transform: translate3d(0, -100%, 0);
+  transform: translate3d(0, -100%, 0);
+  }
+  100% {
+  opacity: 1;
+  -webkit-transform: none;
+  transform: none;
+  }
+  }
+  @keyframes fadeInDown {
+  0% {
+  opacity: 0;
+  -webkit-transform: translate3d(0, -100%, 0);
+  transform: translate3d(0, -100%, 0);
+  }
+  100% {
+  opacity: 1;
+  -webkit-transform: none;
+  transform: none;
+  }
+}

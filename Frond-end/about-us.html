@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./styles/reset.css" />
+    <link rel="stylesheet" href="./styles/style.css" />
+
+    <title>Детска кухня Плевен</title>
+  </head>
+  <body>
+    <header>
+      <nav class="navigation">
+        <ul class="nav-items" role="list">
+          <li class="nav-item"><a href="./index.html">Начало</a></li>
+          <li class="nav-item"><a href="./about-us.html">За нас</a></li>
+          <li class="nav-item"><a href="./e-kitchen.html">Е-кухня</a></li>
+          <li class="nav-item"><a href="./menus.html">Седмично меню</a></li>
+          <li class="nav-item">
+            <a href="./healthy.html">Съвети на здравословно хранене</a>
+          </li>
+          <li class="nav-item"><a href="./contacts.html">Контакти</a></li>
+          <li class="nav-item"><a href="./register.html">Регистрирай се</a></li>
+          <!-- <li class="nav-item"><a href="">Администратор</a></li> -->
+        </ul>
+      </nav>
+
+      <div class="responsive-wrapper">
+        <button id="nav-btn" onclick="toggle()">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+
+        <nav class="nav-ctn">
+          <h4>Детска кухня</h4>
+          <ul class="nav-items-resp" role="list">
+            <li class="nav-item-resp"><a href="./index.html">Начало</a></li>
+            <li class="nav-item-resp"><a href="./about-us.html">За нас</a></li>
+            <li class="nav-item-resp"><a href="./e-kitchen.html">Е-кухня</a></li>
+            <li class="nav-item-resp">
+              <a href="./menus.html">Седмично меню</a>
+            </li>
+            <li class="nav-item-resp">
+              <a href="./healthy.html">Съвети на здравословно хранене</a>
+            </li>
+            <li class="nav-item-resp">
+              <a href="./contacts.html">Контакти</a>
+            </li>
+            <li class="nav-item-resp"><a href="./register.html">Регистрирай се</a></li>
+            <!-- <li class="nav-item-resp"><a href="">Администратор</a></li>-->
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <div class="content shadow-ctn">
+        <p class="main-info">
+          Детска кухня е организационно обособена структура, под егидата на
+          Община Плевен, в която се приготвя и предоставя храна за деца от 10м
+          до 3-годишна възраст. Към кухнята функционират 12 пункта, предоставящи
+          храна на децата от неорганизирания контингент (деца, които се
+          отглеждат в домашни условия), както и 7 детски ясли за организиран
+          контингент деца, на територията на целия град. Кухнята изхранва
+          следните ясли на територията на града: ДЯ Мир, ДЯ Дружба, ДЯ Щастливо
+          детство, ДЯ Чайка, ДЯ Патинка, ДЯ Гергана, ДЯ Асен Халачев.
+          <br />
+          За да започнете да получавате храна за вашето дете е необходимо да
+          представите:
+          <br />
+          - Удостоверение за раждане
+          <br />
+          - Медицинска бележка от лекаря на вашето дете, в която да се посочва,
+          че детето е клинично здраво и може да се храни от ДК.
+          <br />
+          Храната за децата от неорганизирания контингент включва:
+          <br />
+          - Супа – 100гр
+          <br />
+          - Основно ястие – 130гр.
+          <br />
+          - Десерт – 150гр.
+          <br />
+          И представлява едно Обедно меню. Заявките за храна стават 2 дни
+          предварително, като цената на един купон е 0.80ст. и включва едно
+          обедно меню. Цената на цяла абонаментна карта, включваща 20 купона, е
+          на цена 16лв.
+          <br />
+          За да станете клиент на Детска кухня е необходимо да бъдете жители на
+          град Плевен.
+          <br />
+          В случай, че живеете извън града или сте жители на малко населено
+          място в Общината, а желаете да получавате храна, е необходимо да
+          посещавате някой от пунктовете в града.
+        </p>
+      </div>
+
+      <div class="punkts-container">
+        <h3>Пунктове и график за раздаване на храна</h3>
+
+        <ul role="list" class="punkts-list">
+          <li class="punkts-item">
+            <article class="card">
+              <div class="img-ctn">
+                <img src="./Resources/Pic/punkts/теменуга.jpg" alt="temenuga" />
+              </div>
+              <div class="card-content">
+                <p class="title">ДГ „Теменуга”</p>
+                <address>ул. „Ангел Войвода” №2</address>
+                <p class="working-time">11:30ч. - 12:00ч</p>
+              </div>
+            </article>
+          </li>
+          <li class="punkts-item">
+            <article class="card">
+              <div class="img-ctn">
+                <img src="./Resources/Pic/punkts/3mart.jpg" alt="3 mart" />
+              </div>
+              <div class="card-content">
+                <p class="title">ДГ „Трети март”</p>
+                <address>ул. „Сергей Румянцев” №69</address>
+                <p class="working-time">11:30ч. - 12:00ч</p>
+              </div>
+            </article>
+          </li>
+          <li class="punkts-item">
+            <article class="card">
+              <div class="img-ctn">
+                <img src="./Resources/Pic/punkts/дг дружба.jpg" alt="drujba" />
+              </div>
+              <div class="card-content">
+                <p class="title">ДГ „Дружба”</p>
+                <address>ж.к „Дружба 1”</address>
+                <p class="working-time">11:30ч. - 12:00ч</p>
+              </div>
+            </article>
+          </li>
+          <li class="punkts-item">
+            <article class="card">
+              <div class="img-ctn">
+                <img
+                  src="./Resources/Pic/punkts/дг славейче.jpg"
+                  alt="slaveyche"
+                />
+              </div>
+              <div class="card-content">
+                <p class="title">ДГ „Славейче”</p>
+                <address>ж.к. „Сторгозия”</address>
+                <p class="working-time">11:30ч. - 12:15ч.</p>
+              </div>
+            </article>
+          </li>
+          <li class="punkts-item">
+            <article class="card">
+              <div class="img-ctn">
+                <img
+                  src="./Resources/Pic/punkts/дг незабравка.jpg"
+                  alt="nezabravka"
+                />
+              </div>
+              <div class="card-content">
+                <p class="title">ДГ „Незабравка”</p>
+                <address>ул. „Оряхово” №6</address>
+                <p class="working-time">11:30ч. - 12:00ч.</p>
+              </div>
+            </article>
+          </li>
+          <li class="punkts-item">
+            <article class="card">
+              <div class="img-ctn">
+                <img src="./Resources/Pic/punkts/дг калина.png" alt="kalina" />
+              </div>
+              <div class="card-content">
+                <p class="title">ДГ Калина</p>
+                <address>ж.к. "Дружба"</address>
+                <p class="working-time">11:30ч. - 12:15ч.</p>
+              </div>
+            </article>
+          </li>
+          <li class="punkts-item">
+            <article class="card">
+              <div class="img-ctn">
+                <img
+                  src="./Resources/Pic/punkts/дг латинка.jpg"
+                  alt="latinka"
+                />
+              </div>
+              <div class="card-content">
+                <p class="title">ДГ Латинка</p>
+                <address>ул. „Бузлуджа” №26</address>
+                <p class="working-time">11:30ч. - 12:15ч.</p>
+              </div>
+            </article>
+          </li>
+          <li class="punkts-item">
+            <article class="card">
+              <div class="img-ctn">
+                <img
+                  src="./Resources/Pic/punkts/дя дружба.jpg"
+                  alt="dq drijba"
+                />
+              </div>
+              <div class="card-content">
+                <p class="title">Детска ясла „Дружба”</p>
+                <address>ул. „Борис Шивачев” №36</address>
+                <p class="working-time">11:30ч. - 12:00ч.</p>
+              </div>
+            </article>
+          </li>
+          <li class="punkts-item">
+            <article class="card">
+              <div class="img-ctn">
+                <img src="./Resources/Pic/punkts/дя мир.jpg" alt="мир" />
+              </div>
+              <div class="card-content">
+                <p class="title">Детска ясла "Мир"</p>
+                <address>ж.к. „Сторгозия”</address>
+                <p class="working-time">11:30ч. - 12:00ч.</p>
+              </div>
+            </article>
+          </li>
+          <li class="punkts-item">
+            <article class="card">
+              <div class="img-ctn">
+                <img
+                  src="./Resources/Pic/punkts/gurko.jpg"
+                  alt="punkt 9ti kv"
+                />
+              </div>
+              <div class="card-content">
+                <p class="title">9-ти квартал</p>
+                <address>ул. Гурко” № 10</address>
+                <p class="working-time">11:30ч. - 12:15ч.</p>
+              </div>
+            </article>
+          </li>
+          <li class="punkts-item">
+            <article class="card">
+              <div class="img-ctn">
+                <img
+                  src="./Resources/Pic/punkts/детска ясла чайка.jpg"
+                  alt="chayka"
+                />
+              </div>
+              <div class="card-content">
+                <p class="title">ДЯ "Чайка"</p>
+                <address>ул. „10-ти декември” №40</address>
+                <p class="working-time">11:30ч. - 12:00ч.</p>
+              </div>
+            </article>
+          </li>
+          <li class="punkts-item">
+            <article class="card">
+              <div class="img-ctn">
+                <img src="./Resources/Pic/punkts/дк.jpg" alt="дк" />
+              </div>
+              <div class="card-content">
+                <p class="title">Детска кухня</p>
+                <address>ул. „Георги Кочев“</address>
+                <p class="working-time">11:30ч. - 12:30ч.</p>
+              </div>
+            </article>
+          </li>
+        </ul>
+      </div>
+    </main>
+
+    <script src="./js/togleFunctions.js"></script>
+  </body>
+</html>
