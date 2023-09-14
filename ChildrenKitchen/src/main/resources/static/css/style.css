@@ -1,0 +1,96 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css');
+
+@import url(navigation.css);
+@import url(index.css);
+@import url(about-us.css);
+@import url(contact.css);
+@import url(menus.css);
+@import url(register.css);
+@import url(e-kitchen.css);
+@import url(profile.css);
+@import url(add-kid.css);
+@import url(admin.css);
+@import url(add-menu.css);
+@import url(date-menu.css);
+@import url(add-delete-order.css);
+@import url(healthy.css);
+@import url(add-receip.css);
+
+:root{
+    --clr-primary:#FFDDCC;
+}
+
+body{
+    font-family: 'Poppins', sans-serif;
+    background-image: url(../images/backgrounds/1689dfce9495401e5031a4ad88d1b76d.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+}
+
+.main-btn{
+    border: none;
+    background-color: var(--clr-primary);
+    width: 35%;
+    border-radius: 20px;
+    margin: 0 auto;
+}
+
+.main-btn:hover{
+    background-color: coral;
+}
+
+form{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    border-radius: 12px;
+    justify-content: space-evenly;
+}
+
+form input, form select{
+    border-radius: 16px;
+    border: none;
+    padding: 8px;
+}
+
+form label{
+   margin-top: 12px;
+}
+
+table{
+    border-collapse: separate;
+    border-spacing: 10px;
+    overflow-x:auto;
+}
+
+th, td {
+    border-bottom: 1px solid #615f5f; 
+    text-align: center;
+}
+
+
+.shadow-ctn{
+    border: 1px solid black;
+    padding: 26px;
+    border-radius: 12px;
+    box-shadow: 17px 6px 22px 5px rgba(18, 16, 16, 0.75);
+    -webkit-box-shadow: 17px 6px 22px 5px rgba(18, 16, 16, 0.75);
+    -moz-box-shadow: 17px 6px 22px 5px rgba(18, 16, 16, 0.75);
+}
+
+.error{
+    background: red;
+    color: white;
+    border-radius: 16px;
+    padding: 0 8px;
+    font-size: 10px;
+}
+
+.error:last-of-type{
+    margin-bottom: 12px;
+}
+
+
+

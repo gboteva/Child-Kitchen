@@ -1,0 +1,44 @@
+spring:
+  datasource:
+    driverClassName: com.mysql.cj.jdbc.Driver
+    url: "jdbc:mysql://localhost:3306/children-kitchen?allowPublicKeyRetrieval=true&useSSL=false&createDatabaseIfNotExist=true&serverTimezone=UTC"
+    username: root
+    password: "${SQL_PASS}"
+
+  #property for upload pictures
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 5MB
+      enabled: true
+
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
+
+#  sql:
+#    init:
+#      mode: always
+#      continue-on-error: true
+
+
+  jpa:
+    # Choose either MySQL 8 or MySQL 5 below
+    # For MySQL 8
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    #For MySQL 5
+    #database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: true
+    defer-datasource-initialization: true
+
+cloudinary:
+  cloud-name: "${CLOUDINARY_NAME}"
+  api-key: 161382139321454
+  api-secret: "${CLOUDINARY_SECRET}"

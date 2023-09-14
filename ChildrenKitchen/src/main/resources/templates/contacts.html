@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+>
+  <head th:replace="~{fragments/main-nav::clean-head}">
+  </head>
+
+  <body>
+    <header th:replace="~{fragments/main-nav::main-nav}">
+    </header>
+
+    <main>
+      <section class="contact-info">
+       
+        <article class="telephones">
+          <p class="contacts-title">За контакти:</p>
+          <p>Снежана Русинова - Директор <br> тел: 0884 330 664</p>
+          <p>Катя Иванова - Мед. сестра <br> тел: 0899 136 252</p>
+          <p>Красимира Георгиева - Инструктор хранене <br> тел: 0898 783 569</p>
+          <p>Канцелария: 064 810 722</p>
+        </article>
+
+        <form action="" class="contact-form shadow-ctn">
+          <h4>Свържете се с нас</h4>
+          <label for="theme"></label>
+          <input type="text" placeholder="Въведете тема" id="theme">
+  
+          <label for="contact-content"></label>
+          <textarea name="content" id="contact-content" cols="30" rows="10" placeholder="Въведете текст"></textarea>
+          <button type="submit" class="main-btn">Изпрати</button>
+         
+        </form>
+      </section>
+
+      <article class="address">
+        <address>
+          Адрес: гр. Плевен, 5800, ул. Тодор Каблешков 1.
+        </address>
+        <div class="mapouter">
+          <div class="gmap_canvas">
+            <iframe
+              class="gmap_iframe"
+              width="100%"
+              frameborder="0"
+              scrolling="no"
+              marginheight="0"
+              marginwidth="0"
+              src="https://maps.google.com/maps?width=600&amp;height=400&amp;hl=en&amp;q=43.41701249260992, 24.62344670081368&amp;t=p&amp;z=17&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"
+            ></iframe
+            ><a href="https://gachanox.io/">Gacha Nox</a>
+          </div>
+          <style>
+            .mapouter {
+              position: relative;
+              text-align: right;
+              width: 100%;
+              height: 400px;
+            }
+            .gmap_canvas {
+              overflow: hidden;
+              background: none !important;
+              width: 100%;
+              height: 400px;
+            }
+            .gmap_iframe {
+              height: 400px !important;
+            }
+          </style>
+        </div>
+      </article>
+    </main>
+
+    <script th:src="@{/js/toggleFunctions.js}"></script>
+  </body>
+</html>

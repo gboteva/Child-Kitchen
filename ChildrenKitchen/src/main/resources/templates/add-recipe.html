@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/main-nav::clean-head}">
+</head>
+  <body id="e-kitchen">
+  <header th:replace="~{fragments/e-nav::e-nav}">
+  </header>
+
+    <main>
+
+      <section class="recipe">
+        <div class="add-recipe-ctn shadow-ctn">
+          <form action="">
+            <h3>Добави рецепта</h3>
+
+            <label for="recipe-age-group">Избери възрастова група</label>
+            <select name="recipe-age-group" id="recipe-age-group">
+                <option value="little">10 месеца - 1 година</option>
+                <option value="big">1 година - 3 години</option>
+            </select>
+
+            <label for="food-category">Категория храна</label>
+            <select name="food-category" id="food-category">
+                <option value="soup">СУПА</option>
+                <option value="puree">ПЮРЕ</option>
+                <option value="main">ОСНОВНО</option>
+                <option value="dessert">ДЕСЕРТ</option>
+            </select>
+
+            <label for="food-name">Въведи име на храна:</label>
+            <input type="text" name="food-name" id="food-name">
+
+            <label for="applicant-child"> Посочи алергени:</label>
+            <div class="allergies">
+                <fieldset>
+                  <input
+                    type="checkbox"
+                    id="allergen-gluten"
+                    name="allergen-gluten"
+                    value="gluten"
+                  />
+                  Глутен
+                  <br />
+                  <input
+                    type="checkbox"
+                    id="allergen-egg"
+                    name="allergen-egg"
+                    value="egg"
+                  />
+                  Яйца
+                  <br />
+                  <input
+                    type="checkbox"
+                    id="allergen-yogurt"
+                    name="allergen-yogurt"
+                    value="yogurt"
+                  />
+                  Кисело мляко
+                  <br />
+                  <input
+                    type="checkbox"
+                    id="allergen-butter"
+                    name="allergen-butter"
+                    value="allergen-butter"
+                  />
+                  Краве масло
+                  <br />
+                  <input
+                    type="checkbox"
+                    id="allergen-cheese"
+                    name="allergen-cheese"
+                    value="allergen-cheese"
+                  />
+                  Кашкавал
+                </fieldset>
+                <fieldset>
+                  <input
+                    type="checkbox"
+                    id="allergen-cheese-nature"
+                    name="allergen-cheese-nature"
+                    value="allergen-cheese-nature"
+                  />
+                  Сирене
+                  <br />
+                  <input
+                    type="checkbox"
+                    id="allergen-cottage-cheese"
+                    name="allergen-cottage-cheese"
+                    value="allergen-cottage-cheese"
+                  />
+                  Извара
+                  <br />
+                  <input
+                    type="checkbox"
+                    id="allergen-milk"
+                    name="allergen-milk"
+                    value="allergen-milk"
+                  />
+                  Прясно мляко
+                  <br />
+                  <input
+                    type="checkbox"
+                    id="allergen-fish"
+                    name="allergen-fish"
+                    value="allergen-fish"
+                  />
+                  Риба
+                  <br />
+                  <input
+                    type="checkbox"
+                    id="allergen-celery"
+                    name="allergen-celery"
+                    value="allergen-celery"
+                  />
+                  Целина
+                </fieldset>
+
+             </div>
+             <label for="other-allergen">Въведи друг алерген</label>
+             <input type="text" name="other-allergen" id="other-allergen">
+
+            <button class="main-btn">Добави</button>
+          </form>
+        </div>
+
+      </section>
+    </main>
+
+    <script src="./js/togleFunctions.js"></script>
+  </body>
+</html>

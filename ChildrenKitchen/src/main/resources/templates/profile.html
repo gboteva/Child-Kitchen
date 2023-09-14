@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+  <head th:replace="~{fragments/main-nav::clean-head}">
+  </head>
+  <body id="e-kitchen">
+    <header th:replace="~{fragments/e-nav::e-nav}">
+    </header>
+
+    <main>
+      <h2>Добре дошли, <span sec:authorize="isAuthenticated()" th:text="${loggedInUser.fullName}"></span>!</h2>
+
+      <div class="profile" th:object="${loggedInUser}">
+        <div class="info-wrapper">
+          <article class="main-info shadow-ctn">
+            <h4>Основна информация</h4>
+  
+            <form th:action="@{/users/register}" th:method="PATCH" class="info">
+              <button type="submit" class="large main-btn" name="edit"><a th:href="@{/users/register}">Редактирай</a></button>
+              <label for="info-email">Email</label>
+              <input
+                type="email"
+                placeholder="Въведете e-mail"
+                name="email"
+                id="info-email"
+                th:value="*{username}"
+                disabled
+              />
+              <label for="info-name">Име на родител</label>
+              <input
+                type="text"
+                placeholder="Въведете име и фамилия на родител"
+                name="name"
+                id="info-name"
+                th:value="*{fullName}"
+                disabled
+              />
+  
+              <label for="info-tel">Телефон</label>
+              <input
+                type="text"
+                placeholder="Въведете телефон за връзка"
+                name="tel"
+                id="info-tel"
+                th:value="*{phoneNumber}"
+                disabled
+              />
+              <label for="info-city">Населено място:</label>
+              <input type="text" name="city" id="info-city" th:value="*{cityName}" disabled />
+            </form>
+          </article>
+          
+          <article class="shadow-ctn">
+            <div class="kids-wrapper">
+              <p>Деца:</p>
+              <ul>
+                <li th:each="c : *{children}">
+                  <span id="childName" th:text="${c.fullName}">Гошко</span> на
+                  <span id="childAge" th:text="${c.age}"> 2 год</span>,
+                  <span id="childCoupons" th:text="${c.countCoupons}">10</span> купона, Алергии към:
+                  <span id="childAllergies" th:text="${c.allergies}">глутен, пиле</span>
+                </li>
+
+              </ul>
+              <button class="large main-btn">
+                <a th:href="@{/users/profile/add-kid}">Добави дете</a>
+              </button>
+            </div>
+          </article>
+        </div>
+
+        <div class="add-info">
+          <article class="choice-points shadow-ctn">
+            <h4>Избери обслужващ пункт</h4>
+            <label for="points">Обслужващ пункт: </label>
+            <select name="points" id="points" th:field="*{servicePointName}" th:selected="*{servicePointName}">
+              <option th:each="p : ${points}"
+                      th:value="${p}"
+                      th:text="${p}"
+                      >Детска кухня</option>
+            </select>
+            <button class="main-btn">Избери</button>
+          </article>
+
+          <article class="requests shadow-ctn">
+            <h4>Информация за текущата Ви заявка</h4>
+            <table>
+              <thead>
+                <th>Дете</th>
+                <th>Заявена храна за:</th>
+                <th>Меню</th>
+                <th>Пункт</th>
+                <th>Оставащи купони</th>
+              </thead>
+
+              <tbody>
+                <tr>
+                  <td>Гошко</td>
+                  <td>30.08.2023 г.</td>
+                  <td>
+                    Супа: <span>СУПА ОТ ПУЕШКО МЕСО </span>
+                    <br>
+                    Основно:<span>ТИКВИЧКИ С ОРИЗ </span>
+                    <br>
+                    Десерт: <span>МЛЕЧЕН МУС ОТ НЕКТАРИНИ </span>
+                  </td>
+
+                  <td>Детска Кухня</td>
+                  <td>9</td>
+                </tr>
+              </tbody>
+            </table>
+            <p><strong>При необходимост от отказ на заявка, моля свържете се с нас!</strong></p>
+          </article>
+
+        </div>
+      </div>
+    </main>
+
+    <script th:src="@{/js/toggleFunctions.js}"></script>
+  </body>
+</html>

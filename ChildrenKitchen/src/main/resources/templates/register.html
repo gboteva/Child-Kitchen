@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+  <head th:replace="~{fragments/main-nav::clean-head}">
+  </head>
+  <body>
+    <header th:replace="~{fragments/main-nav::main-nav}">
+    </header>
+
+    <main class="reg-main">
+      <section class="reg-section">
+        <div class="img-ctn">
+          <img th:src="@{/images/backgrounds/hero.jpg}" alt="hero.jpg" />
+        </div>
+        <form th:method="POST" th:action="@{/users/register}" th:object="${userRegisterBindingModel}">
+          <label for="reg-email">Email</label>
+          <input
+            type="email"
+            placeholder="Въведете e-mail"
+            name="email"
+            id="reg-email"
+            th:field="*{email}"
+          />
+          <div th:if="${#fields.hasErrors('email')}" th:class="error">Невалиден имейл!</div>
+
+          <label for="reg-name">Име на родител</label>
+          <input
+            type="text"
+            placeholder="Въведете име и фамилия на родител"
+            name="name"
+            id="reg-name"
+            th:field="*{fullName}"
+            size="50"
+          />
+          <div th:if="${#fields.hasErrors('fullName')}" th:class="error">Името трябва да съръджа между 7 и 50 символа!</div>
+
+
+          <label for="reg-city">Изберете населено място</label>
+
+          <select name="city" id="reg-city" th:field="*{city}">
+            <option value="ПЛЕВЕН" selected>ПЛЕВЕН</option>
+            <option value="БЕГЛЕЖ">БЕГЛЕЖ</option>
+            <option value="БОХОТ">БОХОТ</option>
+            <option value="БРЕСТОВЕЦ">БРЕСТОВЕЦ</option>
+            <option value="БРЪШЛЯНИЦА">БРЪШЛЯНИЦА</option>
+            <option value="БУКОВЛЪК">БУКОВЛЪК</option>
+            <option value="ВЪРБИЦА">ВЪРБИЦА</option>
+            <option value="ГОРТАЛОВО">ГОРТАЛОВО</option>
+            <option value="ГРИВИЦА">ГРИВИЦА</option>
+            <option value="ДИСЕВИЦА">ДИСЕВИЦА</option>
+            <option value="КОКИЛОВЦИ">КОИЛОВЦИ</option>
+            <option value="КЪРТОЖАБЕНЕ">КЪРТОЖАБЕНЕ</option>
+            <option value="КЪШИН">КЪШИН</option>
+            <option value="ЛАСКАР">ЛАСКАР</option>
+          </select>
+
+          <label for="reg-tel">Телефон</label>
+          <input
+            type="tel"
+            placeholder="Въведете телефон за връзка"
+            name="phone"
+            id="reg-tel"
+            size="15"
+            th:field="*{phoneNumber}"
+          />
+          <div th:if="${#fields.hasErrors('phoneNumber')}" th:class="error">Телефонният номер трябва да съръджа поне 10 символа!</div>
+
+          <label for="reg-pass">Парола</label>
+          <input
+            type="password"
+            placeholder="Въведете парола"
+            name="password"
+            id="reg-pass"
+            min="4"
+            th:field="*{password}"
+          />
+          <div th:if="${#fields.hasErrors('password')}" th:class="error">Невалидна парола! Паролата трябва да съръджа поне 4 символа!</div>
+
+          <label for="reg-conf-pass">Потвърди парола</label>
+          <input
+            type="password"
+            placeholder="Въведете парола"
+            name="confirm-password"
+            id="reg-conf-pass"
+            min="4"
+            th:field="*{confirmPassword}"
+          />
+          <div th:if="${#fields.hasErrors('confirmPassword')}" class="error">Невалидна парола!</div>
+
+          <button type="submit" id="register-btn" class="main-btn">Регистрирай се</button>
+        </form>
+      </section>
+    </main>
+
+    <script th:src="@{/js/toggleFunctions.js}"></script>
+  </body>
+</html>

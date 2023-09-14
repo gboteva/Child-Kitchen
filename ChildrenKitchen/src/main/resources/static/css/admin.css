@@ -1,0 +1,153 @@
+
+.actions{
+    margin: 26px auto;
+    width: 40%;
+    -webkit-animation-name: slideInUp;
+    animation-name: slideInUp;
+    -webkit-animation-duration: 1s;
+    animation-duration: 1s;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+    }
+    @-webkit-keyframes slideInUp {
+    0% {
+    -webkit-transform: translateY(100%);
+    transform: translateY(100%);
+    visibility: visible;
+    }
+    100% {
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
+    }
+    }
+    @keyframes slideInUp {
+    0% {
+    -webkit-transform: translateY(100%);
+    transform: translateY(100%);
+    visibility: visible;
+    }
+    100% {
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
+    }
+}
+
+.actions h4{
+   text-align: center;
+   text-decoration: underline;
+   margin-bottom: 26px;
+   font-size: 25px;
+}
+
+.actions ul{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 25px;
+}
+
+.actions ul button{
+    width: 100%;
+}
+
+.actions ul button a{
+    text-decoration: none;
+    color: black;
+}
+
+.requests{
+    width: 85%;
+    margin: 0 auto;
+    margin-bottom: 25px;
+}
+
+.requests h4{
+    text-align: center;
+    margin-bottom: 26px;
+    font-size: 25px;
+    text-decoration: underline;
+}
+
+.wrapper{
+    display: flex;
+    gap: 30px;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.request{
+    padding: 26px;
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+.request label{
+    text-align: left;
+}
+
+
+.requests h3{
+    margin-bottom: 25px;
+    font-size: 1.2rem;
+}
+
+#reference{
+    display: none;
+ }
+
+#reference .info-from-db{
+   display: none;
+}
+
+.info-from-db{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.info-from-db table{
+    width: 80%;
+    margin-bottom: 26px;
+    overflow-x:auto;
+}
+
+.info-from-db table.all-puncts{
+    width: 60%;
+}
+
+.modal-body{
+  margin: 0 auto;
+}
+
+.info-from-db .btn-success{
+    background-color: var(--clr-primary);
+    color: black;
+    border: none;
+}
+
+
+@media(max-width:900px){
+    
+.wrapper{
+    flex-direction: column;
+}
+
+.info-from-db table.all-puncts{
+    width: 100%;
+}
+
+.info-from-db table{
+    width: 100%;
+}
+}
+
+@media(max-width:520px){
+    table.allergic-table{
+      font-size: 10px;
+    }
+}
+
+
+
+

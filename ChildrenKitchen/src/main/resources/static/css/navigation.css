@@ -1,0 +1,147 @@
+header{
+    width: 100vw;
+    margin: 8px 10px;
+}
+
+.navigation ul {
+  margin: 0 auto;
+  width: 90vw;
+  display: flex;
+  font-weight: 500;
+  align-items: center;
+  justify-content: space-between;
+  text-align: center;
+}
+
+.nav-item {
+  width: 12vw;
+}
+
+
+.navigation ul li a {
+  text-decoration: none;
+  color: black;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.responsive-wrapper{
+  position: relative;
+  display: none;
+}
+
+#nav-btn{
+    width: 10%;
+   background: none;
+}
+
+.responsive-wrapper button{
+  border: none;
+  padding: 2.5px;
+}
+
+.responsive-wrapper .nav-ctn{
+  width: 20vw;
+  position: fixed;
+  right: 10px;
+  top: 8px;
+  padding: 12px;
+  background-color: var(--clr-primary) ;
+
+  border-radius: 20px;
+  display: none;
+  -webkit-animation-name: fadeInLeft;
+  animation-name: fadeInLeft;
+  -webkit-animation-duration: 1s;
+  animation-duration: 1s;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+}
+
+.nav-ctn h4{
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+.nav-items-resp{
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+}
+
+
+.nav-ctn .nav-item-resp{
+  width: 100%;
+  margin-bottom: 8px;
+}
+
+.nav-ctn .nav-item-resp a{
+  text-decoration: none;
+  color: black;
+}
+
+@-webkit-keyframes fadeInLeft {
+  0% {
+  opacity: 0;
+  -webkit-transform: translate3d(-100%, 0, 0);
+  transform: translate3d(-100%, 0, 0);
+  }
+  100% {
+  opacity: 1;
+  -webkit-transform: none;
+  transform: none;
+  }
+}
+
+@keyframes fadeInLeft {
+  0% {
+  opacity: 0;
+  -webkit-transform: translate3d(-100%, 0, 0);
+  transform: translate3d(-100%, 0, 0);
+  }
+  100% {
+  opacity: 1;
+  -webkit-transform: none;
+  transform: none;
+  }
+} 
+
+@media(max-height: 1180px){
+  .navigation ul li a {
+    font-size: 0.9rem;
+  }
+}
+
+@media(max-width:800px){
+  .navigation ul li a {
+    font-size: 0.8rem
+  }
+}
+
+@media(max-width:710px){
+  .navigation ul li a {
+    font-size: 0.7rem
+  }
+}
+
+@media(max-width:650px){
+  .navigation {
+    display: none;
+  }
+
+ 
+  .responsive-wrapper{
+    display: block;
+    z-index: 2;
+  }
+
+  .responsive-wrapper .nav-ctn{
+    width: 30vw;
+  }
+}
+
+@media(max-height:450px){
+  *{
+    font-size: 0.75rem;
+  }
+}

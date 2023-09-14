@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+  <head th:replace="~{fragments/main-nav::clean-head}">
+  </head>
+  <body id="e-kitchen">
+    <header th:replace="~{fragments/e-nav::e-nav}">
+    </header>
+
+    <main>
+      <h3 class="add-menu-title">Виж меню</h3>
+
+      <section class="see-menu">
+
+        <div class="menu-ctn shadow-ctn">
+          <form action="">
+            <label for="choose-date">Избери дата</label>
+            <input type="date" id="choose-date"/>
+
+            <label for="ageGroup">Избери възрастова група</label>
+            <select name="ageGroup" id="ageGroup">
+              <option value="littleKids" selected>10 МЕСЕЦА - 1 ГОДИНА</option>
+              <option value="bigKids">1 ГОДИНА - 3 ГОДИНИ</option>
+            </select>
+
+            <button class="main-btn">ВИЖ</button>
+          </form>
+        </div>
+
+        <div class="check-list shadow-ctn">
+            <div class="food">
+                <div><span id="selected-date">Петък, 28.07.2023 г.</div>
+                <div>Супа: <span id="selected-soup">СУПА ОТ ЗЕЛЕН ФАСУЛ СЪС ЗАСТРОЙКА</span></div>
+                <div>Основно: <span id="selected-main">ПИЛЕШКО МЕСО С КАРТОФИ </span></div>
+                <div>Десерт: <span id="selected-dessert">МЛЕЧЕН КИСЕЛ ОТ ПЪПЕШ </span></div>
+            </div>
+
+            <button class="main-btn">Редактирай</button>
+        </div>
+
+      </section>
+
+    </main>
+
+    <script th:src="@{/js/toggleFunctions.js}"></script>
+  </body>
+</html>

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+  <head th:replace="~{fragments/main-nav::clean-head}">
+  </head>
+  <body id="e-kitchen">
+
+    <header th:replace="~{fragments/e-nav::e-nav}">
+    </header>
+
+    <main>
+    
+        <article class="add-kidd">
+          <h4>Добави дете</h4>
+          <form th:action="@{/users/profile/add-kid}" th:method="POST" th:object="${childRegisterBindingModel}" id="add-kid" enctype="multipart/form-data">
+            <label for="add-kid-name">Име на дете</label>
+            <input
+              type="text"
+              name="kid-name"
+              id="add-kid-name"
+              placeholder="Въведете трите имена на детето"
+              th:field="*{fullName}"
+            />
+            <div th:if="${#fields.hasErrors('fullName')}" th:class="error">Невалидни имена! Имената трябва да са с дължина между 10 и 50 символа</div>
+
+            <label for="add-kid-age">Дата на раждане</label>
+            <input type="date" id="add-kid-age" th:field="*{birthDate}">
+            <div th:if="${#fields.hasErrors('birthDate')}" th:class="error">Невалидна дата или възрастта на детето е извън възрастовите граници, с които кухнята работи!</div>
+
+            <label
+              >Изберете алергии, каквито има Вашето дете:</label>
+
+            <div class="allergies" th:field="*{allergy}">
+              <fieldset>
+                <input
+                  type="checkbox"
+                  id="allergy-gluten"
+                  name="allergy"
+                  value="ГЛУТЕН"
+                />
+                Глутен
+                <br />
+                <input
+                  type="checkbox"
+                  id="allergy-egg"
+                  name="allergy"
+                  value="ЯЙЦА"
+                />
+                Яйца
+                <br />
+                <input
+                  type="checkbox"
+                  id="allergy-milk"
+                  name="allergy"
+                  value="МЛЯКО"
+                />
+                Мляко и млечни продукти
+                <br />
+                <input
+                  type="checkbox"
+                  id="allergy-lactose"
+                  name="allergy"
+                  value="ЛАКТОЗА"
+                />
+                Лактоза
+                <br />
+                <input
+                  type="checkbox"
+                  id="allergy-bird"
+                  name="allergy"
+                  value="ПТИЧЕ_МЕСО"
+                />
+                Птиче месо
+              </fieldset>
+              <fieldset>
+                <input
+                  type="checkbox"
+                  id="allergy-veal"
+                  name="allergy"
+                  value="ТЕЛЕШКО_МЕСО"
+                />
+                Телешко месо
+                <br />
+                <input
+                  type="checkbox"
+                  id="allergy-fish"
+                  name="allergy"
+                  value="РИБА"
+                />
+                Риба
+                <br />
+                <input
+                  type="checkbox"
+                  id="allergy-other"
+                  name="allergy"
+                  value="ДРУГО"
+                />
+                Друго
+                <br />
+                <input
+                  type="checkbox"
+                  id="allergy-none"
+                  name="allergy"
+                  value="НЯМА"
+                />
+                Няма
+              </fieldset>
+            </div>
+            <div th:if="${#fields.hasErrors('allergy')}" th:class="error">Трябва да направите поне един избор!</div>
+
+            <p>
+              <strong>
+                Забележка: Алергиите ще бъдат проверени за съответствие с
+                медицинската бележка на детето!
+              </strong>
+            </p>
+
+            <div class="upload-wrapper">
+              <div class="image-ctn">
+
+                <div class="image-upload">
+                  <label for="medical-pic">
+                    <img th:src="@{/images/backgrounds/medicalList.jpg}" alt="medical-list" />
+                  </label>
+                  <input
+                          style="display: none"
+                          id="medical-pic"
+                          type="file"
+                          name="medical"
+                          th:field="*{medicalList}"
+                  />
+                </div>
+                <div th:if="${#fields.hasErrors('medicalList')}" th:class="error">Медицинската бележка е задължителна!</div>
+                <div class="large main-btn">Мед.бележка</div>
+
+              </div>
+
+                <div class="image-ctn">
+
+                  <div class="image-upload">
+                    <label for="birth-pic">
+                      <img th:src="@{/images/backgrounds/Birth-Certificate.jpg}" alt="Birth-Certificate.jpg" />
+                    </label>
+                    <input
+                            style="display: none"
+                            id="birth-pic"
+                            type="file"
+                            name="picture"
+                            th:field="*{birthCertificate}"
+                    />
+                </div>
+                  <div th:if="${#fields.hasErrors('birthCertificate')}" th:class="error">Актът за разждане е задължителен!</div>
+                <div class="large main-btn">Акт за раждане</div>
+              </div>
+            </div>
+
+              <label for="private-data"
+                >Съгласявам се Детска кухня да обработва лични ми данни</label>
+              <input type="checkbox" name="private-date" id="private-data" th:field="*{isChecked}"/>
+
+              <div th:if="${#fields.hasErrors('isChecked')}" th:class="error">Задължително е съгласие за обработване на личните данни!</div>
+
+              <button type="submit" class="main-btn">ЗАПАЗИ</button>
+
+          </form>
+        </article>
+<!--      </div>-->
+    </main>
+
+    <script th:src="@{/js/toggleFunctions.js}"></script>
+  </body>
+</html>

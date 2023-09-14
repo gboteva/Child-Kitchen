@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+  <head th:replace="~{fragments/custom-head::custom-head}">
+  </head>
+  <body id="e-kitchen">
+    <header th:replace="~{fragments/e-nav::e-nav}">
+    </header>
+
+    <main>
+      <h2 id="welcome">Добре дошли в Е-Кухня!</h2>
+
+      <section class="e-kitchen">
+        <button class="main-btn show" onclick="toggleInstruction()">
+          Виж указания за употреба
+        </button>
+        <div class="wrapper">
+          <div class="instructions">
+            <div class="instr-ctn">
+              <h5>Указания за употреба</h5>
+              <button class="main-btn" onclick="toggleInstruction()">
+                Затвори
+              </button>
+            </div>
+            <p>
+              Страницата е направена с цел улесняване на родителите при направа
+              на заявки, закупуване и заверка на купони.
+              <br />
+              На страницата можете да закупите виртуални купони, с които ще
+              получавате храната на Вашето дете. Купоните имат тежестта на
+              хартиените купони, които кухнята дава при закупуване на място т.е.
+              вече не е нужно посещение на място за закупуването им.
+
+              <br />
+              Друга функционалност на страницата е, че можете директно тук да
+              заверявате закупените от Вас купони.
+
+              <br />
+              <strong
+                >ВАЖНО! Заверката важи като при хартиените купони - храната
+                заявена днес, ще получите след 2 дни на избраният от Вас пункт.
+                Например купон заверен в Понеделник ви гарантира храна за
+                сряда.</strong
+              >
+              <br />
+              В профилът си ще можете да следите наличните купони, направените
+              заявки и пунктът, от който следва да получите храната. При заверка
+              на купон за определен ден ще получите дневното меню, коeто можете
+              да следните от секция "Седмично меню"
+              <a th:href="@{/menus}">ТУК</a>.
+              <br />
+              <strong>
+                ВАЖНО!!! Преди да извършите каквито и да било действия е
+                необходимо да регистрирате детето/децата си в Профил секцията си
+                <a th:href="@{/users/profile}">ТУК</a>.
+              </strong>
+            </p>
+          </div>
+        </div>
+
+        <div class="feachers">
+          <form action="" class="shadow-ctn">
+            <h5><b>Купи купони</b></h5>
+            <label for="buy_coupons-child">За дете: </label>
+            <select name="child" id="buy_coupons-child">
+              <option value="childName">Гошко</option>
+              <option value="childName">Пешко</option>
+            </select>
+            <label for="buy_coupons-count">Брой купони: </label>
+            <select name="count" id="buy_coupons-count">
+              <option value="count">Месечен пакет</option>
+              <option value="10">10</option>
+              <option value="20">20</option>
+              <option value="25">25</option>
+            </select>
+            <label for="buy_coupons-price"><b>Обща цена:</b></label>
+            <input type="price" name="price" id="buy_coupons-price" value="" />
+            <button class="main-btn">Купи</button>
+          </form>
+
+          <form action="" class="shadow-ctn">
+            <h5><b>Завери купон</b></h5>
+            <label for="confirm_coupons-child">За дете: </label>
+            <select name="child" id="confirm_coupons-child">
+              <option value="childName">Гошко</option>
+              <option value="childName">Пешко</option>
+            </select>
+            <label for="confirm_coupons-date">За дата: </label>
+            <input type="date" id="confirm_coupons-date"/>
+
+            <button class="main-btn large">Завери купон</button>
+          </form>
+        </div>
+      </section>
+    </main>
+
+    <script th:src="@{/js/toggleFunctions.js}"></script>
+  </body>
+</html>

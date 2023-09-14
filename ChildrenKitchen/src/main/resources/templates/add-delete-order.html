@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+  <head th:replace="~{fragments/main-nav::clean-head}">
+  </head>
+  <body id="e-kitchen">
+    <header th:replace="~{fragments/e-nav::e-nav}">
+    </header>
+
+    <main>
+      <h3 class="order-title">Добави или изтрий заявка</h3>
+
+      <section class="orders">
+        <div class="add-order-ctn order shadow-ctn">
+          <form action="">
+            <h3>Добави заявка</h3>
+
+            <label for="order-date">Избери дата</label>
+            <input type="date" id="order-date" />
+
+            <label for="applicant-name">Име на заявител</label>
+            <div class="search-applicant">
+                <input type="text" id="applicant-name"/>
+                <button class="main-btn">Търси</button>
+            </div>
+
+            <label for="applicant-child"> Избери дете </label>
+            <select name="applicant-child" id="applicant-child">
+              <option value="first-child" selected>Гошко</option>
+              <option value="second-child">Пешко</option>
+            </select>
+
+            <label for="order-punct">Избери пункт: </label>
+            <select name="order-punct" id="order-punct">
+              <option value="Kids_Kitchen" selected>Детска кухня</option>
+              <option value="9thKv">9-ти квартал</option>
+              <option value="DG_Temenuga">ДГ Теменуга</option>
+              <option value="DG_TretiMart">ДГ Трети март</option>
+              <option value="DG_Drujba">ДГ Дружба</option>
+              <option value="DG_Slaveyche">ДГ Славейче</option>
+              <option value="DG_Nezabravka">ДГ Незабравка</option>
+              <option value="DG_Kalina">ДГ Калина</option>
+              <option value="DY_Latinka">ДЯ Латинка</option>
+              <option value="DY_Drujba">ДЯ Дружба</option>
+              <option value="DY_Mir">ДЯ Мир</option>
+            </select>
+
+            <button class="main-btn">Добави</button>
+          </form>
+        </div>
+
+        <div class="delete-order-ctn order shadow-ctn">
+            <h3>Изтрий заявка</h3>
+          <form action="">
+            <label for="order-date">Избери дата</label>
+            <input type="date" id="order-date" />
+
+            <div class="search-applicant">
+                <input type="text" id="applicant-name"/>
+                <button class="main-btn">Търси</button>
+            </div>
+
+            <label for="applicant-child"> Избери дете </label>
+            <select name="applicant-child" id="applicant-child">
+              <option value="first-child" selected>Гошко</option>
+              <option value="second-child">Пешко</option>
+            </select>
+
+            <button class="main-btn">Изтрий</button>
+          </form>
+        </div>
+      </section>
+    </main>
+
+    <script th:src="@{/js/toggleFunctions.js}"></script>
+  </body>
+</html>
