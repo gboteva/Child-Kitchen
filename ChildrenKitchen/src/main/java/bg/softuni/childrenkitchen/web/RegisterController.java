@@ -1,11 +1,13 @@
 package bg.softuni.childrenkitchen.web;
 
+import bg.softuni.childrenkitchen.model.CustomUserDetails;
 import bg.softuni.childrenkitchen.model.binding.UserRegisterBindingModel;
 import bg.softuni.childrenkitchen.model.service.UserRegisterServiceModel;
 import bg.softuni.childrenkitchen.service.ChildService;
 import bg.softuni.childrenkitchen.service.UserService;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -49,11 +51,6 @@ public class RegisterController {
         return "redirect:/users/login";
     }
 
-    @PatchMapping()
-    public String editProfile(){
-
-        return null;
-    }
 
 
 

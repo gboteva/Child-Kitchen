@@ -17,38 +17,61 @@
           <article class="main-info shadow-ctn">
             <h4>Основна информация</h4>
   
-            <form th:action="@{/users/register}" th:method="PATCH" class="info">
-              <button type="submit" class="large main-btn" name="edit"><a th:href="@{/users/register}">Редактирай</a></button>
+            <form th:action="@{/users/profile}" th:method="PATCH" class="info" th:object="${userUpdateBindingModel}">
+              <button type="submit" class="large main-btn" name="edit">Редактирай</button>
               <label for="info-email">Email</label>
               <input
                 type="email"
                 placeholder="Въведете e-mail"
                 name="email"
                 id="info-email"
-                th:value="*{username}"
-                disabled
+                th:value="${userUpdateBindingModel.email} == null ? ${loggedInUser.username} : *{email}"
               />
+              <div th:if="${#fields.hasErrors('email')}" th:class="error">Невалиден имейл!</div>
+
               <label for="info-name">Име на родител</label>
               <input
                 type="text"
                 placeholder="Въведете име и фамилия на родител"
-                name="name"
+                name="fullName"
                 id="info-name"
-                th:value="*{fullName}"
-                disabled
+                th:value="${userUpdateBindingModel.fullName} == null ? ${loggedInUser.fullName} : *{fullName}"
               />
-  
+              <div th:if="${#fields.hasErrors('fullName')}" th:class="error">Името трябва да съръджа между 7 и 50 символа!</div>
+
+              <label for="edit-city">Населено място:</label>
+              <select name="cityName"
+                      id="edit-city"
+                      th:value="${userUpdateBindingModel.cityName} == null ? ${loggedInUser.cityName} : *{cityName}"
+              >
+                <option th:each="c : ${cities}"
+                        th:value="${c.name()}"
+                        th:text="${c.name()}"
+                        th:selected="${loggedInUser.cityName}==${c.name()}"
+                >ПЛЕВЕН
+                </option>
+              </select>
+
+              <label for="servicePoint">Обслужващ пункт: </label>
+              <select name="servicePointName" id="servicePoint">
+                <option th:each="p : ${points}"
+                        th:value="${p}"
+                        th:text="${p}"
+                        th:selected="${loggedInUser.servicePointName} == ${p}"
+                >Детска кухня</option>
+              </select>
+
               <label for="info-tel">Телефон</label>
               <input
                 type="text"
                 placeholder="Въведете телефон за връзка"
-                name="tel"
+                name="phoneNumber"
                 id="info-tel"
-                th:value="*{phoneNumber}"
-                disabled
+                th:value="${userUpdateBindingModel.phoneNumber} == null ? ${loggedInUser.phoneNumber} : *{phoneNumber}"
               />
-              <label for="info-city">Населено място:</label>
-              <input type="text" name="city" id="info-city" th:value="*{cityName}" disabled />
+              <div th:if="${#fields.hasErrors('phoneNumber')}" th:class="error">Телефонният номер трябва да съръджа поне 10 символа!</div>
+
+
             </form>
           </article>
           
@@ -72,17 +95,6 @@
         </div>
 
         <div class="add-info">
-          <article class="choice-points shadow-ctn">
-            <h4>Избери обслужващ пункт</h4>
-            <label for="points">Обслужващ пункт: </label>
-            <select name="points" id="points" th:field="*{servicePointName}" th:selected="*{servicePointName}">
-              <option th:each="p : ${points}"
-                      th:value="${p}"
-                      th:text="${p}"
-                      >Детска кухня</option>
-            </select>
-            <button class="main-btn">Избери</button>
-          </article>
 
           <article class="requests shadow-ctn">
             <h4>Информация за текущата Ви заявка</h4>

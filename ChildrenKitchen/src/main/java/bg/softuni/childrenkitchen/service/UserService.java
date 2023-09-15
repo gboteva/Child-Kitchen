@@ -1,5 +1,6 @@
 package bg.softuni.childrenkitchen.service;
 
+import bg.softuni.childrenkitchen.model.binding.UserUpdateBindingModel;
 import bg.softuni.childrenkitchen.model.entity.UserEntity;
 import bg.softuni.childrenkitchen.model.service.UserRegisterServiceModel;
 import bg.softuni.childrenkitchen.model.view.UserViewModel;
@@ -14,4 +15,6 @@ public interface UserService {
     UserViewModel registerUser(UserRegisterServiceModel userRegisterServiceModel);
 
     boolean isEmailFree(String email);
+
+    void editUser(UserUpdateBindingModel userUpdateBindingModel);
 }

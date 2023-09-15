@@ -16,10 +16,7 @@ import bg.softuni.childrenkitchen.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalDate;
@@ -47,7 +44,7 @@ public class ChildServiceImpl implements ChildService {
     }
 
     @Override
-    public void initDB() throws FileNotFoundException {
+    public void initDB(){
         if(childRepository.count() > 0){
             return;
         }

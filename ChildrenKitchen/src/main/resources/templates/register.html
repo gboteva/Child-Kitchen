@@ -40,20 +40,10 @@
           <label for="reg-city">Изберете населено място</label>
 
           <select name="city" id="reg-city" th:field="*{city}">
-            <option value="ПЛЕВЕН" selected>ПЛЕВЕН</option>
-            <option value="БЕГЛЕЖ">БЕГЛЕЖ</option>
-            <option value="БОХОТ">БОХОТ</option>
-            <option value="БРЕСТОВЕЦ">БРЕСТОВЕЦ</option>
-            <option value="БРЪШЛЯНИЦА">БРЪШЛЯНИЦА</option>
-            <option value="БУКОВЛЪК">БУКОВЛЪК</option>
-            <option value="ВЪРБИЦА">ВЪРБИЦА</option>
-            <option value="ГОРТАЛОВО">ГОРТАЛОВО</option>
-            <option value="ГРИВИЦА">ГРИВИЦА</option>
-            <option value="ДИСЕВИЦА">ДИСЕВИЦА</option>
-            <option value="КОКИЛОВЦИ">КОИЛОВЦИ</option>
-            <option value="КЪРТОЖАБЕНЕ">КЪРТОЖАБЕНЕ</option>
-            <option value="КЪШИН">КЪШИН</option>
-            <option value="ЛАСКАР">ЛАСКАР</option>
+            <option th:each="c : ${cities}"
+                    th:value="${c.name()}"
+                    th:text="${c.name()}" >ПЛЕВЕН
+            </option>
           </select>
 
           <label for="reg-tel">Телефон</label>
