@@ -36,34 +36,30 @@
            <div class="wrapper">
                 <div class="request shadow-ctn">
                     <h3>Заявки по пунктове и по възраст</h3>
-                    <form action="">
-                    <label for="date-from" >Избери дата от:</label>
-                    <input type="date" id="date-from"/>
-                    <label for="date-to">Избери дата до:</label>
-                    <input type="date" id="date-to" />
-                    <label for="puncts">Избери пункт:</label>
-                    <select name="puncts" id="puncts">
-                        <option value="Kids_Kitchen" selected>Детска кухня</option>
-                        <option value="9thKv">9-ти квартал</option>
-                        <option value="DG_Temenuga">ДГ Теменуга</option>
-                        <option value="DG_TretiMart">ДГ Трети март</option>
-                        <option value="DG_Drujba">ДГ Дружба</option>
-                        <option value="DG_Slaveyche">ДГ Славейче</option>
-                        <option value="DG_Nezabravka">ДГ Незабравка</option>
-                        <option value="DG_Kalina">ДГ Калина</option>
-                        <option value="DY_Latinka">ДЯ Латинка</option>
-                        <option value="DY_Drujba">ДЯ Дружба</option>
-                        <option value="DY_Mir">ДЯ Мир</option>
-                        <option value="All">Всички</option>
-                    </select>
-                    <label for="ageGroup">Избери възрастова група</label>
-                    <select name="ageGroup" id="ageGroup">
-                        <option value="littleKids" selected>10 МЕСЕЦА - 1 ГОДИНА</option>
-                        <option value="bigKids">1 ГОДИНА - 3 ГОДИНИ</option>
-                    </select>
+                    <form th:action="@{/admin}" th:method="POST" onchange="disableAgeGroup()">
+                        <label for="date-from" >Избери дата от:</label>
+                        <input type="date" id="date-from" name="fromDate"/>
+<!--                        <div th:if="${#fields.hasErrors('adminSearchBindingModel.fromDate')}" th:class="error">Датата следва да е днешна или предишна</div>-->
+
+                        <label for="date-to">Избери дата до:</label>
+                        <input type="date" id="date-to" name="toDate" />
+<!--                        <div th:if="${#fields.hasErrors('adminSearchBindingModel.toDate')}" th:class="error">Датата следва да е днешна или предишна</div>-->
+
+                        <label for="points">Избери пункт:</label>
+                        <select name="servicePoint" id="points" onchange="disableAgeGroup()">
+                            <option value="All">Всички</option>
+                            <option th:each="p : ${points}" th:value="*{p}" th:text="*{p}">Детска кухня</option>
+                        </select>
+
+                        <label for="ageGroup">Избери възрастова група</label>
+                        <select name="ageGroup" id="searchedAgeGroup" onchange="disableAgeGroup()">
+                            <option th:each="g : ${ageGroups}" th:value="*{g.name()}" th:text="*{g.name()}">10 МЕСЕЦА - 1 ГОДИНА</option>
+                            <option value="All" id = "allOpt">Всички</option>
+                        </select>
+
+                        <button type="submit" class="main-btn">Покажи</button>
                     </form>
-                    
-                    <button class="main-btn" onclick="showInfoFromDB()">Покажи</button>
+
                 </div>
 
                 <div class="allergicKids shadow-ctn">
@@ -76,10 +72,13 @@
                             <th>Алергия към:</th>
                         </thead>
                         <tbody>
-                            <td id="allergicKidName">Петко Иванов</td>
-                            <td id="allergicPoint">ДЯ Мир</td>
-                            <td id="allergicAgeGroup">1 ГОДИНА - 3 ГОДИНИ</td>
-                            <td id="allergicList">Глутен</td>
+                            <tr th:each="k : ${allergicKids}">
+                                <td id="allergicKidName" th:text="*{k.fullName}">Петко Иванов</td>
+                                <td id="allergicPoint" th:text="*{k.servicePoint}">ДЯ Мир</td>
+                                <td id="allergicAgeGroup" th:text="*{k.ageGroup.name()}">1 ГОДИНА - 3 ГОДИНИ</td>
+                                <td id="allergicList" th:text="*{k.allergies}">Глутен</td>
+                            </tr>
+
                         </tbody>
                     </table>
                 </div>
@@ -100,35 +99,22 @@
                       <th>в т.ч. алергични</th>
                   </thead>
                   <tbody>
-                     <tr>
-                      <td id="fromDate">28.08.2023</td>
-                      <td id="toDate">28.08.2023</td>
-                      <td id="ageGroup">10 МЕСЕЦА - 1 ГОДИНА</td>
-                      <td id="point">ДЯ Дружба</td>
-                      <td id="countOrders">240</td>
-                      <td id="countAllergicOrders">5
-                        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-                          Виж
-                        </button>
-                      </td>
+                     <tr th:each="o : ${referenceByPointsViewModelList}">
+                      <td id="fromDate" th:text="*{o.fromDate}">28.08.2023</td>
+                      <td id="toDate" th:text="*{o.toDate}">28.08.2023</td>
+                      <td id="ageGroup" th:text="*{o.ageGroup}">10 МЕСЕЦА - 1 ГОДИНА</td>
+                      <td id="offer-point" th:text="*{o.point}">ДЯ Дружба</td>
+                      <td id="countOrders" th:text="*{o.countOrders}">240</td>
+                      <td id="countAllergicOrders" th:text="*{o.countAllergicOrders}"></td>
                      </tr>
-                     <tr>
-                      <td id="from">28.08.2023</td>
-                      <td id="to">28.08.2023</td>
-                      <td id="group">1 ГОДИНА - 3 ГОДИНИ</td>
-                      <td id="punct">ДЯ Дружба</td>
-                      <td id="count">180</td>
-                      <td id="countAllergicOrdersByPoint">5 <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-                        Виж
-                      </button></td>
-                     </tr>
+
                   </tbody>
                   <tr>
                       <td></td>
                       <td></td>
                       <td></td>
                       <th>Общо: </th>
-                      <th id="totalCountOnePunct">420</th>
+                      <th id="totalCountOnePunct" th:text="${totalCountOrders}">420</th>
                       <td></td>
                   </tr>
                   <tr>
@@ -137,39 +123,38 @@
                       <td></td>
                       <th>В т.ч алергични: </th>
                       <td></td>
-                      <th id="totalCountAllergicOnePunct">10</th>
+                      <th id="totalCountAllergicOnePunct" ><span th:text="${totalCountAllOrders}"></span>
+                          <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                              Виж
+                          </button>
+                      </th>
                   </tr>
               </table>
   
-              <table class="all-puncts shadow-ctn">
+              <table class="all-puncts shadow-ctn" >
                   <thead>
                       <th>Пункт</th>
                       <th>10 МЕСЕЦА - 1 ГОДИНА</th>
                       <th>1 ГОДИНА - 3 ГОДИНИ</th>
-                      <th>АЛЕРГИЧНИ</th>
+                      <th>В Т.Ч. АЛЕРГИЧНИ</th>
                   </thead>
                   <tbody>
-                      <tr>
-                          <td id="punct">Детска кухня</td>
-                          <td id="count-small">120</td>
-                          <td id="count-big">90</td>
-                          <td id="count-allergic">7 <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-                            Виж
-                          </button></td>
+                      <tr th:each="o : ${referenceAllPointsViewModelList}">
+                          <td id="all-points" th:text="*{o.servicePoint}">Детска кухня</td>
+                          <td id="all-count-small" th:text="*{o.smallOrderCount}">120</td>
+                          <td id="all-count-big" th:text="*{o.bigOrderCount}">90</td>
+                          <td id="all-count-allergic" th:text="*{o.allergicChildren.size()}"></td>
                       </tr>
-                      <tr>
-                          <td id="punct">9-ти квартал</td>
-                          <td id="count-small">54</td>
-                          <td id="count-big">67</td>
-                          <td id="count-allergic">2 <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-                            Виж
-                          </button></td>
-                      </tr>
+
                       <tr>
                           <th>Общо: </th>
-                          <th id="totalCountSmallAll">174</th>
-                          <th id="totalCountBigAll">147</th>
-                          <th id="totalCountAllergicAll">9</th>
+                          <th id="totalCountSmallAll" th:text="${smallSum} ? ${smallSum} : '0'">174</th>
+                          <th id="totalCountBigAll" th:text="${bigSum} ? ${bigSum} : '0'">147</th>
+                          <th id="totalCountAllergicAll" > <span th:text="${allergicSum} ? ${allergicSum} : '0'"></span>
+                              <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#staticBackdrop2">
+                                  Виж
+                              </button>
+                          </th>
                       </tr>
                   </tbody>
               </table>
@@ -197,10 +182,12 @@
                     <th>Алергия към:</th>
                 </thead>
                 <tbody>
-                    <td id="allergic-name">Петко Иванов</td>
-                    <td id="allergic-punct">ДЯ Мир</td>
-                    <td id="allergic-age-group">1 ГОДИНА - 3 ГОДИНИ</td>
-                    <td id="allergic-лист">Глутен</td>
+                <tr th:each="c : ${allergicChildren}">
+                    <td id="allergic-name" th:text="*{c.fullName}">Петко Иванов</td>
+                    <td id="allergic-punct" th:text="*{c.servicePoint}">ДЯ Мир</td>
+                    <td id="allergic-age-group" th:text="*{c.ageGroup.name()}">1 ГОДИНА - 3 ГОДИНИ</td>
+                    <td id="allergic-лист" th:text="*{c.allergies}">Глутен</td>
+                </tr>
                 </tbody>
             </table>
             </div>
@@ -212,6 +199,39 @@
       </div>
 
 
+        <div class="modal fade" id="staticBackdrop2" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="staticBackdropLabel2">Алергични деца</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <table class="allergic-table">
+                            <thead>
+                            <th>Име на детето</th>
+                            <th>Обслужващ пункт</th>
+                            <th>Възрастова група</th>
+                            <th>Алергия към:</th>
+                            </thead>
+                            <tbody>
+
+                            <tr th:each="a : ${allergicChildViewModelList}">
+                                <td id="allergic-name-all-points" th:text="*{a.fullName}">Петко Иванов</td>
+                                <td id="allergic-point-all-points" th:text="*{a.servicePoint}">ДЯ Мир</td>
+                                <td id="allergic-age-group-all-points" th:text="*{a.ageGroup.name()}">1 ГОДИНА - 3 ГОДИНИ</td>
+                                <td id="allergic-list-all-points" th:text="*{a.allergies}">Глутен</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Затвори</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </main>
 
   <script
@@ -220,5 +240,6 @@
   crossorigin="anonymous"
 ></script>
     <script th:src="@{/js/toggleFunctions.js}"></script>
+    <script th:src="@{/js/adminOrders.js}"></script>
   </body>
 </html>

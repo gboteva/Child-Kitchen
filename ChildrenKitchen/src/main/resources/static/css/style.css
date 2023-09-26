@@ -16,6 +16,7 @@
 @import url(add-delete-order.css);
 @import url(healthy.css);
 @import url(add-receip.css);
+@import url(error.css);
 
 :root{
     --clr-primary:#FFDDCC;
@@ -88,7 +89,8 @@ th, td {
     font-size: 10px;
 }
 
-.error:last-of-type{
+
+.error:last-of-type, input:last-of-type, select:last-of-type{
     margin-bottom: 12px;
 }
 

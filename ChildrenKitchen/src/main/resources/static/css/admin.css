@@ -91,13 +91,13 @@
     font-size: 1.2rem;
 }
 
-#reference{
-    display: none;
- }
+/*#reference{*/
+/*    display: none;*/
+/* }*/
 
-#reference .info-from-db{
-   display: none;
-}
+/*#reference .info-from-db{*/
+/*   display: none;*/
+/*}*/
 
 .info-from-db{
     display: flex;

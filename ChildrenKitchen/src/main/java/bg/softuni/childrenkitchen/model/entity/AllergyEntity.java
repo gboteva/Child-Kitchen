@@ -13,8 +13,8 @@ public class AllergyEntity extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private AllergyEnum allergenName;
 
-    @ManyToMany(targetEntity = ChildEntity.class, mappedBy = "allergies")
-    private Set<ChildEntity> children;
+//    @ManyToMany(targetEntity = ChildEntity.class, mappedBy = "allergies")
+//    private Set<ChildEntity> children;
 
     public AllergyEnum getAllergenName() {
         return allergenName;
@@ -24,11 +24,11 @@ public class AllergyEntity extends BaseEntity {
         this.allergenName = allergenName;
     }
 
-    public Set<ChildEntity> getChildren() {
-        return children;
-    }
-
-    public void setChildren(Set<ChildEntity> owners) {
-        this.children = owners;
-    }
+//    public Set<ChildEntity> getChildren() {
+//        return children;
+//    }
+//
+//    public void setChildren(Set<ChildEntity> owners) {
+//        this.children = owners;
+//    }
 }

@@ -2,6 +2,7 @@ package bg.softuni.childrenkitchen.web;
 
 import bg.softuni.childrenkitchen.model.CustomUserDetails;
 import bg.softuni.childrenkitchen.model.binding.UserRegisterBindingModel;
+import bg.softuni.childrenkitchen.model.entity.enums.CityEnum;
 import bg.softuni.childrenkitchen.model.service.UserRegisterServiceModel;
 import bg.softuni.childrenkitchen.service.ChildService;
 import bg.softuni.childrenkitchen.service.UserService;
@@ -9,11 +10,9 @@ import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
@@ -28,6 +27,12 @@ public class RegisterController {
         this.modelMapper = modelMapper;
         this.userService = userService;
         this.childService = childService;
+    }
+
+    @GetMapping()
+    public String getRegister(Model model){
+        model.addAttribute("cities", CityEnum.values());
+        return "register";
     }
 
     @PostMapping()
@@ -52,6 +57,10 @@ public class RegisterController {
     }
 
 
+    @ModelAttribute
+    public UserRegisterBindingModel userRegisterBindingModel(){
+        return new UserRegisterBindingModel();
+    }
 
 
 }

@@ -9,6 +9,7 @@ public class ChildViewModel {
     private String allergies;
     private int countCoupons;
 
+
     public String getFullName() {
         return fullName;
     }
@@ -40,4 +41,5 @@ public class ChildViewModel {
     public void setCountCoupons(int countCoupons) {
         this.countCoupons = countCoupons;
     }
+
 }

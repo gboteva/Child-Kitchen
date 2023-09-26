@@ -43,6 +43,10 @@
   }
 }
 
+  button#see-points-btn{
+    margin: 16px 0;
+  }
+
 .points-container{
   margin: 0 auto;
   text-align: center;

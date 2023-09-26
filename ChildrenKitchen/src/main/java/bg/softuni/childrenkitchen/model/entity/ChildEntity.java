@@ -2,6 +2,7 @@ package bg.softuni.childrenkitchen.model.entity;
 
 import bg.softuni.childrenkitchen.model.entity.enums.AgeGroupEnum;
 import jakarta.persistence.*;
+import org.hibernate.annotations.Cascade;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -26,7 +27,8 @@ public class ChildEntity extends BaseEntity {
     @Column(name = "birth_cert_url")
     private String birthCertificateURL;
 
-    @ManyToMany(targetEntity = AllergyEntity.class, fetch = FetchType.EAGER)
+    @ManyToMany(targetEntity = AllergyEntity.class,
+            fetch = FetchType.EAGER)
     private Set<AllergyEntity> allergies = new HashSet<>();
 
     @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER)

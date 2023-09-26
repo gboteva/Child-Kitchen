@@ -29,6 +29,7 @@ public class FoodServiceImpl implements FoodService {
             return;
         }
 
+        // TODO: 17.9.2023 г. throw
         AllergenEntity gluten = allergenService.findById(1L).orElse(null);
         AllergenEntity cotagge = allergenService.findById(2L).orElse(null);
         AllergenEntity cheese = allergenService.findById(3L).orElse(null);

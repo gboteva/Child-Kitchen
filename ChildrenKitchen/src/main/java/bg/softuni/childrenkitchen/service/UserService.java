@@ -1,10 +1,13 @@
 package bg.softuni.childrenkitchen.service;
 
 import bg.softuni.childrenkitchen.model.binding.UserUpdateBindingModel;
+import bg.softuni.childrenkitchen.model.entity.ChildEntity;
 import bg.softuni.childrenkitchen.model.entity.UserEntity;
 import bg.softuni.childrenkitchen.model.service.UserRegisterServiceModel;
+import bg.softuni.childrenkitchen.model.view.UserAndChildViewModel;
 import bg.softuni.childrenkitchen.model.view.UserViewModel;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface UserService {
@@ -16,5 +19,9 @@ public interface UserService {
 
     boolean isEmailFree(String email);
 
-    void editUser(UserUpdateBindingModel userUpdateBindingModel);
+    UserUpdateBindingModel editUser(UserUpdateBindingModel userUpdateBindingModel);
+
+    List<UserAndChildViewModel> getUserByKeyWord(String keyWord);
+
+    ChildEntity getChildByNames(String childFullName, String userEmail);
 }

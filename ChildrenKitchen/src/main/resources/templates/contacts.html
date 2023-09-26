@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
->
+ lang="en">
   <head th:replace="~{fragments/main-nav::clean-head}">
   </head>
 
@@ -21,13 +20,21 @@
           <p>Канцелария: 064 810 722</p>
         </article>
 
-        <form action="" class="contact-form shadow-ctn">
+        <form th:action="@{/contacts}" th:method="POST" class="contact-form shadow-ctn" th:object="${contactBindingModel}">
           <h4>Свържете се с нас</h4>
-          <label for="theme"></label>
-          <input type="text" placeholder="Въведете тема" id="theme">
+
+          <label for="recipient"></label>
+          <input th:field="*{recipient}" type="text" placeholder="Въведете email за обратна връзка" id="recipient" name="recipient">
+          <div th:if="${#fields.hasErrors('recipient')}" th:class="error">Невалиден имейл!</div>
+
+          <label for="subject"></label>
+          <input th:field="*{subject}" type="text" placeholder="Въведете тема" id="subject" name="subject">
+          <div th:if="${#fields.hasErrors('subject')}" th:class="error">Моля въведете тема!</div>
   
           <label for="contact-content"></label>
-          <textarea name="content" id="contact-content" cols="30" rows="10" placeholder="Въведете текст"></textarea>
+          <textarea th:field="*{content}" name="content" id="contact-content" cols="30" rows="10" placeholder="Въведете текст"></textarea>
+          <div th:if="${#fields.hasErrors('content')}" th:class="error">Моля въведете съдържание!</div>
+
           <button type="submit" class="main-btn">Изпрати</button>
          
         </form>

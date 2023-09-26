@@ -16,14 +16,8 @@ spring:
     hiddenmethod:
       filter:
         enabled: true
-
-#  sql:
-#    init:
-#      mode: always
-#      continue-on-error: true
-
-
   jpa:
+
     # Choose either MySQL 8 or MySQL 5 below
     # For MySQL 8
     database-platform: org.hibernate.dialect.MySQL8Dialect
@@ -32,11 +26,18 @@ spring:
 
     hibernate:
       ddl-auto: update
-    open-in-view: false
+      open-in-view: false
     properties:
       hibernate:
         format_sql: true
     defer-datasource-initialization: true
+
+mail:
+  host: localhost
+  port: 1025
+  username: "admin@example.com"
+  password: ""
+
 
 cloudinary:
   cloud-name: "${CLOUDINARY_NAME}"

@@ -27,9 +27,9 @@ public class ApplicationSecurityConfiguration {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(authorize -> authorize
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
-                .requestMatchers("/", "/users/login", "/users/register").permitAll()
-                .requestMatchers("/admin", "/admin/add-menu", "/admin/view-menu-by-date", "/admin/add-recipe", "/admin/add-delete-order", "/admin/**").hasRole(UserRoleEnum.ADMIN.name())
-                .requestMatchers("/about-us", "/contacts", "/healthy-food", "/menus").permitAll()
+                .requestMatchers("/admin",  "/admin/**", "/api/admin/ordersInfoByPoint").hasRole(UserRoleEnum.ADMIN.name())
+                .requestMatchers("/", "/users/login", "/users/register", "/about-us", "/contacts",
+                        "/healthy-food", "/menus", "/api/points", "/thanks-feedback").permitAll()
                 .anyRequest().authenticated()
 
         ).formLogin(loginConfigurer -> {loginConfigurer

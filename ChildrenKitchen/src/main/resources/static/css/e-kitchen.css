@@ -48,7 +48,7 @@ button.close{
 }
 
 
-.feachers{
+.functionality{
    margin: 0 auto;
     display: flex;
     justify-content: space-evenly;
@@ -87,13 +87,31 @@ button.close{
   }
   
 
-.feachers form{
+.functionality form{
     width: 50%;
 }
 
-.feachers form h5{
+.functionality form h5{
     text-align: center;
 }
+
+.coupons-wrapper{
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+@media(max-width: 730px){
+    .functionality{
+        flex-direction: column;
+    }
+
+    .functionality form{
+        width: 100%;
+    }
+
+}
+
 
 
 

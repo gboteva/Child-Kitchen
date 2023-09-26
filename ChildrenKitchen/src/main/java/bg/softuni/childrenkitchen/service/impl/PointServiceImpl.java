@@ -1,8 +1,12 @@
 package bg.softuni.childrenkitchen.service.impl;
 
 import bg.softuni.childrenkitchen.model.entity.PointEntity;
+import bg.softuni.childrenkitchen.model.view.PointViewModel;
 import bg.softuni.childrenkitchen.repository.PointRepository;
 import bg.softuni.childrenkitchen.service.PointService;
+import org.modelmapper.ModelMapper;
+import org.springframework.boot.autoconfigure.web.reactive.function.client.WebClientAutoConfiguration;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,9 +17,13 @@ import java.util.stream.Collectors;
 @Service
 public class PointServiceImpl implements PointService {
     private final PointRepository pointRepository;
+    private final ModelMapper modelMapper;
 
-    public PointServiceImpl(PointRepository pointRepository) {
+
+    public PointServiceImpl(PointRepository pointRepository, ModelMapper modelMapper) {
         this.pointRepository = pointRepository;
+        this.modelMapper = modelMapper;
+
     }
 
     @Override
@@ -105,9 +113,17 @@ public class PointServiceImpl implements PointService {
     }
 
     @Override
-    public Set<String> getAll() {
+    public Set<String> getAllNames() {
         return   pointRepository.findAll().stream()
                 .map(PointEntity::getName)
+                .collect(Collectors.toSet());
+    }
+
+    @Cacheable("points")
+    @Override
+    public Set<PointViewModel> getAll() {
+       return pointRepository.findAll().stream()
+                       .map(entity-> modelMapper.map(entity, PointViewModel.class))
                 .collect(Collectors.toSet());
     }
 }

@@ -10,7 +10,7 @@
     </header>
 
     <main>
-      <h2>Добре дошли, <span sec:authorize="isAuthenticated()" th:text="${loggedInUser.fullName}"></span>!</h2>
+      <h2>Добре дошли, <span sec:authorize="isAuthenticated()" th:text="${loggedInUser.fullName.substring(0, loggedInUser.getFullName().indexOf(' '))}"></span>!</h2>
 
       <div class="profile" th:object="${loggedInUser}">
         <div class="info-wrapper">
@@ -74,7 +74,7 @@
 
             </form>
           </article>
-          
+
           <article class="shadow-ctn">
             <div class="kids-wrapper">
               <p>Деца:</p>

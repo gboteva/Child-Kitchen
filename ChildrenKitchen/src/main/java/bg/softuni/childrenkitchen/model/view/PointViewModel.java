@@ -4,7 +4,6 @@ public class PointViewModel {
     private String name;
     private String address;
     private String workingTime;
-
     private String pictureUrl;
 
     public String getName() {

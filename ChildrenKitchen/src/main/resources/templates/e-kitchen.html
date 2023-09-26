@@ -1,9 +1,8 @@
 <!DOCTYPE html>
 <html lang="en"
       xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-  <head th:replace="~{fragments/custom-head::custom-head}">
+      xmlns:th="http://www.thymeleaf.org">
+  <head th:replace="~{fragments/custom-head::head}">
   </head>
   <body id="e-kitchen">
     <header th:replace="~{fragments/e-nav::e-nav}">
@@ -60,42 +59,56 @@
           </div>
         </div>
 
-        <div class="feachers">
-          <form action="" class="shadow-ctn">
+        <div class="functionality">
+          <form th:action="@{/e-kitchen}" class="shadow-ctn" th:method="POST" th:object="${buyCouponsBindingModel}">
             <h5><b>Купи купони</b></h5>
             <label for="buy_coupons-child">За дете: </label>
-            <select name="child" id="buy_coupons-child">
-              <option value="childName">Гошко</option>
-              <option value="childName">Пешко</option>
+            <select name="childName" id="buy_coupons-child">
+              <option th:each="c : ${children}" th:value="${c.fullName}" th:text="${c.fullName}">Гошко</option>
             </select>
-            <label for="buy_coupons-count">Брой купони: </label>
-            <select name="count" id="buy_coupons-count">
-              <option value="count">Месечен пакет</option>
-              <option value="10">10</option>
-              <option value="20">20</option>
-              <option value="25">25</option>
+
+            <label for="coupon-age-group">Купон за възрастова група:</label>
+            <select name="ageGroupName" id="coupon-age-group" >
+              <option th:each="age : ${ageGroups}" th:value="${age.name()}" th:text="${age.name()}"></option>
             </select>
-            <label for="buy_coupons-price"><b>Обща цена:</b></label>
-            <input type="price" name="price" id="buy_coupons-price" value="" />
-            <button class="main-btn">Купи</button>
+
+            <div class="coupons-wrapper">
+              <label for="buy_coupons-count">Брой купони: </label>
+              <select name="countCoupons" id="buy_coupons-count" th:field="*{countCoupons}">
+                <option value="10">10</option>
+                <option value="20">20</option>
+                <option value="25">25</option>
+              </select>
+              <label for="buy_coupons-price"><b>Обща цена:</b></label>
+              <input type="text" name="price" id="buy_coupons-price"
+                   th:value="*{countCoupons} == null ? '8,00 лв' : *{countCoupons}" />
+            </div>
+            <button type="submit" class="main-btn">Купи</button>
           </form>
 
-          <form action="" class="shadow-ctn">
+          <form th:action="@{/e-kitchen}" th:method="PATCH" class="shadow-ctn" th:object="${verifyCouponBindingModel}">
             <h5><b>Завери купон</b></h5>
             <label for="confirm_coupons-child">За дете: </label>
-            <select name="child" id="confirm_coupons-child">
-              <option value="childName">Гошко</option>
-              <option value="childName">Пешко</option>
+            <select name="childName" id="confirm_coupons-child">
+              <option th:each="c : ${children}" th:value="${c.fullName}" th:text="${c.fullName}">Гошко</option>
             </select>
-            <label for="confirm_coupons-date">За дата: </label>
-            <input type="date" id="confirm_coupons-date"/>
 
-            <button class="main-btn large">Завери купон</button>
+            <label for="confirm_coupons-date">За дата: </label>
+            <input type="date" name="verifyDate" id="confirm_coupons-date" th:field="*{verifyDate}" data-bs-toggle="modal" data-bs-target="#staticBackdrop"/>
+
+            <div th:if="${#fields.hasErrors('verifyDate')}" class="error">Нямате право да правите заявки през уикенда, или по-малко от 2 дни предварително! </div>
+
+            <button type="submit" id="verifyCouponBtn" class="main-btn large">
+              Завери купон
+            </button>
           </form>
         </div>
       </section>
+
     </main>
 
     <script th:src="@{/js/toggleFunctions.js}"></script>
+    <script th:src="@{/js/calculatePrice.js}"></script>
+
   </body>
 </html>

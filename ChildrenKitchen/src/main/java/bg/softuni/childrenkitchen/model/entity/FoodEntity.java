@@ -16,7 +16,7 @@ public class FoodEntity extends BaseEntity {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private FoodCategoryEnum category;
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     private Set<AllergenEntity> allergens;
 
     public String getName() {

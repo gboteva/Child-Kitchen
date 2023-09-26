@@ -26,25 +26,7 @@ function toggleInstruction() {
 
 }
 
-function showInfoFromDB(event) {
-  console.log("show info");
-  let infoCtn = document.getElementById("reference");
-  let select = document.getElementById("puncts");
-  let infoFromDB = document.querySelector("#reference .info-from-db");
-  let onePunctTable = document.getElementsByClassName("one-punct")[0];
-  let allPunctsTable = document.getElementsByClassName("all-puncts")[0]
 
-  infoCtn.setAttribute("style", "display: block");
-  infoFromDB.setAttribute("style", "display: flex");
-
-  if (select.options[select.selectedIndex].text !== "Всички"){
-    onePunctTable.setAttribute("style", "display: block");
-    allPunctsTable.setAttribute("style", "display: none");
-  } else {
-    onePunctTable.setAttribute("style", "display: none");
-    allPunctsTable.setAttribute("style", "display: block");
-  }
-}
 
 
 

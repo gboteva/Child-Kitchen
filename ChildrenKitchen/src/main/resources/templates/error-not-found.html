@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      lang="en">
+<head th:replace="~{fragments/main-nav::clean-head}">
+</head>
+
+<body>
+<header th:replace="~{fragments/main-nav::main-nav}">
+</header>
+
+<main>
+  <div class="error-ctn">
+    <article class="error-view">
+      <div class="img-ctn">
+        <img src="https://res.cloudinary.com/galkab/image/upload/v1695197006/404-errors_yjpjeq.jpg" alt="">
+      </div>
+      <p>
+        Нещо се обърка! Работим по въпроса! &#9203;
+      </p>
+    </article>
+
+  </div>
+
+</main>
+
+<script th:src="@{/js/toggleFunctions.js}"></script>
+
+</body>
+</html>

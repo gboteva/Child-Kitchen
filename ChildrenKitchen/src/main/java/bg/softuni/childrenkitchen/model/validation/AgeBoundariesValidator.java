@@ -14,21 +14,12 @@ public class AgeBoundariesValidator implements ConstraintValidator<OutOfAgeKid, 
             return false;
         }
 
-        if (birthDate.isBefore(LocalDate.now().minusMonths(12))){
-            int years = LocalDate.now().getYear() - birthDate.getYear();
-            int months = LocalDate.now().getMonth().getValue() - birthDate.getMonth().getValue();
-            int age = years*12 + months;
+        if (birthDate.isBefore(LocalDate.now().minusYears(3))){
+            return false;
+        }
 
-            if (age > 36){
-                return false;
-            }
-
-        }else {
-            int months = LocalDate.now().getMonth().getValue() - birthDate.getMonth().getValue();
-
-            if (months < 10){
-                return false;
-            }
+        if (birthDate.isAfter(LocalDate.now().minusMonths(10))){
+            return false;
         }
 
         return true;

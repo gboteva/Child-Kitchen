@@ -14,8 +14,10 @@ public class DBInitialize implements CommandLineRunner {
     private final UserService userService;
     private final AllergyService allergyService;
     private final ChildService childService;
+    private final CouponService couponService;
+    private final OrderService orderService;
 
-    public DBInitialize(RoleService roleService, AllergenService allergenService, PointService pointService, FoodService foodService, MenuService menuService, UserService userService, AllergyService allergyService, ChildService childService) {
+    public DBInitialize(RoleService roleService, AllergenService allergenService, PointService pointService, FoodService foodService, MenuService menuService, UserService userService, AllergyService allergyService, ChildService childService, CouponService couponService, OrderService orderService) {
         this.roleService = roleService;
         this.allergenService = allergenService;
         this.pointService = pointService;
@@ -24,6 +26,8 @@ public class DBInitialize implements CommandLineRunner {
         this.userService = userService;
         this.allergyService = allergyService;
         this.childService = childService;
+        this.couponService = couponService;
+        this.orderService = orderService;
     }
 
     @Override
@@ -36,5 +40,7 @@ public class DBInitialize implements CommandLineRunner {
         userService.initDB();
         allergyService.initDB();
         childService.initDB();
+        couponService.initDB();
+        orderService.initDB();
     }
 }

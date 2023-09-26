@@ -12,60 +12,71 @@
     <main>
       <h3 class="order-title">Добави или изтрий заявка</h3>
 
+      <div class="search-applicant shadow-ctn">
+          <label>Въведете потребителски e-mail: </label>
+          <input type="text" id="add-applicant-name" name="addApplicantName" placeholder="Въведете част или целия email"/>
+          <button class="main-btn" type="submit" onclick='searchUser()'>Търси</button>
+      </div>
+
       <section class="orders">
+
         <div class="add-order-ctn order shadow-ctn">
-          <form action="">
-            <h3>Добави заявка</h3>
+
+          <h3>Добави заявка</h3>
+
+          <form th:action="@{/admin/add-delete-order}" th:method="POST" th:object="${addOrderBindingModel}">
+
+            <label for="add-applicant-name">Име на заявител</label>
+            <select name="userEmail" id="user-result" onchange="populateFields()" th:field="*{userEmail}">
+              <option value=""></option>
+            </select>
+            <div th:if="${#fields.hasErrors('userEmail')}" class="error">Няма избран потребител! </div>
 
             <label for="order-date">Избери дата</label>
-            <input type="date" id="order-date" />
+            <input type="date" id="add-order-date" th:field="*{date}"/>
+            <div th:if="${#fields.hasErrors('date')}" class="error">Не сте въвели дата или сте въвели минала такава! </div>
 
-            <label for="applicant-name">Име на заявител</label>
-            <div class="search-applicant">
-                <input type="text" id="applicant-name"/>
-                <button class="main-btn">Търси</button>
-            </div>
+            <label for="add-applicant-child"> Избери дете </label>
+            <select name="applicant-child" id="add-applicant-child" th:field="*{childFullName}">
 
-            <label for="applicant-child"> Избери дете </label>
-            <select name="applicant-child" id="applicant-child">
-              <option value="first-child" selected>Гошко</option>
-              <option value="second-child">Пешко</option>
             </select>
+            <div th:if="${#fields.hasErrors('childFullName')}" class="error">Няма избрано дете! </div>
 
-            <label for="order-punct">Избери пункт: </label>
-            <select name="order-punct" id="order-punct">
-              <option value="Kids_Kitchen" selected>Детска кухня</option>
-              <option value="9thKv">9-ти квартал</option>
-              <option value="DG_Temenuga">ДГ Теменуга</option>
-              <option value="DG_TretiMart">ДГ Трети март</option>
-              <option value="DG_Drujba">ДГ Дружба</option>
-              <option value="DG_Slaveyche">ДГ Славейче</option>
-              <option value="DG_Nezabravka">ДГ Незабравка</option>
-              <option value="DG_Kalina">ДГ Калина</option>
-              <option value="DY_Latinka">ДЯ Латинка</option>
-              <option value="DY_Drujba">ДЯ Дружба</option>
-              <option value="DY_Mir">ДЯ Мир</option>
+
+            <label for="add-order-point">Избери пункт: </label>
+            <select name="order-punct" id="add-order-point" th:field="*{servicePoint}">
+              <option value="Детска кухня" >Детска кухня</option>
+              <option value="9-ти квартал">9-ти квартал</option>
+              <option value="ДГ Теменуга">ДГ Теменуга</option>
+              <option value="ДГ Трети март">ДГ Трети март</option>
+              <option value="ДГ Дружба">ДГ Дружба</option>
+              <option value="ДГ Славейче">ДГ Славейче</option>
+              <option value="ДГ Незабравка">ДГ Незабравка</option>
+              <option value="ДГ Калина">ДГ Калина</option>
+              <option value="ДЯ Чайка">ДЯ Чайка</option>
+              <option value="ДЯ Латинка">ДЯ Латинка</option>
+              <option value="ДЯ Дружба">ДЯ Дружба</option>
+              <option value="ДЯ Мир">ДЯ Мир</option>
             </select>
 
             <button class="main-btn">Добави</button>
           </form>
+
         </div>
 
         <div class="delete-order-ctn order shadow-ctn">
+
             <h3>Изтрий заявка</h3>
-          <form action="">
-            <label for="order-date">Избери дата</label>
-            <input type="date" id="order-date" />
 
-            <div class="search-applicant">
-                <input type="text" id="applicant-name"/>
-                <button class="main-btn">Търси</button>
-            </div>
+          <form th:action="@{/admin/add-delete-order}" th:method="DELETE">
+            <label for="delete-order-date">Избери дата</label>
+            <select name="deleteOrderDate" id="delete-order-date">
 
-            <label for="applicant-child"> Избери дете </label>
-            <select name="applicant-child" id="applicant-child">
-              <option value="first-child" selected>Гошко</option>
-              <option value="second-child">Пешко</option>
+            </select>
+
+            <label for="delete-applicant-child"> Избери дете </label>
+            <select name="childName" id="delete-applicant-child" onchange="populateOrders()" >
+
             </select>
 
             <button class="main-btn">Изтрий</button>
@@ -75,5 +86,6 @@
     </main>
 
     <script th:src="@{/js/toggleFunctions.js}"></script>
+    <script th:src="@{/js/search.js}"></script>
   </body>
 </html>

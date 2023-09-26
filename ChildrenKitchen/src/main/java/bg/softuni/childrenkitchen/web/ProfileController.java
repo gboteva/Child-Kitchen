@@ -3,13 +3,16 @@ package bg.softuni.childrenkitchen.web;
 import bg.softuni.childrenkitchen.model.CustomUserDetails;
 import bg.softuni.childrenkitchen.model.binding.ChildRegisterBindingModel;
 import bg.softuni.childrenkitchen.model.binding.UserUpdateBindingModel;
+import bg.softuni.childrenkitchen.model.entity.enums.CityEnum;
 import bg.softuni.childrenkitchen.model.view.ChildViewModel;
 import bg.softuni.childrenkitchen.service.ChildService;
+import bg.softuni.childrenkitchen.service.PointService;
 import bg.softuni.childrenkitchen.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -22,12 +25,28 @@ public class ProfileController {
 
     private final ChildService childService;
     private final UserService userService;
+    private final PointService pointService;
 
-    public ProfileController(ChildService childService, UserService userService) {
+
+    public ProfileController(ChildService childService, UserService userService, PointService pointService) {
         this.childService = childService;
         this.userService = userService;
+        this.pointService = pointService;
     }
+    @GetMapping()
+    public String getUserProfile(
+            @AuthenticationPrincipal CustomUserDetails loggedInUser,
+            Model model){
 
+        if (loggedInUser!=null){
+            model.addAttribute("loggedInUser", loggedInUser);
+            model.addAttribute("points", pointService.getAllNames());
+            model.addAttribute("cities", CityEnum.values());
+        }
+
+        //todo delete expired coupons older than 1 year
+        return "profile";
+    }
 
     @PatchMapping(consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public String editProfile(@Valid UserUpdateBindingModel userUpdateBindingModel,
@@ -45,9 +64,22 @@ public class ProfileController {
 
         userUpdateBindingModel.setId(loggedInUser.getId());
 
-        userService.editUser(userUpdateBindingModel);
+        UserUpdateBindingModel updated = userService.editUser(userUpdateBindingModel);
 
-        return "redirect:/e-kitchen";
+        loggedInUser.setCityName(updated.getCityName());
+        loggedInUser.setPhoneNumber(updated.getPhoneNumber());
+        loggedInUser.setFullName(updated.getFullName());
+        loggedInUser.setEmail(updated.getEmail());
+        loggedInUser.setServicePointName(updated.getServicePointName());
+
+
+        return "redirect:/users/profile";
+    }
+
+
+    @GetMapping("/add-kid")
+    public String addKidPage(){
+        return "add-kid";
     }
 
 
@@ -58,12 +90,6 @@ public class ProfileController {
                          @AuthenticationPrincipal CustomUserDetails loggedInUser
                          ) throws IOException {
 
-        boolean empty = childRegisterBindingModel.getBirthCertificate()
-                                                 .isEmpty();
-        String originalFilename = childRegisterBindingModel.getBirthCertificate()
-                                                           .getOriginalFilename();
-        String name = childRegisterBindingModel.getBirthCertificate()
-                                               .getName();
 
         if(bindingResult.hasErrors() || !childRegisterBindingModel.getIsChecked()){
             redirectAttributes.addFlashAttribute("childRegisterBindingModel", childRegisterBindingModel);
@@ -76,4 +102,16 @@ public class ProfileController {
 
         return "redirect:/users/profile";
     }
+
+
+    @ModelAttribute
+    public UserUpdateBindingModel userUpdateBindingModel(){
+        return new UserUpdateBindingModel();
+    }
+
+    @ModelAttribute
+    public ChildRegisterBindingModel childRegisterBindingModel(){
+        return new ChildRegisterBindingModel();
+    }
+
 }

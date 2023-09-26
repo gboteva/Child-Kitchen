@@ -3,6 +3,19 @@
     margin: 26px 0;
 }
 
+.search-applicant{
+    width: 60vw;
+    margin: 26px auto;
+    text-align: center;
+}
+
+.search-applicant input{
+    border-radius: 16px;
+    border: none;
+    padding: 8px;
+    margin-right: 8px;
+}
+
 .orders, .recipe{
     display: flex;
     justify-content: space-evenly;

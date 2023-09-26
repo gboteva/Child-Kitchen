@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/main-nav::clean-head">
+</head>
+
+<body>
+    <header th:replace="~{fragments/main-nav::main-nav}">
+    </header>
+
+    <main>
+        <div class="error-ctn">
+            <article class="error-view">
+                <div class="img-ctn">
+                    <img src="https://res.cloudinary.com/galkab/image/upload/v1695197006/404-errors_yjpjeq.jpg" alt="">
+                </div>
+                <p>Нямате налични купони! Моля закупете от системата или на място в Детска Кухня!</p>
+                <button class="main-btn large"><a th:href="@{/e-kitchen}">Купи купони</a></button>
+            </article>
+        </div>
+
+    </main>
+
+</body>
+</html>

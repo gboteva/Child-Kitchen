@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+ lang="en">
+<head th:replace="~{fragments/main-nav::clean-head}">
+</head>
+
+<body>
+<header th:replace="~{fragments/main-nav::main-nav}">
+</header>
+
+<main>
+  <section class="error-ctn">
+    <div class="error-view">
+      <h3>Благодарим за обратната връзка! Ще се свръжем с Вас възможно най-скоро!</h3>
+    </div>
+  </section>
+
+</main>
+
+<script th:src="@{/js/toggleFunctions.js}"></script>
+</body>
+</html>

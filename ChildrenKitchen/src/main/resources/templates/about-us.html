@@ -1,12 +1,14 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
->
-  <head th:replace="~{fragments/main-nav::clean-head}">
-  </head>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
 
-  <body>
+<head th:replace="fragments/main-nav::clean-head">
+</head>
+
+<script th:src="@{/js/loadPoints.js}"></script>
+
+  <body onload='loadPoints()'>
     <header th:replace="~{fragments/main-nav::main-nav}">
     </header>
 
@@ -55,168 +57,8 @@
       <div class="points-container">
         <h3>Пунктове и график за раздаване на храна</h3>
 
-        <ul role="list" class="points-list">
-          <li class="point-item">
-            <article class="card">
-              <div class="img-ctn">
-                <img th:src="@{/images/points/dg_temenuga.jpg}" alt="temenuga" />
-              </div>
-              <div class="card-content">
-                <p class="title">ДГ „Теменуга”</p>
-                <address>ул. „Ангел Войвода” №2</address>
-                <p class="working-time">11:30ч. - 12:00ч</p>
-              </div>
-            </article>
-          </li>
-          <li class="punkts-item">
-            <article class="card">
-              <div class="img-ctn">
-                <img th:src="@{/images/points/dg_3mart.jpg}" alt="3 mart" />
-              </div>
-              <div class="card-content">
-                <p class="title">ДГ „Трети март”</p>
-                <address>ул. „Сергей Румянцев” №69</address>
-                <p class="working-time">11:30ч. - 12:00ч</p>
-              </div>
-            </article>
-          </li>
-          <li class="punkts-item">
-            <article class="card">
-              <div class="img-ctn">
-                <img th:src="@{/images/points/dg_drujba.jpg}" alt="drujba" />
-              </div>
-              <div class="card-content">
-                <p class="title">ДГ „Дружба”</p>
-                <address>ж.к „Дружба 1”</address>
-                <p class="working-time">11:30ч. - 12:00ч</p>
-              </div>
-            </article>
-          </li>
-          <li class="punkts-item">
-            <article class="card">
-              <div class="img-ctn">
-                <img
-                  th:src="@{/images/points/dg_slaveyche.jpg}"
-                  alt="slaveyche"
-                />
-              </div>
-              <div class="card-content">
-                <p class="title">ДГ „Славейче”</p>
-                <address>ж.к. „Сторгозия”</address>
-                <p class="working-time">11:30ч. - 12:15ч.</p>
-              </div>
-            </article>
-          </li>
-          <li class="punkts-item">
-            <article class="card">
-              <div class="img-ctn">
-                <img
-                 th:src="@{/images/points/dg_nezabravka.jpg}"
-                  alt="nezabravka"
-                />
-              </div>
-              <div class="card-content">
-                <p class="title">ДГ „Незабравка”</p>
-                <address>ул. „Оряхово” №6</address>
-                <p class="working-time">11:30ч. - 12:00ч.</p>
-              </div>
-            </article>
-          </li>
-          <li class="punkts-item">
-            <article class="card">
-              <div class="img-ctn">
-                <img th:src="@{/images/points/dg_kalina.png}" alt="kalina" />
-              </div>
-              <div class="card-content">
-                <p class="title">ДГ Калина</p>
-                <address>ж.к. "Дружба"</address>
-                <p class="working-time">11:30ч. - 12:15ч.</p>
-              </div>
-            </article>
-          </li>
-          <li class="punkts-item">
-            <article class="card">
-              <div class="img-ctn">
-                <img
-                  th:src="@{/images/points/dg_latinka.jpg}"
-                  alt="latinka"
-                />
-              </div>
-              <div class="card-content">
-                <p class="title">ДГ Латинка</p>
-                <address>ул. „Бузлуджа” №26</address>
-                <p class="working-time">11:30ч. - 12:15ч.</p>
-              </div>
-            </article>
-          </li>
-          <li class="punkts-item">
-            <article class="card">
-              <div class="img-ctn">
-                <img
-                  th:src="@{/images/points/dq_drujba.jpg}"
-                  alt="dq drijba"
-                />
-              </div>
-              <div class="card-content">
-                <p class="title">Детска ясла „Дружба”</p>
-                <address>ул. „Борис Шивачев” №36</address>
-                <p class="working-time">11:30ч. - 12:00ч.</p>
-              </div>
-            </article>
-          </li>
-          <li class="punkts-item">
-            <article class="card">
-              <div class="img-ctn">
-                <img th:src="@{/images/points/dq_mir.jpg}" alt="мир" />
-              </div>
-              <div class="card-content">
-                <p class="title">Детска ясла "Мир"</p>
-                <address>ж.к. „Сторгозия”</address>
-                <p class="working-time">11:30ч. - 12:00ч.</p>
-              </div>
-            </article>
-          </li>
-          <li class="punkts-item">
-            <article class="card">
-              <div class="img-ctn">
-                <img
-                  th:src="@{/images/points/gurko.jpg}"
-                  alt="point 9ti kv"
-                />
-              </div>
-              <div class="card-content">
-                <p class="title">9-ти квартал</p>
-                <address>ул. Гурко” № 10</address>
-                <p class="working-time">11:30ч. - 12:15ч.</p>
-              </div>
-            </article>
-          </li>
-          <li class="punkts-item">
-            <article class="card">
-              <div class="img-ctn">
-                <img th:src="@{/images/points/dq_chayka.jpg}"
-                  alt="chayka"
-                />
-              </div>
-              <div class="card-content">
-                <p class="title">ДЯ "Чайка"</p>
-                <address>ул. „10-ти декември” №40</address>
-                <p class="working-time">11:30ч. - 12:00ч.</p>
-              </div>
-            </article>
-          </li>
-          <li class="punkts-item">
-            <article class="card">
-              <div class="img-ctn">
-                <img th:src="@{/images/points/dk.jpg}" alt="дк" />
-              </div>
-              <div class="card-content">
-                <p class="title">Детска кухня</p>
-                <address>ул. „Георги Кочев“</address>
-                <p class="working-time">11:30ч. - 12:30ч.</p>
-              </div>
-            </article>
-          </li>
+        <ul role="list" class="points-list" id="points-list">
+
         </ul>
       </div>
     </main>
