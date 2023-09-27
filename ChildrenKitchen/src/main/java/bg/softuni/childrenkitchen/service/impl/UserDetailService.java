@@ -80,6 +80,8 @@ public class UserDetailService implements UserDetailsService {
 
         childViewModel.setAge(age);
 
+        childViewModel.setAgeGroupName(childEntity.getAgeGroup().name());
+
         return childViewModel;
     }
 }

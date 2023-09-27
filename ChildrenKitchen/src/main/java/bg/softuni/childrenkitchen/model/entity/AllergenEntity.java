@@ -9,14 +9,14 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "allergens")
 public class AllergenEntity extends BaseEntity {
-    @Enumerated(EnumType.STRING)
-    private AllergensEnum name;
 
-    public AllergensEnum getName() {
+    private String name;
+
+    public String getName() {
         return name;
     }
 
-    public void setName(AllergensEnum name) {
+    public void setName(String name) {
         this.name = name;
     }
 }

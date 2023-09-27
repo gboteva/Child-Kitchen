@@ -9,6 +9,7 @@ import bg.softuni.childrenkitchen.model.service.BuyCouponsServiceModel;
 import bg.softuni.childrenkitchen.repository.CouponRepository;
 import bg.softuni.childrenkitchen.service.CouponService;
 import bg.softuni.childrenkitchen.service.MenuService;
+import bg.softuni.childrenkitchen.service.OrderService;
 import bg.softuni.childrenkitchen.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -123,6 +124,8 @@ public class CouponServiceImpl implements CouponService {
 
         nextFreeCoupon.setVerifiedDate(forDate);
 
+        couponRepository.save(nextFreeCoupon);
+
         return nextFreeCoupon;
     }
 
@@ -158,7 +161,8 @@ public class CouponServiceImpl implements CouponService {
                                               .getChildren()
                                               .stream()
                                               .filter(childEntity ->
-                                                      childEntity.getFullName()                                                                                .equals(buyCouponServiceModel.getChildName()))
+                                                      childEntity.getFullName()
+                                                                 .equals(buyCouponServiceModel.getChildName()))
                                               .limit(1).toList()
                                                 .get(0);
 

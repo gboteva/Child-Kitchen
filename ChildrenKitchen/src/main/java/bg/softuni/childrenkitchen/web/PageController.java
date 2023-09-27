@@ -42,10 +42,7 @@ public class PageController {
         return "date-menu";
     }
 
-    @GetMapping("/admin/add-recipe")
-    public String addRecipe(){
-        return "add-recipe";
-    }
+
 
 
 

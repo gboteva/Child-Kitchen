@@ -6,6 +6,7 @@ import bg.softuni.childrenkitchen.model.binding.UserUpdateBindingModel;
 import bg.softuni.childrenkitchen.model.entity.enums.CityEnum;
 import bg.softuni.childrenkitchen.model.view.ChildViewModel;
 import bg.softuni.childrenkitchen.service.ChildService;
+import bg.softuni.childrenkitchen.service.OrderService;
 import bg.softuni.childrenkitchen.service.PointService;
 import bg.softuni.childrenkitchen.service.UserService;
 import jakarta.validation.Valid;
@@ -26,12 +27,14 @@ public class ProfileController {
     private final ChildService childService;
     private final UserService userService;
     private final PointService pointService;
+    private final OrderService orderService;
 
 
-    public ProfileController(ChildService childService, UserService userService, PointService pointService) {
+    public ProfileController(ChildService childService, UserService userService, PointService pointService, OrderService orderService) {
         this.childService = childService;
         this.userService = userService;
         this.pointService = pointService;
+        this.orderService = orderService;
     }
     @GetMapping()
     public String getUserProfile(
@@ -42,9 +45,9 @@ public class ProfileController {
             model.addAttribute("loggedInUser", loggedInUser);
             model.addAttribute("points", pointService.getAllNames());
             model.addAttribute("cities", CityEnum.values());
+            model.addAttribute("lastOrders", orderService.getOrdersFromToday(loggedInUser.getUsername()));
         }
 
-        //todo delete expired coupons older than 1 year
         return "profile";
     }
 

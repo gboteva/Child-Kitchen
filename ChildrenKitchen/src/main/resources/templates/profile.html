@@ -108,19 +108,19 @@
               </thead>
 
               <tbody>
-                <tr>
-                  <td>Гошко</td>
-                  <td>30.08.2023 г.</td>
-                  <td>
-                    Супа: <span>СУПА ОТ ПУЕШКО МЕСО </span>
+                <tr th:each="o : ${lastOrders}" th:object="${o}">
+                  <td th:text="*{childNames}">Гошко</td>
+                  <td th:text="*{date}">30.08.2023 г.</td>
+                  <td th:object="${o.menuViewModel}">
+                    Супа: <span th:text="*{soup.name}">СУПА ОТ ПУЕШКО МЕСО </span>
                     <br>
-                    Основно:<span>ТИКВИЧКИ С ОРИЗ </span>
+                    Основно: <span th:text="*{main.name}">ТИКВИЧКИ С ОРИЗ </span>
                     <br>
-                    Десерт: <span>МЛЕЧЕН МУС ОТ НЕКТАРИНИ </span>
+                    Десерт: <span th:text="*{dessert.name}">МЛЕЧЕН МУС ОТ НЕКТАРИНИ </span>
                   </td>
 
-                  <td>Детска Кухня</td>
-                  <td>9</td>
+                  <td th:text="*{servicePointName}">Детска Кухня</td>
+                  <td th:text="*{remainingCouponsCount}">9</td>
                 </tr>
               </tbody>
             </table>

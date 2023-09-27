@@ -1,13 +1,11 @@
 package bg.softuni.childrenkitchen.model.view;
 
-import java.util.HashSet;
-import java.util.Set;
-
 public class ChildViewModel {
     private String fullName;
     private String age;
     private String allergies;
     private int countCoupons;
+    private String ageGroupName;
 
 
     public String getFullName() {
@@ -42,4 +40,11 @@ public class ChildViewModel {
         this.countCoupons = countCoupons;
     }
 
+    public String getAgeGroupName() {
+        return ageGroupName;
+    }
+
+    public void setAgeGroupName(String ageGroupName) {
+        this.ageGroupName = ageGroupName;
+    }
 }

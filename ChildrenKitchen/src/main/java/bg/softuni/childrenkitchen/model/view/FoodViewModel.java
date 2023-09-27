@@ -40,4 +40,15 @@ public class FoodViewModel {
     public void setAllergens(String allergens) {
         this.allergens = allergens;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(name).append(System.lineSeparator());
+        sb.append("Възрастова група: ").append(ageGroupName).append(System.lineSeparator());
+        sb.append("Категория: ").append(categoryName).append(System.lineSeparator());
+        sb.append("Алергени: ").append(allergens).append(System.lineSeparator());
+
+        return sb.toString();
+    }
 }

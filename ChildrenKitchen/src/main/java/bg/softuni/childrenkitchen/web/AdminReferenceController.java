@@ -51,9 +51,14 @@ public class AdminReferenceController {
                                      BindingResult bindingResult,
                                      RedirectAttributes redirectAttributes) {
 
-        if(bindingResult.hasErrors()){
+        if(bindingResult.hasErrors()
+                || adminSearchBindingModel.getFromDate() == null
+                || adminSearchBindingModel.getToDate() == null
+                || adminSearchBindingModel.getFromDate().isAfter(adminSearchBindingModel.getToDate())
+        ){
             redirectAttributes.addFlashAttribute("adminSearchBindingModel", adminSearchBindingModel);
             redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.adminSearchBindingModel", bindingResult);
+            redirectAttributes.addFlashAttribute("errorMsg", "Грешка при въвеждане!");
             return "redirect:/admin";
         }
 
@@ -116,19 +121,18 @@ public class AdminReferenceController {
         return new AdminSearchBindingModel();
     }
 
-
     @ModelAttribute
-    List<ReferenceByPointsViewModel> referenceByPointsViewModelList(){
+    public List<ReferenceByPointsViewModel> referenceByPointsViewModelList(){
         return new ArrayList<>();
     }
 
-   @ModelAttribute
-    List<ReferenceAllPointsViewModel> referenceForAllPoints(){
+    @ModelAttribute
+    public List<ReferenceAllPointsViewModel> referenceForAllPoints(){
         return new ArrayList<>();
    }
 
-   @ModelAttribute
-   List<AllergicChildViewModel> getAllergicChildren(){
+    @ModelAttribute
+    public List<AllergicChildViewModel> getAllergicChildren(){
        return new ArrayList<>();
    }
 

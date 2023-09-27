@@ -1,22 +1,26 @@
 package bg.softuni.childrenkitchen.service.impl;
 
+import bg.softuni.childrenkitchen.model.binding.AddRecipeBindingModel;
 import bg.softuni.childrenkitchen.model.entity.AllergenEntity;
 import bg.softuni.childrenkitchen.model.entity.FoodEntity;
 import bg.softuni.childrenkitchen.model.entity.enums.AgeGroupEnum;
+import bg.softuni.childrenkitchen.model.entity.enums.AllergensEnum;
 import bg.softuni.childrenkitchen.model.entity.enums.FoodCategoryEnum;
+import bg.softuni.childrenkitchen.model.exception.ObjectNotFoundException;
+import bg.softuni.childrenkitchen.model.view.FoodViewModel;
 import bg.softuni.childrenkitchen.repository.FoodRepository;
 import bg.softuni.childrenkitchen.service.AllergenService;
 import bg.softuni.childrenkitchen.service.FoodService;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class FoodServiceImpl implements FoodService {
     private final FoodRepository foodRepository;
     private final AllergenService allergenService;
+
 
     public FoodServiceImpl(FoodRepository foodRepository, AllergenService allergenService) {
         this.foodRepository = foodRepository;
@@ -25,37 +29,117 @@ public class FoodServiceImpl implements FoodService {
 
     @Override
     public void initDB() {
-        if (foodRepository.count() > 0){
+        if (foodRepository.count() > 0) {
             return;
         }
 
-        // TODO: 17.9.2023 г. throw
-        AllergenEntity gluten = allergenService.findById(1L).orElse(null);
-        AllergenEntity cotagge = allergenService.findById(2L).orElse(null);
-        AllergenEntity cheese = allergenService.findById(3L).orElse(null);
-        AllergenEntity fish = allergenService.findById(4L).orElse(null);
-        AllergenEntity eggs = allergenService.findById(5L).orElse(null);
-        AllergenEntity yoghurt = allergenService.findById(6L).orElse(null);
-        AllergenEntity milk = allergenService.findById(7L).orElse(null);
-        AllergenEntity butter = allergenService.findById(8L).orElse(null);
-        AllergenEntity cheeseNature = allergenService.findById(9L).orElse(null);
-        AllergenEntity celery = allergenService.findById(10L).orElse(null);
+        AllergenEntity gluten = allergenService.findByName("ГЛУТЕН")
+                                               .orElseThrow(ObjectNotFoundException::new);
+        AllergenEntity cottage = allergenService.findByName("ИЗВАРА")
+                                                .orElseThrow(ObjectNotFoundException::new);
+        AllergenEntity cheese = allergenService.findByName("КАШКАВАЛ")
+                                               .orElseThrow(ObjectNotFoundException::new);
+        AllergenEntity fish = allergenService.findByName("РИБА")
+                                             .orElseThrow(ObjectNotFoundException::new);
+        AllergenEntity eggs = allergenService.findByName("ЯЙЦА")
+                                             .orElseThrow(ObjectNotFoundException::new);
+        AllergenEntity yoghurt = allergenService.findByName("КИСЕЛО_МЛЯКО")
+                                                .orElseThrow(ObjectNotFoundException::new);
+        AllergenEntity milk = allergenService.findByName("ПРЯСНО_МЛЯКО")
+                                             .orElseThrow(ObjectNotFoundException::new);
+        AllergenEntity butter = allergenService.findByName("КРАВЕ_МАСЛО")
+                                               .orElseThrow(ObjectNotFoundException::new);
+        AllergenEntity cheeseNature = allergenService.findByName("СИРЕНЕ")
+                                                     .orElseThrow(ObjectNotFoundException::new);
+        AllergenEntity celery = allergenService.findByName("ЦЕЛИНА")
+                                               .orElseThrow(ObjectNotFoundException::new);
 
-        saveSoups(gluten, cotagge, cheese, fish, eggs, yoghurt, milk, butter, cheeseNature, celery);
+        saveSoups(gluten, cottage, cheese, fish, eggs, yoghurt, milk, butter, cheeseNature, celery);
 
-        savePurees(gluten, cotagge, cheese, fish, eggs, yoghurt, milk, butter, cheeseNature, celery);
+        savePurees(gluten, cottage, cheese, fish, eggs, yoghurt, milk, butter, cheeseNature, celery);
 
-        saveLittleDesserts(gluten, cotagge, cheese, fish, eggs, yoghurt, milk, butter, cheeseNature, celery);
+        saveLittleDesserts(gluten, cottage, cheese, fish, eggs, yoghurt, milk, butter, cheeseNature, celery);
 
-        saveBigMain(gluten, cotagge, cheese, fish, eggs, yoghurt, milk, butter, cheeseNature, celery);
+        saveBigMain(gluten, cottage, cheese, fish, eggs, yoghurt, milk, butter, cheeseNature, celery);
 
-        saveBigDesserts(gluten, cotagge, cheese, fish, eggs, yoghurt, milk, butter, cheeseNature, celery);
+        saveBigDesserts(gluten, cottage, cheese, fish, eggs, yoghurt, milk, butter, cheeseNature, celery);
 
     }
 
     @Override
     public Optional<FoodEntity> getByName(String foodName) {
         return foodRepository.findByName(foodName);
+    }
+
+    @Override
+    public FoodViewModel addFood(AddRecipeBindingModel addRecipeBindingModel) {
+        FoodEntity foodEntity = new FoodEntity();
+        foodEntity.setName(addRecipeBindingModel.getFoodName()
+                                                .toUpperCase());
+        foodEntity.setAgeGroup(addRecipeBindingModel.getAgeGroup());
+        foodEntity.setCategory(addRecipeBindingModel.getFoodCategory());
+        foodEntity.setAllergens(new HashSet<>());
+
+        Set<AllergenEntity> allergenEntities = getAllergenEntities(addRecipeBindingModel.getAllergens(), addRecipeBindingModel.getOtherAllergen());
+
+        foodEntity.setAllergens(allergenEntities);
+
+        foodRepository.save(foodEntity);
+
+        FoodViewModel foodViewModel = new FoodViewModel();
+        foodViewModel.setName(foodEntity.getName());
+        foodViewModel.setAgeGroupName(foodEntity.getAgeGroup()
+                                                .name());
+        foodViewModel.setCategoryName(foodEntity.getCategory()
+                                                .name());
+        foodViewModel.setAllergens(foodEntity.getAllergens()
+                                             .stream()
+                                             .map(AllergenEntity::getName)
+                                             .map(s -> {
+                                                 if (s.contains("_")) {
+                                                     s = s.replace("_", " ");
+                                                 }
+
+                                                 return s;
+                                             })
+                                             .collect(Collectors.joining(", ")));
+
+        return foodViewModel;
+    }
+
+    private Set<AllergenEntity> getAllergenEntities(List<AllergensEnum> allergens, String otherAllergen) {
+        Set<AllergenEntity> setToReturn = new HashSet<>();
+
+        if (!allergens.isEmpty()) {
+            setToReturn = allergens.stream()
+                                   .map(a -> allergenService.findByName(a.name())
+                                                            .orElseThrow(ObjectNotFoundException::new))
+                                   .collect(Collectors.toSet());
+        }
+
+        if (otherAllergen.equals("")) {
+            return setToReturn;
+        }
+
+        otherAllergen = otherAllergen.toUpperCase();
+
+        List<String> otherAllergensList = new ArrayList<>();
+
+        if (otherAllergen.contains(",")) {
+            otherAllergensList = Arrays.stream(otherAllergen.split(","))
+                                       .map(String::trim)
+                                       .toList();
+        } else {
+            otherAllergensList.add(otherAllergen);
+        }
+
+        Set<AllergenEntity> collect = otherAllergensList.stream()
+                                                        .map(allergenService::createAllergenEntity)
+                                                        .collect(Collectors.toSet());
+        setToReturn.addAll(collect);
+
+        return setToReturn;
+
     }
 
     private void saveBigDesserts(AllergenEntity gluten, AllergenEntity cotagge, AllergenEntity cheese, AllergenEntity fish, AllergenEntity eggs, AllergenEntity yoghurt, AllergenEntity milk, AllergenEntity butter, AllergenEntity cheeseNature, AllergenEntity celery) {
@@ -408,12 +492,12 @@ public class FoodServiceImpl implements FoodService {
         foodRepository.saveAll(List.of(food1, food2, food3, food4, food5, food6, food7, food8, food9, food10, food11, food12));
     }
 
-    private void savePurees(AllergenEntity gluten, AllergenEntity cotagge, AllergenEntity cheese, AllergenEntity fish, AllergenEntity eggs, AllergenEntity yoghurt, AllergenEntity milk, AllergenEntity butter, AllergenEntity cheeseNature, AllergenEntity celery) {
+    private void savePurees(AllergenEntity gluten, AllergenEntity cottage, AllergenEntity cheese, AllergenEntity fish, AllergenEntity eggs, AllergenEntity yoghurt, AllergenEntity milk, AllergenEntity butter, AllergenEntity cheeseNature, AllergenEntity celery) {
         FoodEntity food1 = new FoodEntity();
         food1.setName("ЗЕЛЕНЧУКОВО ПЮРЕ С ИЗВАРА");
         food1.setCategory(FoodCategoryEnum.ПЮРЕ);
         food1.setAgeGroup(AgeGroupEnum.МАЛКИ);
-        food1.setAllergens(Set.of(cotagge));
+        food1.setAllergens(Set.of(cottage));
 
         FoodEntity food2 = new FoodEntity();
         food2.setName("ПЮРЕ МАКАРОНИ СЪС СИРЕНЕ И ЗЕЛЕНЧУЦИ");
@@ -571,8 +655,6 @@ public class FoodServiceImpl implements FoodService {
 
         foodRepository.saveAll(List.of(soup1, soup2, soup3, soup4, soup5, soup6, soup7, soup8, soup9, soup10, soup11, soup12));
     }
-
-
 
 
 }

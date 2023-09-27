@@ -1,10 +1,12 @@
 package bg.softuni.childrenkitchen.model.view;
 
+import org.springframework.cglib.core.Local;
+
 import java.time.LocalDate;
 
 public class OrderViewModel {
     private String childNames;
-    private LocalDate verifiedDate;
+    private String date;
     private MenuViewModel menuViewModel;
     private String servicePointName;
     private Integer remainingCouponsCount;
@@ -17,12 +19,12 @@ public class OrderViewModel {
         this.childNames = childNames;
     }
 
-    public LocalDate getVerifiedDate() {
-        return verifiedDate;
+    public String getDate() {
+        return date;
     }
 
-    public void setVerifiedDate(LocalDate verifiedDate) {
-        this.verifiedDate = verifiedDate;
+    public void setDate(String date) {
+        this.date = date;
     }
 
     public MenuViewModel getMenuViewModel() {

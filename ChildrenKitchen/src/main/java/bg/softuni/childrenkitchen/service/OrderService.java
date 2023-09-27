@@ -1,6 +1,5 @@
 package bg.softuni.childrenkitchen.service;
 
-import bg.softuni.childrenkitchen.model.binding.AddOrderBindingModel;
 import bg.softuni.childrenkitchen.model.binding.AdminSearchBindingModel;
 import bg.softuni.childrenkitchen.model.view.OrderViewModel;
 import bg.softuni.childrenkitchen.model.view.ReferenceByPointsViewModel;
@@ -16,9 +15,12 @@ public interface OrderService {
 
     List<ReferenceByPointsViewModel> getReferenceForPoint(AdminSearchBindingModel adminSearchBindingModel);
 
-    OrderViewModel makeOrder(AddOrderBindingModel addOrderBindingModel);
+    OrderViewModel makeOrder(LocalDate date, String servicePointName, String userEmail, String childFullName);
 
     List<LocalDate> getOrdersOfChild(String childName, String userEmail);
 
     void deleteOrder(LocalDate deleteOrderDate, String childName);
+
+    List<OrderViewModel> getOrdersFromToday(String username);
+
 }

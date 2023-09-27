@@ -72,6 +72,8 @@
               <option th:each="age : ${ageGroups}" th:value="${age.name()}" th:text="${age.name()}"></option>
             </select>
 
+            <div th:if="${noMatchAgeGroup} != null" class="error">Не може да закупувате купони за възрастова група, различна от тази на детето! </div>
+
             <div class="coupons-wrapper">
               <label for="buy_coupons-count">Брой купони: </label>
               <select name="countCoupons" id="buy_coupons-count" th:field="*{countCoupons}">
@@ -104,6 +106,68 @@
           </form>
         </div>
       </section>
+
+      <!-- Modal -->
+      <div th:if="${success} != null" class="custom-modal">
+        <div class="modal-dialog modal-dialog modal-dialog-centered modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="staticBackdropLabel1">
+                Успешно закупихте купони!
+              </h1>
+              <button
+                      type="button"
+                      class="btn-close"
+                      onclick=" closeModal()"
+              ></button>
+            </div>
+            <div class="modal-body">
+              Закупихте <span th:text="${countCoupons}"></span> купона за <span th:text="${kidName}"></span>:
+
+            </div>
+            <div class="modal-footer">
+              <button
+                      type="button"
+                      class="btn btn-secondary"
+                      onclick=" closeModal()"
+              >
+                Затвори
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal -->
+      <div th:if="${successVerify} != null" class="custom-modal">
+        <div class="modal-dialog modal-dialog modal-dialog-centered modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="staticBackdropLabel2">
+                Успешно заверихте купон!
+              </h1>
+              <button
+                      type="button"
+                      class="btn-close"
+                      onclick=" closeModal()"
+              ></button>
+            </div>
+            <div class="modal-body">
+              Заверихте купон за <span th:text="${kidName}"></span> за дата <span th:text="${date}"></span> :
+
+            </div>
+            <div class="modal-footer">
+              <button
+                      type="button"
+                      class="btn btn-secondary"
+                      onclick=" closeModal()"
+              >
+                Затвори
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
 
     </main>
 

@@ -1,6 +1,5 @@
 package bg.softuni.childrenkitchen.service.impl;
 
-import bg.softuni.childrenkitchen.model.binding.AddOrderBindingModel;
 import bg.softuni.childrenkitchen.model.binding.AdminSearchBindingModel;
 import bg.softuni.childrenkitchen.model.entity.ChildEntity;
 import bg.softuni.childrenkitchen.model.entity.OrderEntity;
@@ -18,6 +17,7 @@ import bg.softuni.childrenkitchen.service.*;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -29,6 +29,7 @@ public class OrderServiceImpl implements OrderService {
     private final CouponService couponService;
     private final PointService pointService;
     private final AllergyService allergyService;
+
 
     public OrderServiceImpl(OrderRepository orderRepository, UserService userService, MenuService menuService, CouponService couponService, PointService pointService, AllergyService allergyService) {
         this.orderRepository = orderRepository;
@@ -95,7 +96,6 @@ public class OrderServiceImpl implements OrderService {
                                                                 .getVerifiedDate(), order.getChild()
                                                                                          .getAgeGroup()));
     }
-
 
     @Override
     public List<ReferenceAllPointsViewModel> getReferenceForAllPoints(AdminSearchBindingModel adminSearchBindingModel) {
@@ -170,12 +170,16 @@ public class OrderServiceImpl implements OrderService {
 
                     AllergicChildViewModel allergicChildViewModel = mapToAllergicChildViewModel(order.getChild());
 
+
                     List<AllergicChildViewModel> allergicChildren = saved.getAllergicChildren();
+
+                    List<AllergicChildViewModel> newAllergicList = new ArrayList<>(allergicChildren);
+
                     if(allergicChildren.isEmpty() || allergicChildren == null){
                         saved.setAllergicChildren(List.of(allergicChildViewModel));
                     }else{
-                        allergicChildren.add(allergicChildViewModel);
-                        saved.setAllergicChildren(allergicChildren);
+                        newAllergicList.add(allergicChildViewModel);
+                        saved.setAllergicChildren(newAllergicList);
                     }
                 }
 
@@ -330,24 +334,26 @@ public class OrderServiceImpl implements OrderService {
 
 
     @Override
-    public OrderViewModel makeOrder(AddOrderBindingModel addOrderBindingModel) {
+    public OrderViewModel makeOrder(LocalDate date, String servicePointName, String userEmail, String childFullName) {
         OrderEntity orderEntity = new OrderEntity();
-        orderEntity.setDate(addOrderBindingModel.getDate());
 
-        orderEntity.setServicePoint(pointService.getByName(addOrderBindingModel.getServicePoint())
+        orderEntity.setDate(date);
+
+        orderEntity.setServicePoint(pointService.getByName(servicePointName)
                                                 .orElseThrow(ObjectNotFoundException::new));
 
-        orderEntity.setUser(userService.getByEmail(addOrderBindingModel.getUserEmail())
+        orderEntity.setUser(userService.getByEmail(userEmail)
                                        .orElseThrow(ObjectNotFoundException::new));
 
-        orderEntity.setChild(userService.getChildByNames(addOrderBindingModel.getChildFullName(), addOrderBindingModel.getUserEmail()));
+        orderEntity.setChild(userService.getChildByNames(childFullName, userEmail));
 
-        orderEntity.setCoupon(couponService.getAndVerifyCoupon(orderEntity.getUser()
-                                                                          .getEmail(), orderEntity.getChild()
-                                                                                                  .getFullName(), orderEntity.getDate()));
+        orderEntity.setCoupon(couponService.getAndVerifyCoupon(userEmail, childFullName, date));
 
-        orderEntity.setMenu(menuService.getMenuByDateAndAgeGroup(orderEntity.getDate(), orderEntity.getChild()
-                                                                                                   .getAgeGroup()));
+        //todo Ако няма добавено меню за датата -> грешка
+        //Защо заявката трябва да знае за менюто?
+
+        orderEntity.setMenu(menuService.getMenuByDateAndAgeGroup(date, orderEntity.getCoupon().getAgeGroup()));
+
         OrderEntity saved = orderRepository.save(orderEntity);
 
         OrderViewModel orderViewModel = new OrderViewModel();
@@ -355,7 +361,9 @@ public class OrderServiceImpl implements OrderService {
                                           .getFullName());
         orderViewModel.setServicePointName(saved.getServicePoint()
                                                 .getName());
-        orderViewModel.setVerifiedDate(saved.getDate());
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd LLLL yyyy");
+
+        orderViewModel.setDate(saved.getDate().format(formatter));
         orderViewModel.setMenuViewModel(menuService.mapToViewModel(saved.getMenu()));
 
         return orderViewModel;
@@ -382,6 +390,44 @@ public class OrderServiceImpl implements OrderService {
         }
 
         orderRepository.delete(orderToDelete.get());
+    }
+
+    @Override
+    public List<OrderViewModel> getOrdersFromToday(String userEmail) {
+        Optional<List<OrderEntity>> allByUserEmail = orderRepository.findAllByUserEmail(userEmail);
+
+        if(allByUserEmail.isEmpty()){
+            throw new ObjectNotFoundException();
+        }
+
+       List<OrderEntity> sorted = allByUserEmail.get().stream()
+                      .filter(o -> o.getCoupon()
+                                    .getVerifiedDate() != null
+                                    &&
+                              o.getCoupon().getVerifiedDate().isAfter(LocalDate.now().minusDays(1L)))
+                      .sorted((a, b) -> b.getCoupon()
+                                      .getVerifiedDate()
+                                      .compareTo(a.getCoupon()
+                                                  .getVerifiedDate()))
+               .collect(Collectors.toList());
+
+        return    sorted.stream().map(this::mapToOrderViewModel)
+                .collect(Collectors.toList());
+    }
+
+    private OrderViewModel mapToOrderViewModel(OrderEntity order) {
+        OrderViewModel orderViewModel = new OrderViewModel();
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd LLLL yyyy");
+
+        orderViewModel.setDate(order.getDate().format(formatter));
+        orderViewModel.setChildNames(order.getChild().getFullName());
+        orderViewModel.setServicePointName(order.getServicePoint().getName());
+        orderViewModel.setRemainingCouponsCount(order.getChild().getCoupons().stream().filter(c -> c.getVerifiedDate()==null).collect(Collectors.toList()).size());
+
+        orderViewModel.setMenuViewModel(menuService.mapToViewModel(menuService.getMenuByDateAndAgeGroup(order.getDate(), order.getCoupon()
+                                                                                                                              .getAgeGroup())));
+        return orderViewModel;
     }
 
     private List<AllergicChildViewModel> getListOfAllergicChild(List<OrderEntity> allOrdersPerServicePoint) {

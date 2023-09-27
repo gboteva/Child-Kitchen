@@ -36,26 +36,26 @@
            <div class="wrapper">
                 <div class="request shadow-ctn">
                     <h3>Заявки по пунктове и по възраст</h3>
-                    <form th:action="@{/admin}" th:method="POST" onchange="disableAgeGroup()">
+                    <form th:action="@{/admin}" th:method="POST">
                         <label for="date-from" >Избери дата от:</label>
                         <input type="date" id="date-from" name="fromDate"/>
-<!--                        <div th:if="${#fields.hasErrors('adminSearchBindingModel.fromDate')}" th:class="error">Датата следва да е днешна или предишна</div>-->
 
                         <label for="date-to">Избери дата до:</label>
                         <input type="date" id="date-to" name="toDate" />
-<!--                        <div th:if="${#fields.hasErrors('adminSearchBindingModel.toDate')}" th:class="error">Датата следва да е днешна или предишна</div>-->
 
                         <label for="points">Избери пункт:</label>
-                        <select name="servicePoint" id="points" onchange="disableAgeGroup()">
+                        <select name="servicePoint" id="points" >
                             <option value="All">Всички</option>
                             <option th:each="p : ${points}" th:value="*{p}" th:text="*{p}">Детска кухня</option>
                         </select>
 
                         <label for="ageGroup">Избери възрастова група</label>
-                        <select name="ageGroup" id="searchedAgeGroup" onchange="disableAgeGroup()">
+                        <select name="ageGroup" id="searchedAgeGroup">
                             <option th:each="g : ${ageGroups}" th:value="*{g.name()}" th:text="*{g.name()}">10 МЕСЕЦА - 1 ГОДИНА</option>
-                            <option value="All" id = "allOpt">Всички</option>
+                            <option value="All" id = "allOpt">ВСИЧКИ</option>
                         </select>
+
+                        <div th:if="${errorMsg != null}" th:class="error" th:text="${errorMsg}">Грешка при въвеждане</div>
 
                         <button type="submit" class="main-btn">Покажи</button>
                     </form>

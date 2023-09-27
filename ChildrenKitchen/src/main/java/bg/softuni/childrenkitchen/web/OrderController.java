@@ -3,6 +3,7 @@ package bg.softuni.childrenkitchen.web;
 import bg.softuni.childrenkitchen.model.binding.AddOrderBindingModel;
 import bg.softuni.childrenkitchen.model.binding.DeleteOrderBindingModel;
 import bg.softuni.childrenkitchen.model.exception.NoAvailableCouponsError;
+import bg.softuni.childrenkitchen.model.view.OrderViewModel;
 import bg.softuni.childrenkitchen.service.OrderService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -39,13 +40,18 @@ public class OrderController {
             return "redirect:/admin/add-delete-order";
         }
 
-        orderService.makeOrder(addOrderBindingModel);
+        //ако няма меню за дадената дата, заверява купона, но не прави заявка! Валидация?
+        OrderViewModel orderViewModel = orderService.makeOrder(addOrderBindingModel.getDate(), addOrderBindingModel.getServicePoint(), addOrderBindingModel.getUserEmail(), addOrderBindingModel.getChildFullName());
+
+        redirectAttributes.addFlashAttribute("successAdded", true);
+        redirectAttributes.addFlashAttribute("childName", orderViewModel.getChildNames());
+        redirectAttributes.addFlashAttribute("date", orderViewModel.getDate());
 
         return "redirect:/admin/add-delete-order";
     }
 
     @DeleteMapping("/admin/add-delete-order")
-    public String deleteOrder(DeleteOrderBindingModel deleteOrderBindingModel){
+    public String deleteOrder(DeleteOrderBindingModel deleteOrderBindingModel, RedirectAttributes redirectAttributes){
 
         if(deleteOrderBindingModel.getDeleteOrderDate() == null ||
                 deleteOrderBindingModel.getChildName().equals("")){
@@ -53,6 +59,10 @@ public class OrderController {
         }
 
         orderService.deleteOrder(deleteOrderBindingModel.getDeleteOrderDate(), deleteOrderBindingModel.getChildName());
+
+        redirectAttributes.addFlashAttribute("successDelete", true);
+        redirectAttributes.addFlashAttribute("childName", deleteOrderBindingModel.getChildName());
+        redirectAttributes.addFlashAttribute("date", deleteOrderBindingModel.getDeleteOrderDate());
 
         return "redirect:/admin/add-delete-order";
     }

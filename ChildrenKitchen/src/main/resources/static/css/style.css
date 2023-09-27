@@ -94,5 +94,19 @@ th, td {
     margin-bottom: 12px;
 }
 
+.custom-modal{
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: 1px solid gray;
+    border-radius: 12px;
+    padding: 20px;
+    z-index: 10;
+    background-color: var(--clr-primary);
+}
 
+.custom-modal button{
+    margin-top: 12px;
+}
 

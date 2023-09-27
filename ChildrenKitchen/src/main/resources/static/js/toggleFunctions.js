@@ -26,6 +26,12 @@ function toggleInstruction() {
 
 }
 
+function closeModal(){
+  let modal = document.querySelector(".custom-modal");
+
+  modal.setAttribute("style", "display: none")
+
+}
 
 
 

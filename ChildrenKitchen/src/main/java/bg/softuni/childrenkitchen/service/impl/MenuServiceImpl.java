@@ -133,7 +133,7 @@ public class MenuServiceImpl implements MenuService {
         menuViewModel.getSoup().setCategoryName(entity.getSoup().getCategory().name());
         menuViewModel.getSoup().setAgeGroupName(entity.getSoup().getAgeGroup().name());
         menuViewModel.getSoup().setAllergens(entity.getSoup().getAllergens().stream()
-                                                   .map(allergenEntity->allergenEntity.getName().name().toLowerCase())
+                                                   .map(allergenEntity->allergenEntity.getName().toLowerCase())
                                                    .map(str -> {
                                                        if(str.contains("_")){
                                                            str = str.replace("_", " ");
@@ -146,7 +146,7 @@ public class MenuServiceImpl implements MenuService {
         menuViewModel.getMain().setCategoryName(entity.getMain().getCategory().name());
         menuViewModel.getMain().setAgeGroupName(entity.getMain().getAgeGroup().name());
         menuViewModel.getMain().setAllergens(entity.getMain().getAllergens().stream()
-                                                   .map(allergenEntity->allergenEntity.getName().name().toLowerCase())
+                                                   .map(allergenEntity->allergenEntity.getName().toLowerCase())
                                                    .map(str -> {
                                                        if(str.contains("_")){
                                                            str = str.replace("_", " ");
@@ -159,7 +159,7 @@ public class MenuServiceImpl implements MenuService {
         menuViewModel.getDessert().setCategoryName(entity.getDessert().getCategory().name());
         menuViewModel.getDessert().setAgeGroupName(entity.getDessert().getAgeGroup().name());
         menuViewModel.getDessert().setAllergens(entity.getDessert().getAllergens().stream()
-                                                      .map(allergenEntity->allergenEntity.getName().name().toLowerCase())
+                                                      .map(allergenEntity->allergenEntity.getName().toLowerCase())
                                                       .map(str -> {
                                                           if(str.contains("_")){
                                                               str = str.replace("_", " ");

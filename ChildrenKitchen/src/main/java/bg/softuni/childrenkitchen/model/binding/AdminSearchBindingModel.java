@@ -6,13 +6,11 @@ import jakarta.validation.constraints.*;
 import java.time.LocalDate;
 
 public class AdminSearchBindingModel {
-    @PastOrPresent
     private LocalDate fromDate;
-    @FutureOrPresent
+
     private LocalDate toDate;
     @NotBlank
     private String servicePoint;
-
     @NotBlank
     private String ageGroup;
 

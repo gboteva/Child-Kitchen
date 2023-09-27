@@ -1,9 +1,8 @@
 <!DOCTYPE html>
 <html lang="en"
       xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<head th:replace="~{fragments/main-nav::clean-head}">
+      xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/custom-head}">
 </head>
   <body id="e-kitchen">
   <header th:replace="~{fragments/e-nav::e-nav}">
@@ -13,66 +12,72 @@
 
       <section class="recipe">
         <div class="add-recipe-ctn shadow-ctn">
-          <form action="">
+          <form th:action="@{/admin/add-recipe}" th:method="POST" th:object="${addRecipeBindingModel}">
             <h3>Добави рецепта</h3>
 
             <label for="recipe-age-group">Избери възрастова група</label>
-            <select name="recipe-age-group" id="recipe-age-group">
-                <option value="little">10 месеца - 1 година</option>
-                <option value="big">1 година - 3 години</option>
+            <select name="ageGroup" id="recipe-age-group" th:field="*{ageGroup}">
+                <option th:each="g : ${ageGroups}"
+                        th:value="${g}"
+                        th:text="${g}"
+                >10 месеца - 1 година</option>
             </select>
 
             <label for="food-category">Категория храна</label>
-            <select name="food-category" id="food-category">
-                <option value="soup">СУПА</option>
-                <option value="puree">ПЮРЕ</option>
-                <option value="main">ОСНОВНО</option>
-                <option value="dessert">ДЕСЕРТ</option>
+            <select name="foodCategory" id="food-category" th:field="*{foodCategory}">
+                <option th:each="c : ${foodCategories}" th:value="${c}" th:text="${c}">СУПА</option>
             </select>
 
             <label for="food-name">Въведи име на храна:</label>
-            <input type="text" name="food-name" id="food-name">
+            <input type="text" name="foodName" id="food-name" th:field="*{foodName}">
+            <div th:if="${existFood != null}" th:class="error" th:text="${existFood}">Грешка при въвеждане</div>
+            <div th:if="${#fields.hasErrors('foodName')}" th:class="error">Въведете име на храната</div>
 
-            <label for="applicant-child"> Посочи алергени:</label>
-            <div class="allergies">
+            <label for="food-allergens"> Посочи алергени:</label>
+            <div class="allergies" id="food-allergens">
                 <fieldset>
                   <input
                     type="checkbox"
                     id="allergen-gluten"
-                    name="allergen-gluten"
-                    value="gluten"
+                    name="allergens"
+                    value="ГЛУТЕН"
+                    th:field="*{allergens}"
                   />
                   Глутен
                   <br />
                   <input
                     type="checkbox"
                     id="allergen-egg"
-                    name="allergen-egg"
-                    value="egg"
+                    name="allergens"
+                    value="ЯЙЦА"
+                    th:field="*{allergens}"
                   />
                   Яйца
                   <br />
                   <input
                     type="checkbox"
                     id="allergen-yogurt"
-                    name="allergen-yogurt"
-                    value="yogurt"
+                    name="allergens"
+                    value="КИСЕЛО_МЛЯКО"
+                    th:field="*{allergens}"
                   />
                   Кисело мляко
                   <br />
                   <input
                     type="checkbox"
                     id="allergen-butter"
-                    name="allergen-butter"
-                    value="allergen-butter"
+                    name="allergens"
+                    value="КРАВЕ_МАСЛО"
+                    th:field="*{allergens}"
                   />
                   Краве масло
                   <br />
                   <input
                     type="checkbox"
                     id="allergen-cheese"
-                    name="allergen-cheese"
-                    value="allergen-cheese"
+                    name="allergens"
+                    value="КАШКАВАЛ"
+                    th:field="*{allergens}"
                   />
                   Кашкавал
                 </fieldset>
@@ -80,55 +85,99 @@
                   <input
                     type="checkbox"
                     id="allergen-cheese-nature"
-                    name="allergen-cheese-nature"
-                    value="allergen-cheese-nature"
+                    name="allergens"
+                    value="СИРЕНЕ"
+                    th:field="*{allergens}"
                   />
                   Сирене
                   <br />
                   <input
                     type="checkbox"
                     id="allergen-cottage-cheese"
-                    name="allergen-cottage-cheese"
-                    value="allergen-cottage-cheese"
+                    name="allergens"
+                    value="ИЗВАРА"
+                    th:field="*{allergens}"
                   />
                   Извара
                   <br />
                   <input
                     type="checkbox"
                     id="allergen-milk"
-                    name="allergen-milk"
-                    value="allergen-milk"
+                    name="allergens"
+                    value="ПРЯСНО_МЛЯКО"
+                    th:field="*{allergens}"
                   />
                   Прясно мляко
                   <br />
                   <input
                     type="checkbox"
                     id="allergen-fish"
-                    name="allergen-fish"
-                    value="allergen-fish"
+                    name="allergens"
+                    value="РИБА"
+                    th:field="*{allergens}"
                   />
                   Риба
                   <br />
                   <input
                     type="checkbox"
                     id="allergen-celery"
-                    name="allergen-celery"
-                    value="allergen-celery"
+                    name="allergens"
+                    value="ЦЕЛИНА"
+                    th:field="*{allergens}"
                   />
                   Целина
                 </fieldset>
 
              </div>
-             <label for="other-allergen">Въведи друг алерген</label>
-             <input type="text" name="other-allergen" id="other-allergen">
 
-            <button class="main-btn">Добави</button>
+             <label for="other-allergen">Въведи друг алерген</label>
+             <input type="text" name="otherAllergen" id="other-allergen">
+
+            <button class="main-btn" type="submit">Добави</button>
           </form>
         </div>
-
       </section>
+
+      <!-- Modal -->
+      <div th:if="${success} != null" class="custom-modal">
+        <div class="modal-dialog modal-dialog modal-dialog-centered modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="staticBackdropLabel">
+                Успешно добавена храна!
+              </h1>
+              <button
+                      type="button"
+                      class="btn-close"
+                      onclick=" closeModal()"
+              ></button>
+            </div>
+            <div class="modal-body">
+              Добавихте в базата данни следната храна:
+              <span th:text="${foodViewModel}"></span>
+            </div>
+            <div class="modal-footer">
+              <button
+                      type="button"
+                      class="btn btn-secondary"
+                      onclick=" closeModal()"
+              >
+                Затвори
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
     </main>
 
-    <script src="./js/togleFunctions.js"></script>
+  <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.min.js"
+          integrity="sha384-Rx+T1VzGupg4BHQYs2gCW9It+akI2MM/mndMCy36UVfodzcJcF0GGLxZIzObiEfa"
+          crossorigin="anonymous"
+  ></script>
+  <script th:src="@{/js/toggleFunctions.js}"></script>
+
   </body>
 </html>
