@@ -4,8 +4,8 @@ import bg.softuni.childrenkitchen.model.CustomUserDetails;
 import bg.softuni.childrenkitchen.model.binding.BuyCouponsBindingModel;
 import bg.softuni.childrenkitchen.model.binding.VerifyCouponBindingModel;
 import bg.softuni.childrenkitchen.model.entity.enums.AgeGroupEnum;
-import bg.softuni.childrenkitchen.model.exception.NoAvailableCouponsError;
-import bg.softuni.childrenkitchen.model.exception.ObjectNotFoundException;
+import bg.softuni.childrenkitchen.exception.NoAvailableCouponsException;
+import bg.softuni.childrenkitchen.exception.ObjectNotFoundException;
 import bg.softuni.childrenkitchen.model.service.BuyCouponsServiceModel;
 import bg.softuni.childrenkitchen.model.view.ChildViewModel;
 import bg.softuni.childrenkitchen.service.CouponService;
@@ -20,9 +20,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import java.time.LocalDate;
-import java.util.stream.Collectors;
 
 
 @Controller
@@ -92,8 +89,6 @@ public class EKitchenController {
             return "redirect:/e-kitchen";
         }
 
-        //todo не може да се направи заявка ако няма въведено меню!
-
         orderService.makeOrder(verifyCouponBindingModel.getVerifyDate(),
                 customUserDetails.getServicePointName(),
                 customUserDetails.getUsername(),
@@ -108,7 +103,7 @@ public class EKitchenController {
     }
 
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
-    @ExceptionHandler(NoAvailableCouponsError.class)
+    @ExceptionHandler(NoAvailableCouponsException.class)
     public ModelAndView onNoAvailableCoupons() {
         return new ModelAndView("no-available-coupons");
     }

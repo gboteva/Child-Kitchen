@@ -1,8 +1,8 @@
 package bg.softuni.childrenkitchen.model.binding;
 
-import bg.softuni.childrenkitchen.model.validation.ExistFile;
-import bg.softuni.childrenkitchen.model.validation.IsChecked;
-import bg.softuni.childrenkitchen.model.validation.OutOfAgeKid;
+import bg.softuni.childrenkitchen.validation.annotation.ExistFile;
+import bg.softuni.childrenkitchen.validation.annotation.IsChecked;
+import bg.softuni.childrenkitchen.validation.annotation.OutOfAgeKid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;

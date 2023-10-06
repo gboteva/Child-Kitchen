@@ -1,25 +1,32 @@
 .see-menu{
     display: flex;
-    justify-content: space-evenly;
+    justify-content: space-between;
+    align-items: center;
     gap: 30px;
+    padding: 30px;
+    flex-direction: column;
 }
 
-.see-menu .menu-ctn{
-    width: 30%
-}
 
-.see-menu .check-list{
-    text-align: center;
+
+.check-list form button{
+    margin: 0 auto;
 }
 
 .see-menu .check-list .food div{
     margin-bottom: 12px;
-    text-align: left;
+
 }
 
 .see-menu .check-list .food div:first-child{
     font-weight: bold;
     text-align: center;
+}
+
+#no-available-menu{
+    margin: 0 auto;
+    background-color: red;
+    font-weight: bold;
 }
 
 .menu-ctn, .check-list{

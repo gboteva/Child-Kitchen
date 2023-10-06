@@ -14,32 +14,37 @@
       <section class="see-menu">
 
         <div class="menu-ctn shadow-ctn">
-          <form action="">
+          <form th:action="@{/admin/view-menu-by-date}" th:method="POST">
             <label for="choose-date">Избери дата</label>
-            <input type="date" id="choose-date"/>
+            <input type="date" id="choose-date" name="date"/>
 
             <label for="ageGroup">Избери възрастова група</label>
             <select name="ageGroup" id="ageGroup">
-              <option value="littleKids" selected>10 МЕСЕЦА - 1 ГОДИНА</option>
-              <option value="bigKids">1 ГОДИНА - 3 ГОДИНИ</option>
+              <option value="МАЛКИ" selected>10 МЕСЕЦА - 1 ГОДИНА</option>
+              <option value="ГОЛЕМИ">1 ГОДИНА - 3 ГОДИНИ</option>
             </select>
 
-            <button class="main-btn">ВИЖ</button>
+            <button type="submit" class="main-btn">ВИЖ</button>
           </form>
         </div>
 
         <div class="check-list shadow-ctn">
-            <div class="food">
-                <div><span id="selected-date">Петък, 28.07.2023 г.</div>
-                <div>Супа: <span id="selected-soup">СУПА ОТ ЗЕЛЕН ФАСУЛ СЪС ЗАСТРОЙКА</span></div>
-                <div>Основно: <span id="selected-main">ПИЛЕШКО МЕСО С КАРТОФИ </span></div>
-                <div>Десерт: <span id="selected-dessert">МЛЕЧЕН КИСЕЛ ОТ ПЪПЕШ </span></div>
+            <div class="food" th:object="${menuViewModel}" >
+                <div><span id="selected-date" th:text="*{dayOfWeek}"></span> <span th:text="*{date}"></span></div>
+                <div>Супа: <span id="selected-soup" th:text="*{soup.name}">СУПА ОТ ЗЕЛЕН ФАСУЛ СЪС ЗАСТРОЙКА</span></div>
+                <div>Основно: <span id="selected-main" th:text="*{main.name}">ПИЛЕШКО МЕСО С КАРТОФИ </span></div>
+                <div>Десерт: <span id="selected-dessert" th:text="*{dessert.name}">МЛЕЧЕН КИСЕЛ ОТ ПЪПЕШ </span></div>
             </div>
 
-            <button class="main-btn">Редактирай</button>
+            <form th:action="@{/admin/add-menu}" th:method="PATCH" th:if="${menuViewModel.getSoup().name!='не е избрано'}">
+                <button class="main-btn">Редактирай</button>
+            </form>
+
+            <div id="no-available-menu" th:if="${notFound} != null">Няма въведено меню за тази дата!</div>
         </div>
 
       </section>
+
 
     </main>
 

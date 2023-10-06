@@ -24,8 +24,9 @@ public class OrderEntity extends BaseEntity {
     @ManyToOne
     private PointEntity servicePoint;
 
-    @ManyToOne
-    private DailyManuEntity menu;
+    //todo трябва ли заявката да знае за менюто?
+//    @ManyToOne
+//    private DailyManuEntity menu;
 
     public LocalDate getDate() {
         return date;
@@ -67,11 +68,12 @@ public class OrderEntity extends BaseEntity {
         this.servicePoint = servicePoint;
     }
 
-    public DailyManuEntity getMenu() {
-        return menu;
-    }
 
-    public void setMenu(DailyManuEntity menu) {
-        this.menu = menu;
-    }
+//    public DailyManuEntity getMenu() {
+//        return menu;
+//    }
+//
+//    public void setMenu(DailyManuEntity menu) {
+//        this.menu = menu;
+//    }
 }

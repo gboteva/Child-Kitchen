@@ -55,6 +55,7 @@ public class AdminFoodController {
         return "redirect:/admin/add-recipe";
     }
 
+
     @ModelAttribute
     public AddRecipeBindingModel addRecipeBindingModel(){
         return new  AddRecipeBindingModel();

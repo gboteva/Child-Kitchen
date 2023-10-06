@@ -1,9 +1,5 @@
 package bg.softuni.childrenkitchen.model.view;
 
-import org.springframework.cglib.core.Local;
-
-import java.time.LocalDate;
-
 public class OrderViewModel {
     private String childNames;
     private String date;

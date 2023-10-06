@@ -39,4 +39,21 @@ public class AllergicChildViewModel {
     public void setAllergies(String allergies) {
         this.allergies = allergies;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this.getClass().equals(obj.getClass())){
+            AllergicChildViewModel ch =(AllergicChildViewModel) obj;
+            return this.getFullName()
+                       .equals(ch.getFullName())
+                    && this.getAllergies().equals(ch.getAllergies());
+        }
+
+       return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
 }

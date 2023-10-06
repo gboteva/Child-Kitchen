@@ -2,7 +2,7 @@ package bg.softuni.childrenkitchen.web;
 
 import bg.softuni.childrenkitchen.model.binding.AddOrderBindingModel;
 import bg.softuni.childrenkitchen.model.binding.DeleteOrderBindingModel;
-import bg.softuni.childrenkitchen.model.exception.NoAvailableCouponsError;
+import bg.softuni.childrenkitchen.exception.NoAvailableCouponsException;
 import bg.softuni.childrenkitchen.model.view.OrderViewModel;
 import bg.softuni.childrenkitchen.service.OrderService;
 import jakarta.validation.Valid;
@@ -40,7 +40,6 @@ public class OrderController {
             return "redirect:/admin/add-delete-order";
         }
 
-        //ако няма меню за дадената дата, заверява купона, но не прави заявка! Валидация?
         OrderViewModel orderViewModel = orderService.makeOrder(addOrderBindingModel.getDate(), addOrderBindingModel.getServicePoint(), addOrderBindingModel.getUserEmail(), addOrderBindingModel.getChildFullName());
 
         redirectAttributes.addFlashAttribute("successAdded", true);
@@ -74,7 +73,7 @@ public class OrderController {
     }
 
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
-    @ExceptionHandler(NoAvailableCouponsError.class)
+    @ExceptionHandler(NoAvailableCouponsException.class)
     public ModelAndView onNoAvailableCoupons() {
         return new ModelAndView("no-available-coupons");
     }

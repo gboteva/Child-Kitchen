@@ -1,6 +1,6 @@
 package bg.softuni.childrenkitchen.model.binding;
 
-import bg.softuni.childrenkitchen.model.validation.UniqueEmail;
+import bg.softuni.childrenkitchen.validation.annotation.UniqueEmail;
 import jakarta.validation.constraints.*;
 
 public class UserRegisterBindingModel {

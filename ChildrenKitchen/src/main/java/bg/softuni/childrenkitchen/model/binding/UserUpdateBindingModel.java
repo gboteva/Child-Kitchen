@@ -1,6 +1,5 @@
 package bg.softuni.childrenkitchen.model.binding;
 
-import bg.softuni.childrenkitchen.model.validation.UniqueEmail;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;

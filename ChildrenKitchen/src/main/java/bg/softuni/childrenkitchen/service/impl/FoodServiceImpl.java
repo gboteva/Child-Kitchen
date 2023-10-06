@@ -6,7 +6,8 @@ import bg.softuni.childrenkitchen.model.entity.FoodEntity;
 import bg.softuni.childrenkitchen.model.entity.enums.AgeGroupEnum;
 import bg.softuni.childrenkitchen.model.entity.enums.AllergensEnum;
 import bg.softuni.childrenkitchen.model.entity.enums.FoodCategoryEnum;
-import bg.softuni.childrenkitchen.model.exception.ObjectNotFoundException;
+import bg.softuni.childrenkitchen.exception.ObjectNotFoundException;
+import bg.softuni.childrenkitchen.model.view.FoodNameAndAgeGroup;
 import bg.softuni.childrenkitchen.model.view.FoodViewModel;
 import bg.softuni.childrenkitchen.repository.FoodRepository;
 import bg.softuni.childrenkitchen.service.AllergenService;
@@ -20,7 +21,6 @@ import java.util.stream.Collectors;
 public class FoodServiceImpl implements FoodService {
     private final FoodRepository foodRepository;
     private final AllergenService allergenService;
-
 
     public FoodServiceImpl(FoodRepository foodRepository, AllergenService allergenService) {
         this.foodRepository = foodRepository;
@@ -105,6 +105,13 @@ public class FoodServiceImpl implements FoodService {
                                              .collect(Collectors.joining(", ")));
 
         return foodViewModel;
+    }
+
+    @Override
+    public Set<String> findAllNameByCategoryAndAgeGroup(FoodCategoryEnum foodCategoryEnum, AgeGroupEnum ageGroup) {
+       return foodRepository.findAllByCategoryAndAgeGroup(foodCategoryEnum, ageGroup).stream()
+                            .map(FoodEntity::getName)
+                            .collect(Collectors.toSet());
     }
 
     private Set<AllergenEntity> getAllergenEntities(List<AllergensEnum> allergens, String otherAllergen) {

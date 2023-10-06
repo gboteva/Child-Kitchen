@@ -7,7 +7,7 @@ import bg.softuni.childrenkitchen.model.entity.AllergyEntity;
 import bg.softuni.childrenkitchen.model.entity.ChildEntity;
 import bg.softuni.childrenkitchen.model.entity.enums.AgeGroupEnum;
 import bg.softuni.childrenkitchen.model.entity.enums.AllergyEnum;
-import bg.softuni.childrenkitchen.model.exception.ObjectNotFoundException;
+import bg.softuni.childrenkitchen.exception.ObjectNotFoundException;
 import bg.softuni.childrenkitchen.model.view.AllergicChildViewModel;
 import bg.softuni.childrenkitchen.model.view.ChildViewModel;
 import bg.softuni.childrenkitchen.repository.ChildRepository;

@@ -14,4 +14,6 @@ public interface MenusRepository extends JpaRepository<DailyManuEntity, Long> {
     List<DailyManuEntity> findByDateBetween(LocalDate monday, LocalDate friday);
 
     Optional<DailyManuEntity> findByDateAndAgeGroup(LocalDate date, AgeGroupEnum ageGroup);
+
+    boolean existsByDateAndAgeGroup(LocalDate date, AgeGroupEnum ageGroup);
 }

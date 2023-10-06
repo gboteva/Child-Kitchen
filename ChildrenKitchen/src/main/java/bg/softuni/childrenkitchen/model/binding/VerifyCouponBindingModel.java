@@ -1,8 +1,7 @@
 package bg.softuni.childrenkitchen.model.binding;
 
-import bg.softuni.childrenkitchen.model.validation.DateVerifyCoupon;
+import bg.softuni.childrenkitchen.validation.annotation.DateVerifyCoupon;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
 

@@ -4,7 +4,7 @@ import bg.softuni.childrenkitchen.model.binding.UserUpdateBindingModel;
 import bg.softuni.childrenkitchen.model.entity.ChildEntity;
 import bg.softuni.childrenkitchen.model.entity.UserEntity;
 import bg.softuni.childrenkitchen.model.entity.enums.CityEnum;
-import bg.softuni.childrenkitchen.model.exception.ObjectNotFoundException;
+import bg.softuni.childrenkitchen.exception.ObjectNotFoundException;
 import bg.softuni.childrenkitchen.model.service.UserRegisterServiceModel;
 import bg.softuni.childrenkitchen.model.view.UserAndChildViewModel;
 import bg.softuni.childrenkitchen.model.view.UserViewModel;

@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html lang="en"
       xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+      xmlns:th="http://www.thymeleaf.org">
   <head th:replace="~{fragments/main-nav::clean-head}">
   </head>
   <body id="e-kitchen">
@@ -10,220 +9,111 @@
     </header>
 
     <main>
-      <h3 class="add-menu-title">Добави или редактирай меню</h3>
+      <h3 class="add-menu-title">Добави меню</h3>
 
       <section class="weekly-menu">
         <div class="menu-ctn shadow-ctn">
-          <form action="">
-            <label for="date">Избери дата</label>
-            <input type="date" />
+          <form th:object="${addMenuBindingModel}" th:method="POST" th:action="@{/admin/add-menu}">
 
-            <label for="ageGroup">Избери възрастова група</label>
-            <select name="ageGroup" id="ageGroup">
-              <option value="littleKids" selected>10 МЕСЕЦА - 1 ГОДИНА</option>
-              <option value="bigKids">1 ГОДИНА - 3 ГОДИНИ</option>
+            <label for="add-menu-date">Избери дата</label>
+            <input type="date" id="add-menu-date" name="date" th:field="${addMenuBindingModel.date}"/>
+            <div th:if="${#fields.hasErrors('date')}" th:class="error">Моля въведете валидна дата!</div>
+
+
+            <label for="add-menu-age-group">Избери възрастова група</label>
+            <select name="ageGroup" id="add-menu-age-group" onchange="fillFoods()">
+              <option value="" selected>Избери възрасотва група</option>
+              <option value="МАЛКИ" >10 МЕСЕЦА - 1 ГОДИНА</option>
+              <option value="ГОЛЕМИ">1 ГОДИНА - 3 ГОДИНИ</option>
             </select>
+            <div th:if="${#fields.hasErrors('ageGroup')}" th:class="error">Моля въведете възрастова група!</div>
 
-            <label for="first-food"> Избери супа </label>
-            <select name="firstFood" id="first-food">
-              <option value="">СУПА ОТ ПУЕШКО МЕСО</option>
-              <option value="">СУПА ОТ КАРТОФИ И МОРКОВИ</option>
-              <option value="">СУПА ОТ ТИКВИЧККИ СЪС ЗАСТРОЙКА</option>
-              <option value="">СУПА ОТ ДОМАТИ С КАРТОФИ</option>
-              <option value="">СУПА ОТ ЗЕЛЕН ФАСУЛ СЪС ЗАСТРОЙКА</option>
-              <option value="">СУПА ОТ РИБА И ЗЕЛЕНЧУЦИ</option>
-              <option value="">СУПА ОТ ДОМАТИ С КАРТОФИ</option>
+            <label for="soups"> Избери супа </label>
+            <select name="soup" id="soups">
+
             </select>
 
             <label for="main-food"> Избери основно </label>
-            <select name="mainFood" id="main-food">
-              <option value="">ТИКВИЧКИ С ОРИЗ</option>
-              <option value="">РИБА НА ПАРА; ПЮРЕ ОТ ЛЕЩА</option>
-              <option value="">КЮФТЕ С БЯЛ СОС</option>
-              <option value="">ПУЕШКО МЕСО С ГРАХ</option>
-              <option value="">ПИЛЕШКО МЕСО С КАРТОФИ</option>
-              <option value="">ЛЕЩА СЪС ЗЕЛЕНЧУЦИ</option>
-              <option value="">КУС-КУС СЪС ЗАЕШКО МЕСО И ЗЕЛЕНЧУЦИ</option>
+            <select name="main" id="main-food">
+
             </select>
 
             <label for="dessert-food"> Избери десерт </label>
-            <select name="dessertFood" id="dessert-food">
-              <option value="">МЛЕЧЕН МУС ОТ НЕКТАРИНИ</option>
-              <option value="">КУС-КУС С МЛЯКО И ЯЙЦА</option>
-              <option value="">КРЕМ КАКАО</option>
-              <option value="">ПШЕНИЦА С МЛЯКО</option>
-              <option value="">МЛЕЧЕН КИСЕЛ ОТ ПЪПЕШ</option>
-              <option value="">ОРИЗ С ПЪПЕШ</option>
-              <option value="">КИСЕЛ ОТ ПРАСКОВИ С ПРЕХОДНО МЛЯКО</option>
+            <select name="dessert" id="dessert-food">
+
             </select>
 
             <button class="main-btn">Добави</button>
+
+          </form>
+        </div>
+
+        <div class="success shadow-ctn menu-ctn" th:if="${addedNewMenu}!=null">
+          <p>Успешно добавихте меню!</p>
+          <div class="menu-body">
+            <div>Меню за <span th:text='${newMenu.dayOfWeek}'></span>  <span th:text='${newMenu.date}'>05.10.2023</span></div>
+            <div>
+              Супа: <span th:text="${newMenu.soup.name}">СУПА ОТ КАРТОФИ И МОРКОВИ</span>
+            </div>
+            <div>
+              Основно: <span th:text="${newMenu.main.name}">СУПА ОТ КАРТОФИ И МОРКОВИ</span>
+            </div>
+            <div>
+              Десерт: <span th:text="${newMenu.dessert.name}">СУПА ОТ КАРТОФИ И МОРКОВИ</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="shadow-ctn menu-ctn edit-menu" th:if="${isExistingMenu}!=null">
+          <p>За тази дата вече съществува меню в системата!</p>
+          <p>Меню за
+            <span th:text="${existingMenu.dayOfWeek}"></span>
+            <span th:text="${existingMenu.date}">28.08.2023</span>
+          <p th:text="${existingMenu.soup.name}"></p>
+          <p th:text="${existingMenu.main.name}"></p>
+          <p th:text="${existingMenu.dessert.name}"></p>
+          </p>
+
+          <form th:method="PATCH" th:action="@{/admin/add-menu}">
+            <div id="daily-menu-ctn">
+
+
+              <label for="add-menu-age-group">Избери възрастова група</label>
+              <select name="ageGroup" id="edit-menu-age-group" onchange="fillEditForm()">
+                <option value="" selected>Избери възрасотва група</option>
+                <option th:text="${existingMenu.ageGroupName}" th:value="${existingMenu.ageGroupName}"></option>
+<!--                <option value="МАЛКИ" >10 МЕСЕЦА - 1 ГОДИНА</option>-->
+<!--                <option value="ГОЛЕМИ">1 ГОДИНА - 3 ГОДИНИ</option>-->
+              </select>
+
+              <input type="hidden" th:value="${date}" name="date">
+
+              <label for="first-food-edit"> Избери супа </label>
+              <select name="soup" id="first-food-edit" >
+                <option value=""></option>
+                <option value="">Избери храна</option>
+              </select>
+
+              <label for="main-food-edit"> Избери основно </label>
+              <select name="main" id="main-food-edit">
+
+              </select>
+
+              <label for="dessert-food-edit"> Избери десерт </label>
+              <select name="dessert" id="dessert-food-edit">
+
+              </select>
+
+            </div>
+            <button type="submit" class="main-btn">Редактирай</button>
           </form>
         </div>
       </section>
 
-      <section class="preview">
-        <div class="check-list shadow-ctn" id="little-group">
-          <h4>Възрастова група: <span id="group">10месеца - 1 година</span></h4>
-          <ul role="list" id="added-weekly-menus">
-            <li id="daily">
-              <div id="daily-menu-ctn">
-                <p>Меню за
-                  <span id="added-date">28.08.2023</span>
-                  <button class="edit">
-                    <i class="fa-regular fa-pen-to-square"></i>
-                  </button>
-                </p>
-                <ul role="list" id="daily-menu">
-                  <li>
-                    Супа: <span id="daily-soup">СУПА ОТ ПУЕШКО МЕСО</span>
-                  </li>
-                  <li>Основно: <span id="daily-main">КЮФТЕ С БЯЛ СОС</span></li>
-                  <li>
-                    Десерт:
-                    <span id="daily-dessert"
-                    >КИСЕЛ ОТ ПРАСКОВИ С ПРЕХОДНО МЛЯКО</span
-                    >
-                  </li>
-                </ul>
-
-              </div>
-            </li>
-
-            <li id="daily">
-              <div id="daily-menu-ctn">
-                <p>Меню за
-                  <span id="added-date">28.08.2023</span>
-                  <button class="edit">
-                    <i class="fa-regular fa-pen-to-square"></i>
-                  </button>
-                </p>
-                <ul role="list" id="daily-menu">
-                  <li>
-                    Супа: <span id="daily-soup">СУПА ОТ ПУЕШКО МЕСО</span>
-                  </li>
-                  <li>Основно: <span id="daily-main">КЮФТЕ С БЯЛ СОС</span></li>
-                  <li>
-                    Десерт:
-                    <span id="daily-dessert"
-                    >КИСЕЛ ОТ ПРАСКОВИ С ПРЕХОДНО МЛЯКО</span
-                    >
-                  </li>
-                </ul>
-
-              </div>
-            </li>
-
-            <li id="daily">
-              <div id="daily-menu-ctn">
-                <p>Меню за
-                  <span id="added-date">28.08.2023</span>
-                  <button class="edit">
-                    <i class="fa-regular fa-pen-to-square"></i>
-                  </button>
-                </p>
-                <ul role="list" id="daily-menu">
-                  <li>
-                    Супа: <span id="daily-soup">СУПА ОТ ПУЕШКО МЕСО</span>
-                  </li>
-                  <li>Основно: <span id="daily-main">КЮФТЕ С БЯЛ СОС</span></li>
-                  <li>
-                    Десерт:
-                    <span id="daily-dessert"
-                    >КИСЕЛ ОТ ПРАСКОВИ С ПРЕХОДНО МЛЯКО</span
-                    >
-                  </li>
-                </ul>
-
-              </div>
-            </li>
-          </ul>
-
-          <button class="save-btn">Запази</button>
-        </div>
-
-        <div class="check-list shadow-ctn" id="big-group">
-          <h4>Възрастова група: <span id="group">1 година - 3 години</span></h4>
-          <ul role="list" id="added-weekly-menus">
-            <li id="daily">
-              <div id="daily-menu-ctn">
-                <p>Меню за
-                  <span id="added-date">28.08.2023</span>
-                  <button class="edit">
-                    <i class="fa-regular fa-pen-to-square"></i>
-                  </button>
-                </p>
-                <ul role="list" id="daily-menu">
-                  <li>
-                    Супа: <span id="daily-soup">СУПА ОТ ПУЕШКО МЕСО</span>
-                  </li>
-                  <li>Основно: <span id="daily-main">КЮФТЕ С БЯЛ СОС</span></li>
-                  <li>
-                    Десерт:
-                    <span id="daily-dessert"
-                    >КИСЕЛ ОТ ПРАСКОВИ С ПРЕХОДНО МЛЯКО</span
-                    >
-                  </li>
-                </ul>
-
-              </div>
-            </li>
-
-            <li id="daily">
-              <div id="daily-menu-ctn">
-                <p>Меню за
-                  <span id="added-date">28.08.2023</span>
-                  <button class="edit">
-                    <i class="fa-regular fa-pen-to-square"></i>
-                  </button>
-                </p>
-                <ul role="list" id="daily-menu">
-                  <li>
-                    Супа: <span id="daily-soup">СУПА ОТ ПУЕШКО МЕСО</span>
-                  </li>
-                  <li>Основно: <span id="daily-main">КЮФТЕ С БЯЛ СОС</span></li>
-                  <li>
-                    Десерт:
-                    <span id="daily-dessert"
-                    >КИСЕЛ ОТ ПРАСКОВИ С ПРЕХОДНО МЛЯКО</span
-                    >
-                  </li>
-                </ul>
-
-              </div>
-            </li>
-
-            <li id="daily">
-              <div id="daily-menu-ctn">
-                <p>Меню за
-                  <span id="added-date">28.08.2023</span>
-                  <button class="edit">
-                    <i class="fa-regular fa-pen-to-square"></i>
-                  </button>
-                </p>
-                <ul role="list" id="daily-menu">
-                  <li>
-                    Супа: <span id="daily-soup">СУПА ОТ ПУЕШКО МЕСО</span>
-                  </li>
-                  <li>Основно: <span id="daily-main">КЮФТЕ С БЯЛ СОС</span></li>
-                  <li>
-                    Десерт:
-                    <span id="daily-dessert"
-                    >КИСЕЛ ОТ ПРАСКОВИ С ПРЕХОДНО МЛЯКО</span
-                    >
-                  </li>
-                </ul>
-
-              </div>
-            </li>
-          </ul>
-
-          <button class="save-btn">Запази</button>
-        </div>
-      </section>
 
     </main>
 
     <script th:src="@{/js/toggleFunctions.js}"></script>
+    <script th:src="@{/js/fillFoods.js}"></script>
   </body>
 </html>

@@ -16,7 +16,7 @@
           <h4>Екшън панел</h4>
           <ul role="list">
             <li class="action">
-              <button class="main-btn"><a th:href="@{/admin/add-menu}">Добави или редактирай седмично меню</a></button>
+              <button class="main-btn"><a th:href="@{/admin/add-menu}">Добави седмично меню</a></button>
             </li>
             <li class="action">
               <button class="main-btn"><a th:href="@{/admin/view-menu-by-date}">Виж меню за дата</a></button>
@@ -51,7 +51,8 @@
 
                         <label for="ageGroup">Избери възрастова група</label>
                         <select name="ageGroup" id="searchedAgeGroup">
-                            <option th:each="g : ${ageGroups}" th:value="*{g.name()}" th:text="*{g.name()}">10 МЕСЕЦА - 1 ГОДИНА</option>
+                            <option value="МАЛКИ" selected>10 МЕСЕЦА - 1 ГОДИНА</option>
+                            <option value="ГОЛЕМИ">1 ГОДИНА - 3 ГОДИНИ</option>
                             <option value="All" id = "allOpt">ВСИЧКИ</option>
                         </select>
 

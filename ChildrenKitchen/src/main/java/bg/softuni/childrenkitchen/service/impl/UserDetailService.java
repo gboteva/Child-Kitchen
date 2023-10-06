@@ -69,13 +69,14 @@ public class UserDetailService implements UserDetailsService {
         }else {
             int months = LocalDate.now().getMonth().getValue() - childBirthDate.getMonth().getValue();
 
-            if (months < 0){
+            if (months == 0){
+                age = "1 год.";
+            }else if (months < 0){
                 int lastYearMonthsCount = 12 - childBirthDate.getMonth().getValue();
                 int thisYearMonthsCount = LocalDate.now().getMonth().getValue();
                 months = lastYearMonthsCount + thisYearMonthsCount;
+                age = months + " мес.";
             }
-
-            age = months + " мес.";
         }
 
         childViewModel.setAge(age);

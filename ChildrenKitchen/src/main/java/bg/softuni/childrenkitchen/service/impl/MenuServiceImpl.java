@@ -1,8 +1,12 @@
 package bg.softuni.childrenkitchen.service.impl;
 
+import bg.softuni.childrenkitchen.exception.NoAvailableMenuException;
+import bg.softuni.childrenkitchen.model.binding.AddMenuBindingModel;
 import bg.softuni.childrenkitchen.model.entity.DailyManuEntity;
+import bg.softuni.childrenkitchen.model.entity.FoodEntity;
 import bg.softuni.childrenkitchen.model.entity.enums.AgeGroupEnum;
-import bg.softuni.childrenkitchen.model.exception.ObjectNotFoundException;
+import bg.softuni.childrenkitchen.exception.ObjectNotFoundException;
+import bg.softuni.childrenkitchen.model.view.FoodViewModel;
 import bg.softuni.childrenkitchen.model.view.MenuViewModel;
 import bg.softuni.childrenkitchen.repository.MenusRepository;
 import bg.softuni.childrenkitchen.service.FoodService;
@@ -13,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -50,7 +55,7 @@ public class MenuServiceImpl implements MenuService {
         List<DailyManuEntity> weeklyMenu = menusRepository.findByDateBetween(monday, friday);
 
         if(weeklyMenu.isEmpty()){
-            throw new ObjectNotFoundException();
+            throw new NoAvailableMenuException();
         }
 
         return weeklyMenu.stream()
@@ -107,12 +112,96 @@ public class MenuServiceImpl implements MenuService {
     }
 
     @Override
-    public DailyManuEntity getMenuByDateAndAgeGroup(LocalDate date, AgeGroupEnum ageGroup) {
-        return menusRepository.findByDateAndAgeGroup(date, ageGroup).orElseThrow(ObjectNotFoundException::new);
+    public MenuViewModel createMenu(AddMenuBindingModel addMenuBindingModel) {
+
+        DailyManuEntity menu = new DailyManuEntity();
+        menu.setDate(addMenuBindingModel.getDate());
+        menu.setAgeGroup(AgeGroupEnum.valueOf(addMenuBindingModel.getAgeGroup()));
+        menu.setSoup(foodService.getByName(addMenuBindingModel.getSoup()).orElseThrow(ObjectNotFoundException::new));
+        menu.setMain(foodService.getByName(addMenuBindingModel.getMain()).orElseThrow(ObjectNotFoundException::new));
+        menu.setDessert(foodService.getByName(addMenuBindingModel.getDessert()).orElseThrow(ObjectNotFoundException::new));
+
+        DailyManuEntity saved = menusRepository.save(menu);
+
+       return mapToViewModel(saved);
+    }
+
+    @Override
+    public boolean existByDateAndAgeGroup(LocalDate date, AgeGroupEnum ageGroup) {
+       return menusRepository.existsByDateAndAgeGroup(date, ageGroup);
+    }
+
+    @Override
+    public MenuViewModel editMenu(LocalDate date, AgeGroupEnum ageGroup, AddMenuBindingModel addMenuBindingModel) {
+        Optional<DailyManuEntity> byDateAndAgeGroup = menusRepository.findByDateAndAgeGroup(date, ageGroup);
+
+        if(byDateAndAgeGroup.isEmpty()){
+            throw new NoAvailableMenuException();
+        }
+
+        DailyManuEntity menuEntity = byDateAndAgeGroup.get();
+        Optional<FoodEntity> soup = foodService.getByName(addMenuBindingModel.getSoup());
+        Optional<FoodEntity> main = foodService.getByName(addMenuBindingModel.getMain());
+        Optional<FoodEntity> dessert= foodService.getByName(addMenuBindingModel.getDessert());
+
+        if (soup.isEmpty() || main.isEmpty() || dessert.isEmpty()){
+            throw new ObjectNotFoundException();
+        }
+
+        menuEntity.setSoup(soup.get());
+        menuEntity.setMain(main.get());
+        menuEntity.setDessert(dessert.get());
+
+        DailyManuEntity edited = menusRepository.save(menuEntity);
+
+        return mapToViewModel(edited);
+    }
+
+    @Override
+    public Optional<DailyManuEntity> getMenuByDateAndAgeGroup(LocalDate date, AgeGroupEnum ageGroup) {
+        return menusRepository.findByDateAndAgeGroup(date, ageGroup);
+    }
+
+    @Override
+    public MenuViewModel getMenuViewModelByDateAndAgeGroup(LocalDate date, AgeGroupEnum ageGroup) {
+        Optional<DailyManuEntity> dailyManuEntity = menusRepository.findByDateAndAgeGroup(date, ageGroup);
+
+        MenuViewModel viewModel = null;
+
+        if (dailyManuEntity.isEmpty()){
+            viewModel = mapToEmptyViewModel(date,ageGroup);
+        }else{
+            viewModel = mapToViewModel(dailyManuEntity.get());
+        }
+
+        return viewModel;
+
+    }
+
+    private MenuViewModel mapToEmptyViewModel(LocalDate date, AgeGroupEnum ageGroup) {
+        MenuViewModel model = new MenuViewModel();
+        model.setDate(date.toString());
+        model.setDayOfWeek(date.getDayOfWeek().name());
+        model.setAgeGroupName(ageGroup.name());
+
+        FoodViewModel soup = new FoodViewModel();
+        soup.setName("Няма въведена супа за тази дата");
+
+        FoodViewModel main = new FoodViewModel();
+        main.setName("Няма въведено основно за тази дата");
+
+        FoodViewModel dessert = new FoodViewModel();
+        dessert.setName("Няма въведен десерт за тази дата");
+
+        model.setSoup(soup);
+        model.setMain(main);
+        model.setDessert(dessert);
+        return model;
     }
 
     @Override
     public MenuViewModel mapToViewModel(DailyManuEntity entity) {
+
 
         MenuViewModel menuViewModel = modelMapper.map(entity, MenuViewModel.class);
 

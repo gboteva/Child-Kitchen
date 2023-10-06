@@ -18,7 +18,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -91,12 +93,14 @@ public class AdminReferenceController {
 
             redirectAttributes.addFlashAttribute("referenceAllPointsViewModelList", referenceForAllPoints);
 
-            List<AllergicChildViewModel> allergicList = new ArrayList<>();
+            Set<AllergicChildViewModel> allergicList = new HashSet<>();
 
 
             for (ReferenceAllPointsViewModel order : referenceForAllPoints) {
+
                 allergicList.addAll(order.getAllergicChildren());
             }
+
 
             Integer smallSum = referenceForAllPoints.stream()
                                                         .map(ReferenceAllPointsViewModel::getSmallOrderCount)

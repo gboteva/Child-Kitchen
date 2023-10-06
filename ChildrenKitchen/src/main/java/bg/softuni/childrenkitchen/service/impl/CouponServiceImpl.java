@@ -3,13 +3,12 @@ package bg.softuni.childrenkitchen.service.impl;
 import bg.softuni.childrenkitchen.model.entity.ChildEntity;
 import bg.softuni.childrenkitchen.model.entity.CouponEntity;
 import bg.softuni.childrenkitchen.model.entity.UserEntity;
-import bg.softuni.childrenkitchen.model.exception.NoAvailableCouponsError;
-import bg.softuni.childrenkitchen.model.exception.ObjectNotFoundException;
+import bg.softuni.childrenkitchen.exception.NoAvailableCouponsException;
+import bg.softuni.childrenkitchen.exception.ObjectNotFoundException;
 import bg.softuni.childrenkitchen.model.service.BuyCouponsServiceModel;
 import bg.softuni.childrenkitchen.repository.CouponRepository;
 import bg.softuni.childrenkitchen.service.CouponService;
 import bg.softuni.childrenkitchen.service.MenuService;
-import bg.softuni.childrenkitchen.service.OrderService;
 import bg.softuni.childrenkitchen.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -137,7 +136,7 @@ public class CouponServiceImpl implements CouponService {
                                             .filter(couponEntity -> couponEntity.getVerifiedDate() == null)
                                             .findFirst();
         if (coupon.isEmpty()){
-            throw new NoAvailableCouponsError();
+            throw new NoAvailableCouponsException();
         }
 
         return coupon.get();

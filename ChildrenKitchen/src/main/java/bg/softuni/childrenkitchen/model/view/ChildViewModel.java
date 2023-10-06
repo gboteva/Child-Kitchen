@@ -1,6 +1,8 @@
 package bg.softuni.childrenkitchen.model.view;
 
-public class ChildViewModel {
+import java.io.Serializable;
+
+public class ChildViewModel implements Serializable {
     private String fullName;
     private String age;
     private String allergies;

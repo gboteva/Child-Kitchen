@@ -29,9 +29,6 @@ section.title span{
     height: 60vh;
     overflow: hidden;
     margin: 0 auto;
-}
-
-.carousel-inner{
     border-radius: 20px;
 }
 
@@ -39,14 +36,12 @@ section.title span{
     height: 100%;
 }
 
-
 .carousel-item img.d-block{
     height: 100%;
     object-fit: cover;
 }
 
 @media(max-width:788px){
-
     section.title {
         height: 16vh;
       }
