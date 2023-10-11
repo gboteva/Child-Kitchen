@@ -1,5 +1,6 @@
 package bg.softuni.childrenkitchen.utill;
 
+import bg.softuni.childrenkitchen.exception.EmailProblemException;
 import bg.softuni.childrenkitchen.exception.NoAvailableMenuException;
 import bg.softuni.childrenkitchen.exception.ObjectNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -17,6 +18,16 @@ public class ExceptionsAdvice {
         ModelAndView modelAndView = new ModelAndView("error-not-found");
 
         modelAndView.addObject("error", onfe.getMessage());
+
+        return modelAndView;
+    }
+
+
+    @ExceptionHandler(EmailProblemException.class)
+    public ModelAndView onEmailProblem(EmailProblemException epe){
+        ModelAndView modelAndView = new ModelAndView("error-not-found");
+
+        modelAndView.addObject("error", epe.getMessage());
 
         return modelAndView;
     }

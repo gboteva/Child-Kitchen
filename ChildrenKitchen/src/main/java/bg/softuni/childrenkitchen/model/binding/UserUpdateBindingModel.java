@@ -19,6 +19,7 @@ public class UserUpdateBindingModel {
     private String cityName;
     @NotBlank
     private String servicePointName;
+    private String password;
 
     public Long getId() {
         return id;
@@ -66,5 +67,13 @@ public class UserUpdateBindingModel {
 
     public void setServicePointName(String servicePointName) {
         this.servicePointName = servicePointName;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

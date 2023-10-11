@@ -1,5 +1,6 @@
 package bg.softuni.childrenkitchen.service.impl;
 
+import bg.softuni.childrenkitchen.exception.EmailProblemException;
 import bg.softuni.childrenkitchen.model.CloudinaryImage;
 import bg.softuni.childrenkitchen.model.CustomUserDetails;
 import bg.softuni.childrenkitchen.model.binding.ChildRegisterBindingModel;
@@ -19,16 +20,13 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 public class ChildServiceImpl implements ChildService {
 
-    private static final String recipientEmail = "adminKitchen@gmail.com";
+    private static final String recipientEmail = "childrens.kitchen.pl@gmail.com";
     private final static String subjectAddKid = "Регистрирано ново дете в системата!";
     private final ChildRepository childRepository;
     private final UserService userService;
@@ -115,12 +113,12 @@ public class ChildServiceImpl implements ChildService {
     }
 
     @Override
-    public ChildViewModel saveChild(ChildRegisterBindingModel childRegisterBindingModel, @AuthenticationPrincipal CustomUserDetails loggedInUser) throws IOException {
+    public ChildViewModel saveChild(ChildRegisterBindingModel childRegisterBindingModel, String loggedInUserEmail) throws IOException {
 
         ChildEntity childEntity = modelMapper.map(childRegisterBindingModel, ChildEntity.class);
         childEntity.setAgeGroup(defineAgeGroup(childRegisterBindingModel.getBirthDate()));
         childEntity.setAllergies(defineAllergies(childRegisterBindingModel.getAllergy()));
-        childEntity.setParent(userService.getByEmail(loggedInUser.getUsername())
+        childEntity.setParent(userService.getByEmail(loggedInUserEmail)
                                          .orElseThrow(ObjectNotFoundException::new));
         childEntity.setCoupons(new ArrayList<>());
 
@@ -135,8 +133,6 @@ public class ChildServiceImpl implements ChildService {
                                                          .toUpperCase());
 
         ChildEntity savedChild = childRepository.save(childEntity);
-        loggedInUser.getChildren()
-                    .add(modelMapper.map(savedChild, ChildViewModel.class));
 
         ChildViewModel childViewModel = modelMapper.map(savedChild, ChildViewModel.class);
 
@@ -153,12 +149,14 @@ public class ChildServiceImpl implements ChildService {
                                               })
                                               .collect(Collectors.joining(", ")));
 
+        childViewModel.setAgeGroupName(childEntity.getAgeGroup().name());
+
         String emailContent = String.format("В базата данни е регистрирано ново дете с id = %d! Моля проверете приложените документи и извършете необходимите действия, ако е необходимо!", savedChild.getId());
 
         try {
             emailService.sendEmail(recipientEmail, subjectAddKid, emailContent);
         } catch (MessagingException e) {
-            throw new RuntimeException(e);
+            throw new EmailProblemException();
         }
 
         return childViewModel;
@@ -167,14 +165,11 @@ public class ChildServiceImpl implements ChildService {
 
     @Override
     public List<AllergicChildViewModel> getAllAllergicChildren() {
-        return childRepository.findAll()
-                              .stream()
-                              .filter(childEntity -> !childEntity.getAllergies()
-                                                                 .contains(allergyService.findByName(AllergyEnum.НЯМА)
-                                                                                         .orElseThrow(ObjectNotFoundException::new))
-                              )
-                              .map(this::mapToAllergicChildViewModel)
-                              .collect(Collectors.toList());
+
+        return childRepository.findAll().stream().filter(ChildEntity::isAllergic)
+                .map(this::mapToAllergicChildViewModel)
+                .collect(Collectors.toList());
+
     }
 
     private AllergicChildViewModel mapToAllergicChildViewModel(ChildEntity entity) {

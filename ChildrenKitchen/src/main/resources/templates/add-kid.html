@@ -122,6 +122,7 @@
 
                 <div class="image-upload">
                   <label for="medical-pic">
+                    Качи мед.бележка
                     <img th:src="@{/images/backgrounds/medicalList.jpg}" alt="medical-list" />
                   </label>
                   <input
@@ -133,7 +134,7 @@
                   />
                 </div>
                 <div th:if="${#fields.hasErrors('medicalList')}" th:class="error">Медицинската бележка е задължителна!</div>
-                <div class="large main-btn">Мед.бележка</div>
+
 
               </div>
 
@@ -141,6 +142,7 @@
 
                   <div class="image-upload">
                     <label for="birth-pic">
+                      Качи акт за ражадне
                       <img th:src="@{/images/backgrounds/Birth-Certificate.jpg}" alt="Birth-Certificate.jpg" />
                     </label>
                     <input
@@ -152,7 +154,7 @@
                     />
                 </div>
                   <div th:if="${#fields.hasErrors('birthCertificate')}" th:class="error">Актът за разждане е задължителен!</div>
-                <div class="large main-btn">Акт за раждане</div>
+
               </div>
             </div>
 

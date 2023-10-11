@@ -1,7 +1,10 @@
 package bg.softuni.childrenkitchen.model.view;
 
+import java.time.LocalDate;
+
 public class MenuViewModel {
     private String date;
+    private LocalDate localDate;
     private String dayOfWeek;
     private String ageGroupName;
 
@@ -57,5 +60,13 @@ public class MenuViewModel {
 
     public void setDessert(FoodViewModel dessert) {
         this.dessert = dessert;
+    }
+
+    public LocalDate getLocalDate() {
+        return localDate;
+    }
+
+    public void setLocalDate(LocalDate localDate) {
+        this.localDate = localDate;
     }
 }

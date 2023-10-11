@@ -7,15 +7,21 @@
     flex-direction: column;
 }
 
+.check-list{
+    text-align: center;
+}
 
-
-.check-list form button{
+.check-list button{
     margin: 0 auto;
+}
+
+.check-list button a{
+    text-decoration: none;
+    color: black;
 }
 
 .see-menu .check-list .food div{
     margin-bottom: 12px;
-
 }
 
 .see-menu .check-list .food div:first-child{

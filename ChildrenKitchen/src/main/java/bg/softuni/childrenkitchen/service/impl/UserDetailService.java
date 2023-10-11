@@ -54,7 +54,8 @@ public class UserDetailService implements UserDetailsService {
     private static ChildViewModel mapToChildrenView(ChildEntity childEntity) {
         ChildViewModel childViewModel = new ChildViewModel();
         childViewModel.setFullName(childEntity.getFullName());
-        childViewModel.setCountCoupons(childEntity.getCoupons().size());
+        childViewModel.setCountCoupons(childEntity.getCoupons().stream().filter(c->c.getVerifiedDate()==null).toList()
+                                                  .size());
         childViewModel.setAllergies(childEntity.getAllergies().stream()
                                     .map(allergyEntity -> allergyEntity.getAllergenName().name())
                                                .collect(Collectors.joining(", ")));

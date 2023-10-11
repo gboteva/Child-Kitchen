@@ -2,7 +2,8 @@
 <html lang="en"
       xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+>
   <head th:replace="~{fragments/main-nav::clean-head}">
   </head>
   <body id="e-kitchen">
@@ -18,8 +19,8 @@
             <h4>Основна информация</h4>
   
             <form th:action="@{/users/profile}" th:method="PATCH" class="info" th:object="${userUpdateBindingModel}">
-              <button type="submit" class="large main-btn" name="edit">Редактирай</button>
-              <label for="info-email">Email</label>
+
+              <label for="info-email">Email:</label>
               <input
                 type="email"
                 placeholder="Въведете e-mail"
@@ -29,7 +30,7 @@
               />
               <div th:if="${#fields.hasErrors('email')}" th:class="error">Невалиден имейл!</div>
 
-              <label for="info-name">Име на родител</label>
+              <label for="info-name">Име на родител:</label>
               <input
                 type="text"
                 placeholder="Въведете име и фамилия на родител"
@@ -48,11 +49,11 @@
                         th:value="${c.name()}"
                         th:text="${c.name()}"
                         th:selected="${loggedInUser.cityName}==${c.name()}"
-                >ПЛЕВЕН
+                > ПЛЕВЕН
                 </option>
               </select>
 
-              <label for="servicePoint">Обслужващ пункт: </label>
+              <label for="servicePoint">Обслужващ пункт:</label>
               <select name="servicePointName" id="servicePoint">
                 <option th:each="p : ${points}"
                         th:value="${p}"
@@ -61,7 +62,7 @@
                 >Детска кухня</option>
               </select>
 
-              <label for="info-tel">Телефон</label>
+              <label for="info-tel">Телефон:</label>
               <input
                 type="text"
                 placeholder="Въведете телефон за връзка"
@@ -71,7 +72,15 @@
               />
               <div th:if="${#fields.hasErrors('phoneNumber')}" th:class="error">Телефонният номер трябва да съръджа поне 10 символа!</div>
 
+              <label for="info-pass">Парола:</label>
+              <input
+                      type="password"
+                      placeholder="Въведете нова парола"
+                      name="password"
+                      id="info-pass"
+              />
 
+              <button type="submit" class="large main-btn" name="edit">Редактирай</button>
             </form>
           </article>
 
@@ -82,7 +91,8 @@
                 <li th:each="c : *{children}">
                   <span id="childName" th:text="${c.fullName}">Гошко</span> на
                   <span id="childAge" th:text="${c.age}"> 2 год</span>,
-                  <span id="childCoupons" th:text="${c.countCoupons}">10</span> купона, Алергии към:
+                  <span id="childCoupons" th:text="${c.countCoupons}">10</span> купона,
+                  Алергии към:
                   <span id="childAllergies" th:text="${c.allergies}">глутен, пиле</span>
                 </li>
 

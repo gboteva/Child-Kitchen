@@ -1,10 +1,8 @@
 package bg.softuni.childrenkitchen.service.impl;
 
-import bg.softuni.childrenkitchen.exception.NoAvailableMenuException;
 import bg.softuni.childrenkitchen.model.binding.AdminSearchBindingModel;
 import bg.softuni.childrenkitchen.model.entity.*;
 import bg.softuni.childrenkitchen.model.entity.enums.AgeGroupEnum;
-import bg.softuni.childrenkitchen.model.entity.enums.AllergyEnum;
 import bg.softuni.childrenkitchen.exception.ObjectNotFoundException;
 import bg.softuni.childrenkitchen.model.view.*;
 import bg.softuni.childrenkitchen.repository.OrderRepository;
@@ -134,10 +132,7 @@ public class OrderServiceImpl implements OrderService {
                                             .getAgeGroup()
                                             .equals(AgeGroupEnum.ГОЛЕМИ) ? 1 : 0);
 
-                if (!order.getChild()
-                          .getAllergies()
-                          .contains(allergyService.findByName(AllergyEnum.НЯМА)
-                                                  .orElseThrow(ObjectNotFoundException::new))) {
+                if (order.getChild().isAllergic()) {
 
                     AllergicChildViewModel allergicChildViewModel = mapToAllergicChildViewModel(order.getChild());
 
@@ -163,13 +158,10 @@ public class OrderServiceImpl implements OrderService {
                 saved.setBigOrderCount(order.getChild()
                                             .getAgeGroup()
                                             .equals(AgeGroupEnum.ГОЛЕМИ) ? saved.getBigOrderCount() + 1 : saved.getBigOrderCount());
-                if (!order.getChild()
-                          .getAllergies()
-                          .contains(allergyService.findByName(AllergyEnum.НЯМА)
-                                                  .orElseThrow(ObjectNotFoundException::new))) {
+
+                if (order.getChild().isAllergic()) {
 
                     AllergicChildViewModel allergicChildViewModel = mapToAllergicChildViewModel(order.getChild());
-
 
                     List<AllergicChildViewModel> allergicChildren = saved.getAllergicChildren();
 
@@ -281,14 +273,9 @@ public class OrderServiceImpl implements OrderService {
         byPointSmall.setPoint(pointEntity.getName());
         byPointSmall.setCountOrders(smallOrders.size());
 
-        byPointSmall.setAllergicChild(getListOfAllergicChild(smallOrders.stream()
-                                                                        .filter(o ->
-                                                                                !o.getChild()
-                                                                                  .getAllergies()
-                                                                                  .contains(allergyService.findByName(AllergyEnum.НЯМА)
-                                                                                                          .orElseThrow(ObjectNotFoundException::new))
 
-                                                                        )
+        byPointSmall.setAllergicChild(getListOfAllergicChild(smallOrders.stream()
+                                                                        .filter(o -> o.getChild().isAllergic())
                                                                         .collect(Collectors.toList())));
 
         byPointSmall.setCountAllergicOrders(byPointSmall.getAllergicChild()
@@ -314,14 +301,9 @@ public class OrderServiceImpl implements OrderService {
         byPointBig.setPoint(pointEntity.getName());
         byPointBig.setCountOrders(bigOrders.size());
 
-        byPointBig.setAllergicChild(getListOfAllergicChild(bigOrders.stream()
-                                                                    .filter(o ->
-                                                                            !o.getChild()
-                                                                              .getAllergies()
-                                                                              .contains(allergyService.findByName(AllergyEnum.НЯМА)
-                                                                                                      .orElseThrow(ObjectNotFoundException::new))
 
-                                                                    )
+        byPointBig.setAllergicChild(getListOfAllergicChild(bigOrders.stream()
+                                                                    .filter(o ->o.getChild().isAllergic())
                                                                     .collect(Collectors.toList())));
 
         byPointBig.setCountAllergicOrders(byPointBig.getAllergicChild()
@@ -349,11 +331,6 @@ public class OrderServiceImpl implements OrderService {
 
         orderEntity.setCoupon(couponService.getAndVerifyCoupon(userEmail, childFullName, date));
 
-        //todo Ако няма добавено меню за датата -> грешка
-        //Защо заявката трябва да знае за менюто?
-
-//        orderEntity.setMenu(menuService.getMenuByDateAndAgeGroup(date, orderEntity.getCoupon()
-//                                                                                  .getAgeGroup()));
 
         OrderEntity saved = orderRepository.save(orderEntity);
 
@@ -392,6 +369,9 @@ public class OrderServiceImpl implements OrderService {
         if (orderToDelete.isEmpty()) {
             throw new ObjectNotFoundException();
         }
+
+        //not delete
+        couponService.unverifyCoupon(deleteOrderDate, childName);
 
         orderRepository.delete(orderToDelete.get());
     }
@@ -452,12 +432,8 @@ public class OrderServiceImpl implements OrderService {
 
     private List<AllergicChildViewModel> getListOfAllergicChild(List<OrderEntity> allOrdersPerServicePoint) {
         return allOrdersPerServicePoint.stream()
-                                       .filter(order -> !order.getChild()
-                                                              .getAllergies()
-                                                              .contains(allergyService.findByName(AllergyEnum.НЯМА)
-                                                                                      .orElseThrow(ObjectNotFoundException::new))
-                                       )
                                        .map(OrderEntity::getChild)
+                                       .filter(ChildEntity::isAllergic)
                                        .map(child -> {
                                            AllergicChildViewModel allergicChildViewModel = new AllergicChildViewModel();
                                            allergicChildViewModel.setFullName(child.getFullName());

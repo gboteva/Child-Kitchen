@@ -1,3 +1,7 @@
+.index-main{
+    padding: 26px;
+}
+
 section.title {
   width: 100vw;
   height: 25vh;
@@ -5,7 +9,7 @@ section.title {
   position: relative;
 }
 
-section.title span{
+section.title div{
     position: absolute;
     top:50%;
     left: 50%;
@@ -26,19 +30,21 @@ section.title span{
 
 .carousel{
     width: 80vw;
-    height: 60vh;
     overflow: hidden;
     margin: 0 auto;
     border-radius: 20px;
 }
 
 .carousel-item{
-    height: 100%;
+    height: 400px;
+    overflow: hidden;
 }
 
 .carousel-item img.d-block{
-    height: 100%;
-    object-fit: cover;
+    max-height: 100%;
+    max-width: 100%;
+    object-fit: fill;
+    aspect-ratio: 16/9;
 }
 
 @media(max-width:788px){

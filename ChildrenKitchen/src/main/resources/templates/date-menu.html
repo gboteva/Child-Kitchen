@@ -16,7 +16,7 @@
         <div class="menu-ctn shadow-ctn">
           <form th:action="@{/admin/view-menu-by-date}" th:method="POST">
             <label for="choose-date">Избери дата</label>
-            <input type="date" id="choose-date" name="date"/>
+            <input type="date" id="choose-date" name="date" />
 
             <label for="ageGroup">Избери възрастова група</label>
             <select name="ageGroup" id="ageGroup">
@@ -28,17 +28,25 @@
           </form>
         </div>
 
-        <div class="check-list shadow-ctn">
-            <div class="food" th:object="${menuViewModel}" >
-                <div><span id="selected-date" th:text="*{dayOfWeek}"></span> <span th:text="*{date}"></span></div>
-                <div>Супа: <span id="selected-soup" th:text="*{soup.name}">СУПА ОТ ЗЕЛЕН ФАСУЛ СЪС ЗАСТРОЙКА</span></div>
-                <div>Основно: <span id="selected-main" th:text="*{main.name}">ПИЛЕШКО МЕСО С КАРТОФИ </span></div>
-                <div>Десерт: <span id="selected-dessert" th:text="*{dessert.name}">МЛЕЧЕН КИСЕЛ ОТ ПЪПЕШ </span></div>
-            </div>
+         <div class="check-list shadow-ctn">
 
-            <form th:action="@{/admin/add-menu}" th:method="PATCH" th:if="${menuViewModel.getSoup().name!='не е избрано'}">
-                <button class="main-btn">Редактирай</button>
-            </form>
+             <div class="food" th:object="${menuViewModel}" >
+                <div><span th:text="*{dayOfWeek}"></span> <span th:text="*{date}"></span></div>
+
+                 <input type="hidden" name="date" id="selected-date" th:value="*{localDate}">
+                 <input type="hidden" name="ageGroup" th:value="*{ageGroupName}" >
+
+                 <div>Супа: <span id="selected-soup" th:text="*{soup.name}" th:name="soup"></span></div>
+                 <input type="hidden" name="soup" id="hidden-soup" th:value="*{soup.name}">
+
+                 <div>Основно: <span id="selected-main" th:text="*{main.name}" th:name="main"> </span></div>
+                 <input type="hidden" name="main" id="hidden-main" th:value="*{main.name}">
+
+                 <div>Десерт: <span id="selected-dessert" th:text="*{dessert.name}" th:name="dessert"></span></div>
+                 <input type="hidden" name="dessert" id="hidden-dessert" th:value="*{dessert.name}">
+             </div>
+
+            <button class="main-btn" th:if="${notFound} != null"><a th:href="@{/admin/add-menu}">Добави</a></button>
 
             <div id="no-available-menu" th:if="${notFound} != null">Няма въведено меню за тази дата!</div>
         </div>
@@ -49,5 +57,6 @@
     </main>
 
     <script th:src="@{/js/toggleFunctions.js}"></script>
+
   </body>
 </html>

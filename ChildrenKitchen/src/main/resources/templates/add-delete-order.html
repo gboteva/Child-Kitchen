@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html lang="en"
       xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+      xmlns:th="http://www.thymeleaf.org">
   <head th:replace="~{fragments/main-nav::clean-head}">
   </head>
   <body id="e-kitchen">
@@ -97,7 +96,7 @@
                     type="button"
                     class="btn-close"
                     onclick=" closeModal()"
-            ></button>
+            >X</button>
           </div>
           <div class="modal-body">
             Направихте заявка на името на <span th:text="${childName}"></span> за дата <span th:text="${date}"></span>.
@@ -127,7 +126,7 @@
                     type="button"
                     class="btn-close"
                     onclick=" closeModal()"
-            ></button>
+            >X</button>
           </div>
           <div class="modal-body">
             Изтрихте заявка на името на <span th:text="${childName}"></span> за дата <span th:text="${date}"></span> .

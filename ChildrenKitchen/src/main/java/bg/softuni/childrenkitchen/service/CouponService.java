@@ -4,6 +4,7 @@ import bg.softuni.childrenkitchen.model.entity.CouponEntity;
 import bg.softuni.childrenkitchen.model.service.BuyCouponsServiceModel;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 public interface CouponService {
 
@@ -12,4 +13,6 @@ public interface CouponService {
 
     CouponEntity getAndVerifyCoupon(String userEmail, String childName, LocalDate forDate);
 
+
+    Long unverifyCoupon(LocalDate deleteOrderDate, String childName);
 }

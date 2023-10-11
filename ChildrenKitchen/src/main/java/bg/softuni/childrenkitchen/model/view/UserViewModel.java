@@ -1,5 +1,7 @@
 package bg.softuni.childrenkitchen.model.view;
 
+import java.util.List;
+
 public class UserViewModel {
     private Long id;
     private String fullName;
@@ -7,6 +9,7 @@ public class UserViewModel {
     private String phoneNumber;
     private String cityName;
     private String servicePointName;
+    private List<ChildViewModel> children;
 
     public Long getId() {
         return id;
@@ -54,5 +57,13 @@ public class UserViewModel {
 
     public void setServicePointName(String servicePointName) {
         this.servicePointName = servicePointName;
+    }
+
+    public List<ChildViewModel> getChildren() {
+        return children;
+    }
+
+    public void setChildren(List<ChildViewModel> children) {
+        this.children = children;
     }
 }

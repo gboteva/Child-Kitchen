@@ -24,4 +24,5 @@ public interface UserService {
     List<UserAndChildViewModel> getUserByKeyWord(String keyWord);
 
     ChildEntity getChildByNames(String childFullName, String userEmail);
+
 }

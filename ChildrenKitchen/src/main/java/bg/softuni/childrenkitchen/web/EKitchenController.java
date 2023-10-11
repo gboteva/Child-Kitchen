@@ -41,7 +41,6 @@ public class EKitchenController {
 
         model.addAttribute("children", customUserDetails.getChildren());
         model.addAttribute("buyCouponsBindingModel", buyCouponsBindingModel);
-        model.addAttribute("ageGroups", AgeGroupEnum.values());
 
         return "e-kitchen";
     }
@@ -51,13 +50,13 @@ public class EKitchenController {
                              @AuthenticationPrincipal CustomUserDetails loggedInUser,
                              RedirectAttributes redirectAttributes){
 
-        String ageGroupName = loggedInUser.getChildren()
-                               .stream()
-                               .filter(c -> c.getFullName()
-                                             .equals(buyCouponsBindingModel.getChildName()))
-                               .map(ChildViewModel::getAgeGroupName)
-                               .findFirst()
-                                .orElseThrow(ObjectNotFoundException::new);
+        ChildViewModel couponsOwner = loggedInUser.getChildren()
+                                     .stream()
+                                     .filter(c -> c.getFullName()
+                                                   .equals(buyCouponsBindingModel.getChildName()))
+                                           .findFirst().orElseThrow(ObjectNotFoundException::new);
+
+        String ageGroupName = couponsOwner.getAgeGroupName();
 
         if (!buyCouponsBindingModel.getAgeGroupName().equals(ageGroupName)){
             redirectAttributes.addFlashAttribute("noMatchAgeGroup", true);
@@ -69,6 +68,8 @@ public class EKitchenController {
         serviceModel.setParentEmail(loggedInUser.getUsername());
 
         int countCoupons = couponService.buyCoupons(serviceModel);
+
+        couponsOwner.setCountCoupons(couponsOwner.getCountCoupons() + countCoupons);
 
         redirectAttributes.addFlashAttribute("countCoupons", countCoupons);
         redirectAttributes.addFlashAttribute("kidName", buyCouponsBindingModel.getChildName());

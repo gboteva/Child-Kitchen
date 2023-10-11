@@ -15,7 +15,7 @@ import java.util.List;
 public interface ChildService {
     void initDB() throws FileNotFoundException;
 
-    ChildViewModel saveChild(ChildRegisterBindingModel childRegisterBindingModel, CustomUserDetails loggedInUser) throws IOException;
+    ChildViewModel saveChild(ChildRegisterBindingModel childRegisterBindingModel, String loggedInUserEmail) throws IOException;
 
     List<AllergicChildViewModel> getAllAllergicChildren();
 

@@ -9,10 +9,11 @@
     </header>
 
     <main>
-      <h3 class="add-menu-title">Добави меню</h3>
+      <h3 class="add-menu-title">Добави или редактирай меню</h3>
 
-      <section class="weekly-menu">
+      <section class="weekly-menu" id="add-edit-form-sec">
         <div class="menu-ctn shadow-ctn">
+          <h3>Добави меню</h3>
           <form th:object="${addMenuBindingModel}" th:method="POST" th:action="@{/admin/add-menu}">
 
             <label for="add-menu-date">Избери дата</label>
@@ -48,45 +49,34 @@
           </form>
         </div>
 
-        <div class="success shadow-ctn menu-ctn" th:if="${addedNewMenu}!=null">
-          <p>Успешно добавихте меню!</p>
-          <div class="menu-body">
-            <div>Меню за <span th:text='${newMenu.dayOfWeek}'></span>  <span th:text='${newMenu.date}'>05.10.2023</span></div>
-            <div>
-              Супа: <span th:text="${newMenu.soup.name}">СУПА ОТ КАРТОФИ И МОРКОВИ</span>
-            </div>
-            <div>
-              Основно: <span th:text="${newMenu.main.name}">СУПА ОТ КАРТОФИ И МОРКОВИ</span>
-            </div>
-            <div>
-              Десерт: <span th:text="${newMenu.dessert.name}">СУПА ОТ КАРТОФИ И МОРКОВИ</span>
-            </div>
-          </div>
-        </div>
+        <div class="shadow-ctn menu-ctn edit-menu" >
+          <h3>Редактирай меню</h3>
 
-        <div class="shadow-ctn menu-ctn edit-menu" th:if="${isExistingMenu}!=null">
-          <p>За тази дата вече съществува меню в системата!</p>
-          <p>Меню за
-            <span th:text="${existingMenu.dayOfWeek}"></span>
-            <span th:text="${existingMenu.date}">28.08.2023</span>
-          <p th:text="${existingMenu.soup.name}"></p>
-          <p th:text="${existingMenu.main.name}"></p>
-          <p th:text="${existingMenu.dessert.name}"></p>
-          </p>
+          <div th:if="${isExistingMenu}!=null" class="exist-menu">
+            <p>За тази дата вече съществува меню в системата!</p>
+            <p>Меню за
+              <span th:text="${existingMenu.dayOfWeek}"></span>
+              <span th:text="${existingMenu.date}">28.08.2023</span>
+            <p th:text="${existingMenu.soup.name}"></p>
+            <p th:text="${existingMenu.main.name}"></p>
+            <p th:text="${existingMenu.dessert.name}"></p>
+            </p>
+          </div>
+
+          <div id="no-available-menu" th:if="${notFound} != null">Няма въведено меню за тази дата!</div>
 
           <form th:method="PATCH" th:action="@{/admin/add-menu}">
-            <div id="daily-menu-ctn">
 
+            <label for="select-date">Избери дата</label>
+            <input type="date" th:value="${date}" name="date" id="select-date">
 
-              <label for="add-menu-age-group">Избери възрастова група</label>
+            <label for="edit-menu-age-group">Избери възрастова група</label>
               <select name="ageGroup" id="edit-menu-age-group" onchange="fillEditForm()">
                 <option value="" selected>Избери възрасотва група</option>
-                <option th:text="${existingMenu.ageGroupName}" th:value="${existingMenu.ageGroupName}"></option>
-<!--                <option value="МАЛКИ" >10 МЕСЕЦА - 1 ГОДИНА</option>-->
-<!--                <option value="ГОЛЕМИ">1 ГОДИНА - 3 ГОДИНИ</option>-->
+                <option value="МАЛКИ">10 МЕСЕЦА - 1 ГОДИНА</option>
+                <option value="ГОЛЕМИ">1 ГОДИНА - 3 ГОДИНИ</option>
               </select>
 
-              <input type="hidden" th:value="${date}" name="date">
 
               <label for="first-food-edit"> Избери супа </label>
               <select name="soup" id="first-food-edit" >
@@ -104,9 +94,26 @@
 
               </select>
 
-            </div>
             <button type="submit" class="main-btn">Редактирай</button>
           </form>
+
+        </div>
+
+        <div class="success shadow-ctn menu-ctn" th:if="${addedNewMenu}!=null">
+          <p>Успешно добавихте меню!</p>
+          <div class="menu-body">
+            <div>Меню за <span th:text='${newMenu.dayOfWeek}'></span>  <span th:text='${newMenu.date}'>05.10.2023</span></div>
+            <div>
+              Супа: <span th:text="${newMenu.soup.name}">СУПА ОТ КАРТОФИ И МОРКОВИ</span>
+            </div>
+            <div>
+              Основно: <span th:text="${newMenu.main.name}">СУПА ОТ КАРТОФИ И МОРКОВИ</span>
+            </div>
+            <div>
+              Десерт: <span th:text="${newMenu.dessert.name}">СУПА ОТ КАРТОФИ И МОРКОВИ</span>
+            </div>
+          </div>
+          <button class="main-btn" onclick="closeSuccess()">Затвори</button>
         </div>
       </section>
 

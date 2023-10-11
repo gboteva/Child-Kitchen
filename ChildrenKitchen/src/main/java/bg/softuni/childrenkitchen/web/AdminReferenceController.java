@@ -21,8 +21,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Controller
 public class AdminReferenceController {
@@ -42,7 +40,9 @@ public class AdminReferenceController {
 
         model.addAttribute("points", pointService.getAllNames());
 
-        model.addAttribute("allergicKids", childService.getAllAllergicChildren());
+        List<AllergicChildViewModel> allAllergicChildren = childService.getAllAllergicChildren();
+
+        model.addAttribute("allergicKids", allAllergicChildren);
 
 
         return "admin";
@@ -71,21 +71,28 @@ public class AdminReferenceController {
                                               .map(ReferenceByPointsViewModel::getCountOrders)
                                               .reduce(0, Integer::sum);
 
-            Integer totalCountAllOrders = referenceForPoint.stream()
+            Integer totalCountAllergicOrders = referenceForPoint.stream()
                                                         .map(ReferenceByPointsViewModel::getCountAllergicOrders)
                                                         .reduce(0, Integer::sum);
 
-           List<AllergicChildViewModel> allergicList = new ArrayList<>();
+           Set<AllergicChildViewModel> allergicList = new HashSet<>();
             referenceForPoint.stream().map(ReferenceByPointsViewModel::getAllergicChild)
                                      .forEach(list -> {
                                          if (list.size() > 0){
-                                             allergicList.addAll(list);
+                                             list.forEach(c -> {
+                                                 if(!alreadyAdded(allergicList, c.getFullName())){
+                                                     allergicList.add(c);
+                                                 }
+                                             });
                                          }
+
                                      });
+
+
 
             redirectAttributes.addFlashAttribute("referenceByPointsViewModelList", referenceForPoint);
             redirectAttributes.addFlashAttribute("totalCountOrders", totalCountOrders);
-            redirectAttributes.addFlashAttribute("totalCountAllOrders", totalCountAllOrders);
+            redirectAttributes.addFlashAttribute("totalCountAllOrders", totalCountAllergicOrders);
             redirectAttributes.addFlashAttribute("allergicChildren", allergicList);
 
         }else {
@@ -94,11 +101,16 @@ public class AdminReferenceController {
             redirectAttributes.addFlashAttribute("referenceAllPointsViewModelList", referenceForAllPoints);
 
             Set<AllergicChildViewModel> allergicList = new HashSet<>();
-
+            Set<AllergicChildViewModel> allAllergicOrders = new HashSet<>();
 
             for (ReferenceAllPointsViewModel order : referenceForAllPoints) {
+                allAllergicOrders.addAll(order.getAllergicChildren());
 
-                allergicList.addAll(order.getAllergicChildren());
+                order.getAllergicChildren().forEach(c -> {
+                    if (!alreadyAdded(allergicList, c.getFullName())){
+                        allergicList.add(c);
+                    }
+                });
             }
 
 
@@ -113,11 +125,21 @@ public class AdminReferenceController {
             redirectAttributes.addFlashAttribute("allergicChildViewModelList",allergicList);
             redirectAttributes.addFlashAttribute("smallSum", smallSum);
             redirectAttributes.addFlashAttribute("bigSum", bigSum);
-            redirectAttributes.addFlashAttribute("allergicSum", allergicList.size());
+            redirectAttributes.addFlashAttribute("allergicSum", allAllergicOrders.size());
         }
 
         return "redirect:/admin";
 
+    }
+
+    private boolean alreadyAdded(Set<AllergicChildViewModel> allergicList, String fullName) {
+        for(AllergicChildViewModel c : allergicList){
+            if (c.getFullName().equals(fullName)){
+                return true;
+            }
+        }
+
+        return false;
     }
 
     @ModelAttribute

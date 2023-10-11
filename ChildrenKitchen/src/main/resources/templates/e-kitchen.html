@@ -39,9 +39,14 @@
               <br />
               <strong
                 >ВАЖНО! Заверката важи като при хартиените купони - храната
-                заявена днес, ще получите след 2 дни на избраният от Вас пункт.
+                заявена днес, ще получите след 2 дни на избраният от Вас пункт, който можете да видите в <a
+                        th:href="@{/users/profile}">Профила си</a>.
                 Например купон заверен в Понеделник ви гарантира храна за
-                сряда.</strong
+                сряда.
+                <br>
+                ВАЖНО! Нямате право да правите заявка за текущия или следващия ден!
+                Валидна заявка е само заявка направена за след 2 дни!
+              </strong
               >
               <br />
               В профилът си ще можете да следите наличните купони, направените
@@ -69,7 +74,8 @@
 
             <label for="coupon-age-group">Купон за възрастова група:</label>
             <select name="ageGroupName" id="coupon-age-group" >
-              <option th:each="age : ${ageGroups}" th:value="${age.name()}" th:text="${age.name()}"></option>
+              <option value="МАЛКИ" selected>10 МЕСЕЦА - 1 ГОДИНА</option>
+              <option value="ГОЛЕМИ">1 ГОДИНА - 3 ГОДИНИ</option>
             </select>
 
             <div th:if="${noMatchAgeGroup} != null" class="error">Не може да закупувате купони за възрастова група, различна от тази на детето! </div>
@@ -119,7 +125,7 @@
                       type="button"
                       class="btn-close"
                       onclick=" closeModal()"
-              ></button>
+              >X</button>
             </div>
             <div class="modal-body">
               Закупихте <span th:text="${countCoupons}"></span> купона за <span th:text="${kidName}"></span>:
@@ -150,7 +156,7 @@
                       type="button"
                       class="btn-close"
                       onclick=" closeModal()"
-              ></button>
+              >X</button>
             </div>
             <div class="modal-body">
               Заверихте купон за <span th:text="${kidName}"></span> за дата <span th:text="${date}"></span> :

@@ -107,3 +107,10 @@
 .healthy legend{
     font-style: italic;
 }
+
+@media (max-width: 750px){
+    .healthy .healthy-main-info,
+    .healthy ul.shadow-ctn {
+        width: 80%;
+    }
+}

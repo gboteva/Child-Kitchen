@@ -1,6 +1,7 @@
 package bg.softuni.childrenkitchen.service.impl;
 
 import bg.softuni.childrenkitchen.model.binding.UserUpdateBindingModel;
+import bg.softuni.childrenkitchen.model.entity.AllergyEntity;
 import bg.softuni.childrenkitchen.model.entity.ChildEntity;
 import bg.softuni.childrenkitchen.model.entity.UserEntity;
 import bg.softuni.childrenkitchen.model.entity.enums.CityEnum;
@@ -104,6 +105,7 @@ public class UserServiceImpl implements UserService {
         userEntity.setCity(CityEnum.valueOf(userUpdateBindingModel.getCityName()));
         userEntity.setServicePoint(pointService.getByName(userUpdateBindingModel.getServicePointName())
                                                .orElseThrow());
+        userEntity.setPassword(passwordEncoder.encode(userUpdateBindingModel.getPassword()));
 
 
         UserEntity saved = userRepository.save(userEntity);
@@ -144,6 +146,7 @@ public class UserServiceImpl implements UserService {
                                       .findFirst()
                                       .orElseThrow(ObjectNotFoundException::new);
     }
+
 
     @Override
     public UserViewModel registerUser(UserRegisterServiceModel userRegisterServiceModel) {

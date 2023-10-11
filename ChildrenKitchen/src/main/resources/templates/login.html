@@ -14,7 +14,6 @@
           <img th:src="@{/images/backgrounds/hero.jpg}" alt="hero.jpg" />
         </div>
 
-<!--        <div th:if="${#fields.hasErrors()}" class="error">Невалиден имеил или парола! Моля опитайте пак!</div>-->
 
         <form th:method="POST" th:action="@{/users/login}" >
           <label for="login-email">Email</label>

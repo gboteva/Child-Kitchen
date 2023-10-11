@@ -5,7 +5,6 @@ import bg.softuni.childrenkitchen.model.binding.ViewMenuByDateBindingModel;
 import bg.softuni.childrenkitchen.model.entity.enums.AgeGroupEnum;
 import bg.softuni.childrenkitchen.model.view.FoodViewModel;
 import bg.softuni.childrenkitchen.model.view.MenuViewModel;
-import bg.softuni.childrenkitchen.service.FoodService;
 import bg.softuni.childrenkitchen.service.MenuService;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
@@ -13,18 +12,16 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Controller
 public class MenuController {
     private final MenuService menuService;
-    private final FoodService foodService;
 
-    public MenuController(MenuService menuService, FoodService foodService) {
+
+    public MenuController(MenuService menuService) {
         this.menuService = menuService;
-        this.foodService = foodService;
     }
 
     @GetMapping("/menus")
@@ -49,7 +46,7 @@ public class MenuController {
     }
 
     @GetMapping("/admin/add-menu")
-    public String getAddMenu(Model model) {
+    public String getAddMenu() {
         return "add-menu";
     }
 
@@ -88,7 +85,6 @@ public class MenuController {
             return "redirect:/admin/add-menu";
         }
 
-
         MenuViewModel newMenu = menuService.createMenu(addMenuBindingModel);
 
         redirectAttributes.addFlashAttribute("addedNewMenu", true);
@@ -97,16 +93,23 @@ public class MenuController {
         return "redirect:/admin/add-menu";
     }
 
+
     @PatchMapping("/admin/add-menu")
     public String editMenu(AddMenuBindingModel addMenuBindingModel, RedirectAttributes redirectAttributes) {
 
         MenuViewModel edited = menuService.editMenu(addMenuBindingModel.getDate(), AgeGroupEnum.valueOf(addMenuBindingModel.getAgeGroup()), addMenuBindingModel);
+
+        if (edited == null){
+            redirectAttributes.addFlashAttribute("notFound", true);
+            return "redirect:/admin/add-menu";
+        }
 
         redirectAttributes.addFlashAttribute("addedNewMenu", true);
         redirectAttributes.addFlashAttribute("newMenu", edited);
 
         return "redirect:/admin/add-menu";
     }
+
 
 
     @ModelAttribute

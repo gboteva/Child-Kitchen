@@ -106,7 +106,13 @@ th, td {
     background-color: var(--clr-primary);
 }
 
-.custom-modal button{
+.modal-header{
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+}
+
+.custom-modal .modal-footer button{
     margin-top: 12px;
 }
 

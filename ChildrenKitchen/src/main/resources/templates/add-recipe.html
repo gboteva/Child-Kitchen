@@ -17,10 +17,8 @@
 
             <label for="recipe-age-group">Избери възрастова група</label>
             <select name="ageGroup" id="recipe-age-group" th:field="*{ageGroup}">
-                <option th:each="g : ${ageGroups}"
-                        th:value="${g}"
-                        th:text="${g}"
-                >10 месеца - 1 година</option>
+              <option value="МАЛКИ">10 МЕСЕЦА - 1 ГОДИНА</option>
+              <option value="ГОЛЕМИ">1 ГОДИНА - 3 ГОДИНИ</option>
             </select>
 
             <label for="food-category">Категория храна</label>

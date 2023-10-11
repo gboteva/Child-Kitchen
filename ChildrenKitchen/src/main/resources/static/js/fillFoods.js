@@ -103,4 +103,9 @@ function generateOptions(soupSrc, mainSrc, dessertSrc, ageGroup){
 
 }
 
+function closeSuccess(){
+    let successDiv = document.getElementsByClassName("success")[0];
+    successDiv.setAttribute("style", "display: none");
+}
+
 

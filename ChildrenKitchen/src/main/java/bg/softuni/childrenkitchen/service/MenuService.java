@@ -6,14 +6,12 @@ import bg.softuni.childrenkitchen.model.entity.enums.AgeGroupEnum;
 import bg.softuni.childrenkitchen.model.view.MenuViewModel;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 public interface MenuService {
     void initDB();
 
     List<MenuViewModel> getWeeklyMenu();
 
-    Optional<DailyManuEntity> getMenuByDateAndAgeGroup(LocalDate date, AgeGroupEnum ageGroup);
     MenuViewModel getMenuViewModelByDateAndAgeGroup(LocalDate date, AgeGroupEnum ageGroup);
 
     MenuViewModel mapToViewModel(DailyManuEntity entity);

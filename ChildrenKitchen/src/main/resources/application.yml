@@ -17,29 +17,29 @@ spring:
       filter:
         enabled: true
   jpa:
-
-    # Choose either MySQL 8 or MySQL 5 below
-    # For MySQL 8
     database-platform: org.hibernate.dialect.MySQL8Dialect
-    #For MySQL 5
-    #database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+
 
     hibernate:
       ddl-auto: update
-      open-in-view: false
+    open-in-view: false
     properties:
       hibernate:
         format_sql: true
     defer-datasource-initialization: true
 
-mail:
-  host: localhost
-  port: 1025
-  username: "admin@example.com"
-  password: ""
-
+#  mail:
+#    host: localhost
+#    port: 1025
+#    username: "${GMAIL_USER}"
+#    password: ""
+  mail:
+    host: smtp.gmail.com
+    username: "${GMAIL_USER}"
+    password: "${GMAIL_PASS}"
+    port: 587
 
 cloudinary:
   cloud-name: "${CLOUDINARY_NAME}"
-  api-key: 161382139321454
+  api-key: "${API_KEY}"
   api-secret: "${CLOUDINARY_SECRET}"

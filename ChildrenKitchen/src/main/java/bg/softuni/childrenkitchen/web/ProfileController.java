@@ -3,8 +3,11 @@ package bg.softuni.childrenkitchen.web;
 import bg.softuni.childrenkitchen.model.CustomUserDetails;
 import bg.softuni.childrenkitchen.model.binding.ChildRegisterBindingModel;
 import bg.softuni.childrenkitchen.model.binding.UserUpdateBindingModel;
+import bg.softuni.childrenkitchen.model.entity.UserEntity;
 import bg.softuni.childrenkitchen.model.entity.enums.CityEnum;
 import bg.softuni.childrenkitchen.model.view.ChildViewModel;
+import bg.softuni.childrenkitchen.model.view.UserAndChildViewModel;
+import bg.softuni.childrenkitchen.model.view.UserViewModel;
 import bg.softuni.childrenkitchen.service.ChildService;
 import bg.softuni.childrenkitchen.service.OrderService;
 import bg.softuni.childrenkitchen.service.PointService;
@@ -19,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/users/profile")
@@ -41,12 +45,10 @@ public class ProfileController {
             @AuthenticationPrincipal CustomUserDetails loggedInUser,
             Model model){
 
-        if (loggedInUser!=null){
-            model.addAttribute("loggedInUser", loggedInUser);
-            model.addAttribute("points", pointService.getAllNames());
-            model.addAttribute("cities", CityEnum.values());
-            model.addAttribute("lastOrders", orderService.getOrdersFromToday(loggedInUser.getUsername()));
-        }
+        model.addAttribute("loggedInUser", loggedInUser);
+        model.addAttribute("points", pointService.getAllNames());
+        model.addAttribute("cities", CityEnum.values());
+        model.addAttribute("lastOrders", orderService.getOrdersFromToday(loggedInUser.getUsername()));
 
         return "profile";
     }
@@ -100,8 +102,9 @@ public class ProfileController {
             return "redirect:add-kid";
         }
 
-        ChildViewModel childViewModel = childService.saveChild(childRegisterBindingModel, loggedInUser);
+        ChildViewModel childViewModel = childService.saveChild(childRegisterBindingModel, loggedInUser.getUsername());
 
+        loggedInUser.getChildren().add(childViewModel);
 
         return "redirect:/users/profile";
     }

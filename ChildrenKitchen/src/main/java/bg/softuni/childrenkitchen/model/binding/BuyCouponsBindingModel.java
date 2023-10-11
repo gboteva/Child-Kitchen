@@ -1,6 +1,5 @@
 package bg.softuni.childrenkitchen.model.binding;
 
-import java.math.BigDecimal;
 
 public class BuyCouponsBindingModel {
     private String childName;

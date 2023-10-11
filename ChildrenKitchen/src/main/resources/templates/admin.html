@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html lang="en"
       xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+      xmlns:th="http://www.thymeleaf.org">
   <head th:replace="~{fragments/custom-head::custom-head}">
   </head>
   <body id="e-kitchen">
@@ -16,7 +15,7 @@
           <h4>Екшън панел</h4>
           <ul role="list">
             <li class="action">
-              <button class="main-btn"><a th:href="@{/admin/add-menu}">Добави седмично меню</a></button>
+              <button class="main-btn"><a th:href="@{/admin/add-menu}">Добави или редактирай седмично меню</a></button>
             </li>
             <li class="action">
               <button class="main-btn"><a th:href="@{/admin/view-menu-by-date}">Виж меню за дата</a></button>
@@ -241,6 +240,5 @@
   crossorigin="anonymous"
 ></script>
     <script th:src="@{/js/toggleFunctions.js}"></script>
-    <script th:src="@{/js/adminOrders.js}"></script>
   </body>
 </html>

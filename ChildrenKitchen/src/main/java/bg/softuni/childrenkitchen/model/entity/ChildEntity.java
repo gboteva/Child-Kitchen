@@ -1,6 +1,7 @@
 package bg.softuni.childrenkitchen.model.entity;
 
 import bg.softuni.childrenkitchen.model.entity.enums.AgeGroupEnum;
+import bg.softuni.childrenkitchen.model.entity.enums.AllergyEnum;
 import jakarta.persistence.*;
 import org.hibernate.annotations.Cascade;
 
@@ -9,6 +10,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "children")
@@ -99,5 +101,10 @@ public class ChildEntity extends BaseEntity {
 
     public void setParent(UserEntity parent) {
         this.parent = parent;
+    }
+
+    public boolean isAllergic(){
+      return getAllergies().stream().filter(a -> a.getAllergenName()!= AllergyEnum.НЯМА)
+                .collect(Collectors.toSet()).size() > 0;
     }
 }

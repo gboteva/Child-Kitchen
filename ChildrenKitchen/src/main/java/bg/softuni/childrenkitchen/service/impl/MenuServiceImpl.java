@@ -136,7 +136,7 @@ public class MenuServiceImpl implements MenuService {
         Optional<DailyManuEntity> byDateAndAgeGroup = menusRepository.findByDateAndAgeGroup(date, ageGroup);
 
         if(byDateAndAgeGroup.isEmpty()){
-            throw new NoAvailableMenuException();
+            return null;
         }
 
         DailyManuEntity menuEntity = byDateAndAgeGroup.get();
@@ -157,10 +157,7 @@ public class MenuServiceImpl implements MenuService {
         return mapToViewModel(edited);
     }
 
-    @Override
-    public Optional<DailyManuEntity> getMenuByDateAndAgeGroup(LocalDate date, AgeGroupEnum ageGroup) {
-        return menusRepository.findByDateAndAgeGroup(date, ageGroup);
-    }
+
 
     @Override
     public MenuViewModel getMenuViewModelByDateAndAgeGroup(LocalDate date, AgeGroupEnum ageGroup) {
@@ -183,6 +180,7 @@ public class MenuServiceImpl implements MenuService {
         model.setDate(date.toString());
         model.setDayOfWeek(date.getDayOfWeek().name());
         model.setAgeGroupName(ageGroup.name());
+        model.setLocalDate(date);
 
         FoodViewModel soup = new FoodViewModel();
         soup.setName("Няма въведена супа за тази дата");
@@ -202,7 +200,6 @@ public class MenuServiceImpl implements MenuService {
     @Override
     public MenuViewModel mapToViewModel(DailyManuEntity entity) {
 
-
         MenuViewModel menuViewModel = modelMapper.map(entity, MenuViewModel.class);
 
         String localDay = entity.getDate().getDayOfWeek().name().toLowerCase();
@@ -216,6 +213,7 @@ public class MenuServiceImpl implements MenuService {
         }
 
         menuViewModel.setDayOfWeek(dayOfWeek);
+        menuViewModel.setLocalDate(entity.getDate());
 
         menuViewModel.setAgeGroupName(entity.getAgeGroup().name());
 

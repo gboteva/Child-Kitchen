@@ -9,7 +9,6 @@ public class ChildViewModel implements Serializable {
     private int countCoupons;
     private String ageGroupName;
 
-
     public String getFullName() {
         return fullName;
     }
