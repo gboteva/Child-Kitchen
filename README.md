@@ -1,4 +1,6 @@
+# The "Child Kitchen" application 
 
+The "Child Kitchen" application represents a system for managing the activities of a real functioning organization that does not yet have such a system in place. The system closely mirrors the actual operations of Child Kitchen Pleven and includes the following:
 ## Features
 
 ### For unregistered users
