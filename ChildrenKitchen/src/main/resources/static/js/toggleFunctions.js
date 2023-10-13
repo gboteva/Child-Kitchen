@@ -1,5 +1,5 @@
 function toggle() {
-  let nav = document.getElementsByClassName("nav-ctn")[0];
+  let nav = document.querySelector(".responsive-wrapper nav.nav-ctn");
 
   if (nav.getAttribute("style") === "display: none") {
     nav.setAttribute("style", "display: block");

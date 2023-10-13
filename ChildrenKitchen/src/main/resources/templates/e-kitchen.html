@@ -96,6 +96,9 @@
 
           <form th:action="@{/e-kitchen}" th:method="PATCH" class="shadow-ctn" th:object="${verifyCouponBindingModel}">
             <h5><b>Завери купон</b></h5>
+
+            <div class="error" th:if="${noMoreOrdersPerDay}!=null">Вече имате заверен купон за този ден! Нямате право да правите повече от една заявка на ден през системата! Моля обърнете се към Детска кухня <a th:href="@{/contacts}">на контактите показани тук</a></div>
+
             <label for="confirm_coupons-child">За дете: </label>
             <select name="childName" id="confirm_coupons-child">
               <option th:each="c : ${children}" th:value="${c.fullName}" th:text="${c.fullName}">Гошко</option>

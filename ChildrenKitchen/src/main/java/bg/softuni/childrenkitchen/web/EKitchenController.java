@@ -8,6 +8,7 @@ import bg.softuni.childrenkitchen.exception.NoAvailableCouponsException;
 import bg.softuni.childrenkitchen.exception.ObjectNotFoundException;
 import bg.softuni.childrenkitchen.model.service.BuyCouponsServiceModel;
 import bg.softuni.childrenkitchen.model.view.ChildViewModel;
+import bg.softuni.childrenkitchen.model.view.OrderViewModel;
 import bg.softuni.childrenkitchen.service.CouponService;
 import bg.softuni.childrenkitchen.service.OrderService;
 import jakarta.validation.Valid;
@@ -90,10 +91,16 @@ public class EKitchenController {
             return "redirect:/e-kitchen";
         }
 
-        orderService.makeOrder(verifyCouponBindingModel.getVerifyDate(),
+        OrderViewModel orderViewModel = orderService.makeOrder(verifyCouponBindingModel.getVerifyDate(),
                 customUserDetails.getServicePointName(),
                 customUserDetails.getUsername(),
-                verifyCouponBindingModel.getChildName());
+                verifyCouponBindingModel.getChildName(),
+                customUserDetails.getUsername());
+
+        if (orderViewModel == null){
+            redirectAttributes.addFlashAttribute("noMoreOrdersPerDay", true);
+            return "redirect:/e-kitchen";
+        }
 
 
         redirectAttributes.addFlashAttribute("successVerify", true);

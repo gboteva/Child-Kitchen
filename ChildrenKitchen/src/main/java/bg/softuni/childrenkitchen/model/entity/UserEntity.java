@@ -27,7 +27,6 @@ public class UserEntity extends BaseEntity {
     @ManyToOne(optional = false)
     private PointEntity servicePoint;
 
-
     @OneToMany(mappedBy = "parent", fetch = FetchType.EAGER)
     private Set<ChildEntity> children = new HashSet<>();
 

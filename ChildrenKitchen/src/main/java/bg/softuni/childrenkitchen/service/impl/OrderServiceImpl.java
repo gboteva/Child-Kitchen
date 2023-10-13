@@ -1,5 +1,6 @@
 package bg.softuni.childrenkitchen.service.impl;
 
+import bg.softuni.childrenkitchen.model.CustomUserDetails;
 import bg.softuni.childrenkitchen.model.binding.AdminSearchBindingModel;
 import bg.softuni.childrenkitchen.model.entity.*;
 import bg.softuni.childrenkitchen.model.entity.enums.AgeGroupEnum;
@@ -7,6 +8,7 @@ import bg.softuni.childrenkitchen.exception.ObjectNotFoundException;
 import bg.softuni.childrenkitchen.model.view.*;
 import bg.softuni.childrenkitchen.repository.OrderRepository;
 import bg.softuni.childrenkitchen.service.*;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -316,7 +318,20 @@ public class OrderServiceImpl implements OrderService {
 
 
     @Override
-    public OrderViewModel makeOrder(LocalDate date, String servicePointName, String userEmail, String childFullName) {
+    public OrderViewModel makeOrder(LocalDate date, String servicePointName, String userEmail, String childFullName, String loggedInUserEmail) {
+        UserEntity loggedInUser = userService.getByEmail(loggedInUserEmail).orElseThrow(ObjectNotFoundException::new);
+
+        //only admin may add more than one order per day
+        if (!userService.isAdmin(loggedInUser)){
+            List<OrderEntity> allByDate = orderRepository.findAllByDate(date);
+            if (!allByDate.isEmpty()){
+                return null;
+            }
+        }
+
+        UserEntity user = userService.getByEmail(userEmail)
+                                     .orElseThrow(ObjectNotFoundException::new);
+
         OrderEntity orderEntity = new OrderEntity();
 
         orderEntity.setDate(date);
@@ -324,13 +339,11 @@ public class OrderServiceImpl implements OrderService {
         orderEntity.setServicePoint(pointService.getByName(servicePointName)
                                                 .orElseThrow(ObjectNotFoundException::new));
 
-        orderEntity.setUser(userService.getByEmail(userEmail)
-                                       .orElseThrow(ObjectNotFoundException::new));
+        orderEntity.setUser(user);
 
         orderEntity.setChild(userService.getChildByNames(childFullName, userEmail));
 
         orderEntity.setCoupon(couponService.getAndVerifyCoupon(userEmail, childFullName, date));
-
 
         OrderEntity saved = orderRepository.save(orderEntity);
 
@@ -352,28 +365,31 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<LocalDate> getOrdersOfChild(String childName, String userEmail) {
-        ChildEntity childByNames = userService.getChildByNames(childName, userEmail);
 
         List<OrderEntity> allByChildFullName = orderRepository.findAllByChildFullName(childName);
 
         return allByChildFullName.stream()
                                  .map(OrderEntity::getDate)
                                  .collect(Collectors.toList());
-
     }
 
     @Override
     public void deleteOrder(LocalDate deleteOrderDate, String childName) {
-        Optional<OrderEntity> orderToDelete = orderRepository.findByChildFullNameAndDate(childName, deleteOrderDate);
+        List<OrderEntity> ordersToDelete = orderRepository.findAllByChildFullNameAndDate(childName, deleteOrderDate);
 
-        if (orderToDelete.isEmpty()) {
+        if (ordersToDelete.isEmpty()) {
             throw new ObjectNotFoundException();
         }
 
-        //not delete
-        couponService.unverifyCoupon(deleteOrderDate, childName);
+        if (ordersToDelete.size() == 1){
+            couponService.unverifyCoupon(ordersToDelete.get(0).getCoupon().getId());
+            orderRepository.delete(ordersToDelete.get(0));
+        }else {
+            OrderEntity toDelete = ordersToDelete.get(ordersToDelete.size()-1);
+            couponService.unverifyCoupon(toDelete.getCoupon().getId());
+            orderRepository.delete(toDelete);
+        }
 
-        orderRepository.delete(orderToDelete.get());
     }
 
     @Override
@@ -383,6 +399,7 @@ public class OrderServiceImpl implements OrderService {
         if (allByUserEmail.isEmpty()) {
             return new ArrayList<>();
         }
+
 
         List<OrderEntity> sorted = allByUserEmail.get()
                                                  .stream()

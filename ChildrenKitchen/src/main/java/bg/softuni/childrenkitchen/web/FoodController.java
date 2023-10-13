@@ -22,6 +22,12 @@ public class FoodController {
         this.foodService = foodService;
     }
 
+
+    @GetMapping("/healthy-food")
+    public String getHealthyFood(){
+        return "healthy";
+    }
+
     @GetMapping("/admin/add-recipe")
     public String addRecipe(Model model){
         model.addAttribute("ageGroups", AgeGroupEnum.values());

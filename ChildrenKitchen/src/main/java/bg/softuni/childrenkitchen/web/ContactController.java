@@ -20,6 +20,8 @@ public class ContactController {
         this.emailService = emailService;
     }
 
+
+
     @GetMapping("/contacts")
     public String getContacts(){
         return "contacts";
@@ -49,6 +51,11 @@ public class ContactController {
     @GetMapping("/thanks-feedback")
     public String getThanks(){
         return "thanks-feedback";
+    }
+
+    @GetMapping("/about-us")
+    public String aboutUs(){
+        return "about-us";
     }
 
     @ModelAttribute

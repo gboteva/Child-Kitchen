@@ -1,8 +1,8 @@
 package bg.softuni.childrenkitchen.service.impl;
 
 import bg.softuni.childrenkitchen.model.binding.UserUpdateBindingModel;
-import bg.softuni.childrenkitchen.model.entity.AllergyEntity;
 import bg.softuni.childrenkitchen.model.entity.ChildEntity;
+import bg.softuni.childrenkitchen.model.entity.RoleEntity;
 import bg.softuni.childrenkitchen.model.entity.UserEntity;
 import bg.softuni.childrenkitchen.model.entity.enums.CityEnum;
 import bg.softuni.childrenkitchen.exception.ObjectNotFoundException;
@@ -95,21 +95,67 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserUpdateBindingModel editUser(UserUpdateBindingModel userUpdateBindingModel) {
-        UserEntity userEntity = userRepository.findById(userUpdateBindingModel.getId())
-                                              .orElseThrow();
+        UserEntity userEntity = userRepository.findByEmail(userUpdateBindingModel.getEmail())
+                                              .orElseThrow(ObjectNotFoundException::new);
 
-        userEntity.setEmail(userUpdateBindingModel.getEmail());
-        userEntity.setFullName(userUpdateBindingModel.getFullName()
-                                                     .toUpperCase());
-        userEntity.setPhoneNumber(userUpdateBindingModel.getPhoneNumber());
-        userEntity.setCity(CityEnum.valueOf(userUpdateBindingModel.getCityName()));
-        userEntity.setServicePoint(pointService.getByName(userUpdateBindingModel.getServicePointName())
-                                               .orElseThrow());
-        userEntity.setPassword(passwordEncoder.encode(userUpdateBindingModel.getPassword()));
+        if (!userUpdateBindingModel.getNewEmail().equals(userEntity.getEmail())){
+            userEntity.setEmail(userUpdateBindingModel.getNewEmail());
+        }
 
+        if (!userEntity.getFullName().equals(userUpdateBindingModel.getFullName())){
+            userEntity.setFullName(userUpdateBindingModel.getFullName()
+                                                         .toUpperCase());
+        }
+
+        if (!userEntity.getPhoneNumber().equals(userUpdateBindingModel.getPhoneNumber())){
+            userEntity.setPhoneNumber(userUpdateBindingModel.getPhoneNumber());
+        }
+
+        if (!userEntity.getCity().name().equals(userUpdateBindingModel.getCityName())){
+            userEntity.setCity(CityEnum.valueOf(userUpdateBindingModel.getCityName()));
+        }
+
+        if (!userEntity.getServicePoint().getName().equals(userUpdateBindingModel.getServicePointName())){
+            userEntity.setServicePoint(pointService.getByName(userUpdateBindingModel.getServicePointName())
+                                                   .orElseThrow(ObjectNotFoundException::new));
+        }
+
+        if (!userUpdateBindingModel.getPassword().equals("") && userUpdateBindingModel.getPassword()!=null){
+            if (!passwordEncoder.matches(userUpdateBindingModel.getPassword(), userEntity.getPassword())){
+                userEntity.setPassword(passwordEncoder.encode(userUpdateBindingModel.getPassword()));
+            }
+        }
+
+        if (userUpdateBindingModel.getMakeAdmin() != null){
+            if (userUpdateBindingModel.getMakeAdmin() && !isAdmin(userEntity)){
+                userEntity.getRoles().add(roleService.getRole("ADMIN").orElseThrow(ObjectNotFoundException::new));
+            }
+        }
+
+        if (userUpdateBindingModel.getMakeUser() != null){
+            if (userUpdateBindingModel.getMakeUser() && isAdmin(userEntity)){
+                userEntity.getRoles().clear();
+                userEntity.getRoles().add(roleService.getRole("USER").orElseThrow(ObjectNotFoundException::new));
+            }
+        }
 
         UserEntity saved = userRepository.save(userEntity);
-        return modelMapper.map(saved, UserUpdateBindingModel.class);
+        UserUpdateBindingModel mapped = modelMapper.map(saved, UserUpdateBindingModel.class);
+        mapped.setCityName(saved.getCity().name());
+        mapped.setMakeAdmin(isAdmin(saved));
+
+        return mapped;
+    }
+
+    @Override
+    public boolean isAdmin(UserEntity userEntity) {
+        for (RoleEntity r: userEntity.getRoles()){
+            if (r.getRole().name().equals("ADMIN")){
+                return true;
+            }
+        }
+
+        return false;
     }
 
     @Override
@@ -128,6 +174,7 @@ public class UserServiceImpl implements UserService {
                                     .stream()
                                     .map(ChildEntity::getFullName)
                                     .collect(Collectors.toSet()));
+            model.setPhoneNumber(u.getPhoneNumber());
             list.add(model);
         });
 

@@ -85,3 +85,31 @@ function populateOrders(){
         }))
         .catch(e => console.log(e))
 }
+
+function populateUserData(){
+    let nameInput = document.getElementById("edit-name");
+    let citySelect = document.getElementById("edit-city")
+    let servicePointSelect = document.getElementById("edit-service-point");
+    let phoneInput = document.getElementById("info-tel-edit");
+    let emailInput = document.getElementById("edit-email");
+    let deleteEmailInput = document.getElementById("delete-email");
+
+    let userData = resultCollection[resultSelect.value];
+
+    for(op of servicePointSelect.options){
+        if (op.text === userData.servicePointName){
+            op.selected = "true";
+        }
+    }
+
+    for(op of citySelect.options){
+        if (op.text === userData.city){
+            op.selected = "true";
+        }
+    }
+
+    nameInput.value = userData.userNames;
+    phoneInput.value = userData.phoneNumber;
+    emailInput.value = userData.userEmail;
+    deleteEmailInput.value = userData.userEmail;
+}

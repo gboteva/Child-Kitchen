@@ -111,6 +111,11 @@ th, td {
     justify-content: space-between;
     align-items: baseline;
 }
+.modal-header button{
+    background-color: var(--clr-primary);
+    border: none;
+}
+
 
 .custom-modal .modal-footer button{
     margin-top: 12px;

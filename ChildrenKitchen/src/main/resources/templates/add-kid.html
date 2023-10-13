@@ -162,13 +162,11 @@
                 >Съгласявам се Детска кухня да обработва лични ми данни</label>
               <input type="checkbox" name="private-date" id="private-data" th:field="*{isChecked}"/>
 
-              <div th:if="${#fields.hasErrors('isChecked')}" th:class="error">Задължително е съгласие за обработване на личните данни!</div>
-
-              <button type="submit" class="main-btn">ЗАПАЗИ</button>
+              <button type="submit" class="main-btn">Добави</button>
 
           </form>
         </article>
-<!--      </div>-->
+
     </main>
 
     <script th:src="@{/js/toggleFunctions.js}"></script>

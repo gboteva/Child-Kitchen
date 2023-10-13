@@ -3,7 +3,6 @@ package bg.softuni.childrenkitchen.model.entity;
 import bg.softuni.childrenkitchen.model.entity.enums.AgeGroupEnum;
 import bg.softuni.childrenkitchen.model.entity.enums.AllergyEnum;
 import jakarta.persistence.*;
-import org.hibernate.annotations.Cascade;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -36,7 +35,7 @@ public class ChildEntity extends BaseEntity {
     @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER)
     private List<CouponEntity> coupons = new ArrayList<>();
 
-    @ManyToOne()
+    @ManyToOne
     private UserEntity parent;
 
     public String getFullName() {

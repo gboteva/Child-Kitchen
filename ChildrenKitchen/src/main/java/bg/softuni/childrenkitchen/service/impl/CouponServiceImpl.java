@@ -129,26 +129,20 @@ public class CouponServiceImpl implements CouponService {
     }
 
     @Override
-    public Long unverifyCoupon(LocalDate verifyDate, String childName) {
-        List<CouponEntity> allCouponsByDateAndChild = couponRepository.findAllByVerifiedDateAndOwnerFullName(verifyDate, childName);
+    public Long unverifyCoupon(Long couponId) {
+        Optional<CouponEntity> couponToUnverify = couponRepository.findById(couponId);
 
-        if (allCouponsByDateAndChild.size() > 1){
-            throw new RuntimeException("There is more than one coupon for the provided date per owner! Please check your business logic!");
-        }
 
-        long id = allCouponsByDateAndChild.get(0).getId();
-
-        Optional<CouponEntity> byId = couponRepository.findById(id);
-        if (byId.isEmpty()){
+        if (couponToUnverify.isEmpty()){
             throw new ObjectNotFoundException();
         }
 
-        CouponEntity couponEntity = byId.get();
+        CouponEntity couponEntity = couponToUnverify.get();
         couponEntity.setVerifiedDate(null);
 
         couponRepository.save(couponEntity);
 
-        return id;
+        return couponEntity.getId();
     }
 
 

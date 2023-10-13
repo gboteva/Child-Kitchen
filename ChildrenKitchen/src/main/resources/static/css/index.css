@@ -1,25 +1,17 @@
 .index-main{
     padding: 26px;
+    position: relative;
 }
 
-section.title {
-  width: 100vw;
-  height: 25vh;
-  overflow: hidden;
-  position: relative;
-}
-
-section.title div{
-    position: absolute;
-    top:50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+section.title{
     text-align: center;
+    margin-bottom: 12px;
+    padding: 16px;
 }
+
 
 .title .bigtitle{
     font-size: 32px;
-    margin-bottom: 12px;
     font-weight: bold;
 }
 
@@ -30,78 +22,72 @@ section.title div{
 
 .carousel{
     width: 80vw;
-    overflow: hidden;
     margin: 0 auto;
     border-radius: 20px;
+    overflow: hidden;
 }
 
 .carousel-item{
-    height: 400px;
+    max-height: 450px;
     overflow: hidden;
 }
 
 .carousel-item img.d-block{
     max-height: 100%;
     max-width: 100%;
-    object-fit: fill;
+    /*object-fit: fill;*/
+    object-fit: cover;
     aspect-ratio: 16/9;
 }
 
-@media(max-width:788px){
-    section.title {
-        height: 16vh;
-      }
 
+
+@media(max-width:788px){
     .title .bigtitle{
         font-size: 1.5rem;
-        margin-bottom: 12px;
     }
-    
+
     .title .subtitle{
         font-size: 1.2rem;
-        font-style: italic;
     }
- }
 
- @media(max-width:650px){
+}
+
+@media(max-width:650px){
     section.title{
         z-index: -1;
-        height: 30vh;
     }
-    section.title span{
-        margin: 0 auto;
-        text-align: center;
-    }
+
     .title .bigtitle{
         font-size: 1.1rem;
     }
-    
+
     .title .subtitle{
         font-size: 1.1rem;
     }
- }
+}
 
- @media(max-width:380px){
-   
+
+@media(max-height:450px){
+    .title .bigtitle{
+        font-size: 1rem;
+    }
+
+    .title .subtitle{
+        font-size: 1rem;
+    }
+}
+
+@media(max-width:380px){
+
     section.title {
-        height: 25vh;
         font-size: 1rem;
     }
     .title .bigtitle{
         font-size: 1rem;
     }
-    
-    .title .subtitle{
-        font-size: 1rem;
-    }
- }
 
- @media(max-height:450px){
-    .title .bigtitle{
-        font-size: 1rem;
-    }
-    
     .title .subtitle{
         font-size: 1rem;
     }
- }
+}

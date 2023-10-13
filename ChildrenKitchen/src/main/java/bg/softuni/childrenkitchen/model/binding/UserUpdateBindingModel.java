@@ -20,6 +20,10 @@ public class UserUpdateBindingModel {
     @NotBlank
     private String servicePointName;
     private String password;
+    private Boolean makeAdmin;
+    private Boolean makeUser;
+
+    private String newEmail;
 
     public Long getId() {
         return id;
@@ -75,5 +79,29 @@ public class UserUpdateBindingModel {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Boolean getMakeAdmin() {
+        return makeAdmin;
+    }
+
+    public void setMakeAdmin(Boolean makeAdmin) {
+        this.makeAdmin = makeAdmin;
+    }
+
+    public Boolean getMakeUser() {
+        return makeUser;
+    }
+
+    public void setMakeUser(Boolean makeUser) {
+        this.makeUser = makeUser;
+    }
+
+    public String getNewEmail() {
+        return newEmail;
+    }
+
+    public void setNewEmail(String newEmail) {
+        this.newEmail = newEmail;
     }
 }

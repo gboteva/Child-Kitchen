@@ -15,7 +15,7 @@ public interface OrderService {
 
     List<ReferenceByPointsViewModel> getReferenceForPoint(AdminSearchBindingModel adminSearchBindingModel);
 
-    OrderViewModel makeOrder(LocalDate date, String servicePointName, String userEmail, String childFullName);
+//    OrderViewModel makeOrder(LocalDate date, String servicePointName, String userEmail, String childFullName);
 
     List<LocalDate> getOrdersOfChild(String childName, String userEmail);
 
@@ -23,4 +23,5 @@ public interface OrderService {
 
     List<OrderViewModel> getOrdersFromToday(String username);
 
+    OrderViewModel makeOrder(LocalDate date, String servicePoint, String userEmail, String childFullName, String loggedInUserEmail);
 }

@@ -84,6 +84,7 @@ body.menu-body{
 .kids ul li{
     margin-bottom: 25px;
     font-weight: 550;
+    padding: 0 8px;
 }
 
 .kids .date {
@@ -107,7 +108,7 @@ body.menu-body{
     }
 }
 
-@media(max-width:450px){
+@media(max-width:650px){
     .menu-main{
         flex-direction: column;
         justify-content: center;

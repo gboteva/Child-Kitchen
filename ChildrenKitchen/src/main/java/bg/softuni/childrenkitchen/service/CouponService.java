@@ -14,5 +14,5 @@ public interface CouponService {
     CouponEntity getAndVerifyCoupon(String userEmail, String childName, LocalDate forDate);
 
 
-    Long unverifyCoupon(LocalDate deleteOrderDate, String childName);
+    Long unverifyCoupon(Long couponId);
 }

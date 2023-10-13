@@ -25,4 +25,6 @@ public interface UserService {
 
     ChildEntity getChildByNames(String childFullName, String userEmail);
 
+    boolean isAdmin(UserEntity user);
+
 }

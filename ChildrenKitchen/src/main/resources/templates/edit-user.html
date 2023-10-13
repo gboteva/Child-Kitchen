@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+  <head th:replace="~{fragments/main-nav::clean-head}">
+  </head>
+  <body id="e-kitchen">
+    <header th:replace="~{fragments/e-nav::e-nav}">
+    </header>
+
+    <main>
+      <h3 class="order-title">Редактирай потребител</h3>
+
+      <div class="search-applicant shadow-ctn">
+          <label>Въведете потребителски e-mail: </label>
+          <input type="text" id="add-applicant-name" name="addApplicantName" placeholder="Въведете част или целия email"/>
+          <button class="main-btn" type="submit" onclick='searchUser()'>Търси</button>
+      </div>
+
+      <section class="orders">
+
+        <div class="add-order-ctn order shadow-ctn">
+
+          <h3>Редактирай потребител</h3>
+
+          <form th:action="@{/admin/edit-user}" th:method="PUT" th:object="${userUpdateBindingModel}">
+
+            <label for="add-applicant-name"> Избери потребител</label>
+            <select name="email" id="user-result" onchange="populateUserData()"  th:field="*{email}">
+              <option value=""></option>
+            </select>
+            <div th:if="${#fields.hasErrors('email')}" class="error">Няма избран потребител! </div>
+
+            <label for="edit-email">Промени email:</label>
+            <input
+                    type="email"
+                    placeholder="Въведете e-mail"
+                    name="email"
+                    id="edit-email"
+                    th:field="*{newEmail}"
+            />
+            <div th:if="${#fields.hasErrors('email')}" th:class="error">Невалиден имейл!</div>
+
+            <label for="edit-name">Име на потребител:</label>
+            <input
+                    type="text"
+                    placeholder="Въведете име и фамилия на родител"
+                    name="fullName"
+                    id="edit-name"
+                    th:field="*{fullName}"
+                    th:value="${userUpdateBindingModel.fullName} ?: *{fullName}"
+            />
+            <div th:if="${#fields.hasErrors('fullName')}" th:class="error">Името трябва да съръджа между 7 и 50 символа!</div>
+
+            <label for="edit-city">Населено място:</label>
+            <select name="cityName"
+                    id="edit-city"
+                    th:value="${userUpdateBindingModel.cityName} ?: *{cityName}"
+            >
+              <option th:each="c : ${cities}"
+                      th:value="${c.name()}"
+                      th:text="${c.name()}"
+              > ПЛЕВЕН
+              </option>
+            </select>
+
+            <label for="edit-service-point">Избери пункт: </label>
+            <select name="order-punct" id="edit-service-point" th:field="*{servicePointName}">
+              <option value="Детска кухня" >Детска кухня</option>
+              <option value="9-ти квартал">9-ти квартал</option>
+              <option value="ДГ Теменуга">ДГ Теменуга</option>
+              <option value="ДГ Трети март">ДГ Трети март</option>
+              <option value="ДГ Дружба">ДГ Дружба</option>
+              <option value="ДГ Славейче">ДГ Славейче</option>
+              <option value="ДГ Незабравка">ДГ Незабравка</option>
+              <option value="ДГ Калина">ДГ Калина</option>
+              <option value="ДЯ Чайка">ДЯ Чайка</option>
+              <option value="ДЯ Латинка">ДЯ Латинка</option>
+              <option value="ДЯ Дружба">ДЯ Дружба</option>
+              <option value="ДЯ Мир">ДЯ Мир</option>
+            </select>
+
+            <label for="info-tel-edit">Телефон:</label>
+            <input
+                    type="text"
+                    placeholder="Въведете телефон за връзка"
+                    name="phoneNumber"
+                    id="info-tel-edit"
+                    th:value="${userUpdateBindingModel.phoneNumber}  ?: *{phoneNumber}"
+            />
+            <div th:if="${#fields.hasErrors('phoneNumber')}" th:class="error">Телефонният номер трябва да съръджа поне 10 символа!</div>
+
+            <label for="info-pass-edit">Парола:</label>
+            <input
+                    type="password"
+                    placeholder="Въведете нова парола"
+                    name="password"
+                    id="info-pass-edit"
+            />
+
+            <label for="make-admin">Направи администратор</label>
+            <input type="checkbox" name="makeAdmin" id="make-admin" th:field="*{makeAdmin}"/>
+
+            <label for="make-user">Отмени администраторски права</label>
+            <input type="checkbox" name="makeUser" id="make-user" th:field="*{makeUser}"/>
+
+            <div th:if="${notPossible} != null" class="error"> Можете да направите само един избор!</div>
+
+            <button class="main-btn">Редактирай</button>
+          </form>
+
+        </div>
+
+      </section>
+    </main>
+
+    <!-- Modal -->
+    <div th:if="${successUpdate} != null" class="custom-modal">
+      <div class="modal-dialog modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="staticBackdropLabel2">
+              Успешно редактирахте потребител!
+            </h1>
+            <button
+                    type="button"
+                    class="btn-close"
+                    onclick=" closeModal()"
+            >X</button>
+          </div>
+          <div class="modal-body">
+            Новите данни на потербител с email <span th:text="${userUpdateBindingModel.email}"></span> са:
+            <br>
+            <ul>
+              <li>Email: <th:block th:text="${updated.email}"></th:block></li>
+              <li>Име: <th:block th:text="${updated.fullName}"></th:block></li>
+              <li>Населено място: <th:block th:text="${updated.cityName}"></th:block></li>
+              <li>Телефон: <th:block th:text="${updated.phoneNumber}"></th:block></li>
+              <li>Облсужващ пункт: <th:block th:text="${updated.servicePointName}"></th:block></li>
+              <li>Администраторски права:
+                <th:block th:if="${updated.makeAdmin}">Да</th:block>
+                <th:block th:unless="${updated.makeAdmin}">Не</th:block>
+              </li>
+            </ul>
+          </div>
+          <div class="modal-footer">
+            <button
+                    type="button"
+                    class="btn btn-secondary"
+                    onclick=" closeModal()"
+            >
+              Затвори
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+    <script th:src="@{/js/toggleFunctions.js}"></script>
+    <script th:src="@{/js/search.js}"></script>
+  </body>
+</html>

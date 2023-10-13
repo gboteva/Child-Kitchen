@@ -8,6 +8,7 @@ public class UserAndChildViewModel {
     private Set<String> childrenNames;
 
     private String servicePointName;
+    private String phoneNumber;
 
     public String getUserEmail() {
         return userEmail;
@@ -39,5 +40,13 @@ public class UserAndChildViewModel {
 
     public void setServicePointName(String servicePointName) {
         this.servicePointName = servicePointName;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 }

@@ -1,6 +1,6 @@
-.reg-main{
-    height: 100vh;
-}
+/*.reg-main{*/
+/*    height: 100vh;*/
+/*}*/
 
 .reg-section{
     margin: 0 auto;
@@ -8,6 +8,7 @@
     flex-direction: column;
     width: 35vw;
     height: 95%;
+    padding: 24px;
 }
 
 .reg-section form{
