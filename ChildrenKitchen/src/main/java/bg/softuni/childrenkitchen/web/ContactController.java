@@ -13,8 +13,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class ContactController {
-
     private final EmailService emailService;
+
 
     public ContactController(EmailService emailService) {
         this.emailService = emailService;
@@ -39,8 +39,9 @@ public class ContactController {
         }
 
         try {
-            emailService.sendEmail(contactBindingModel.getRecipient(),
-                    contactBindingModel.getSubject(), contactBindingModel.getContent());
+            emailService.sendEmail(contactBindingModel.getSender(),
+                    contactBindingModel.getSubject(),
+                    contactBindingModel.getContent());
         } catch (MessagingException e) {
             throw new RuntimeException(e);
         }

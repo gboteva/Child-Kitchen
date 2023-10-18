@@ -6,18 +6,18 @@ import jakarta.validation.constraints.NotBlank;
 public class ContactBindingModel {
     @NotBlank
     @Email
-    private String recipient;
+    private String sender;
     @NotBlank
     private String subject;
     @NotBlank
     private String content;
 
-    public String getRecipient() {
-        return recipient;
+    public String getSender() {
+        return sender;
     }
 
-    public void setRecipient(String recipient) {
-        this.recipient = recipient;
+    public void setSender(String sender) {
+        this.sender = sender;
     }
 
     public String getSubject() {

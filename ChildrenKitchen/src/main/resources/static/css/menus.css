@@ -101,6 +101,9 @@ body.menu-body{
     font-weight: normal;
 }
 
+.kids div.error-handler{
+    text-align: center;
+}
 
 @media(max-height:450px){
     *{

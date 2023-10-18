@@ -1,5 +1,6 @@
 package bg.softuni.childrenkitchen.web;
 
+import bg.softuni.childrenkitchen.exception.NoAvailableMenuException;
 import bg.softuni.childrenkitchen.model.binding.AddMenuBindingModel;
 import bg.softuni.childrenkitchen.model.binding.ViewMenuByDateBindingModel;
 import bg.softuni.childrenkitchen.model.entity.enums.AgeGroupEnum;
@@ -7,10 +8,12 @@ import bg.softuni.childrenkitchen.model.view.FoodViewModel;
 import bg.softuni.childrenkitchen.model.view.MenuViewModel;
 import bg.softuni.childrenkitchen.service.MenuService;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -39,6 +42,13 @@ public class MenuController {
 
         return "/menus";
     }
+
+    @ResponseStatus(value = HttpStatus.NOT_FOUND)
+    @ExceptionHandler(NoAvailableMenuException.class)
+    public ModelAndView onNoAvailableMenu() {
+        return new ModelAndView("no-available-menus");
+    }
+
 
     @GetMapping("/admin/view-menu-by-date")
     public String getMenuByDate() {
@@ -109,8 +119,6 @@ public class MenuController {
 
         return "redirect:/admin/add-menu";
     }
-
-
 
     @ModelAttribute
     public MenuViewModel model() {

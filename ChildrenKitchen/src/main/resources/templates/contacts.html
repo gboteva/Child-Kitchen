@@ -24,8 +24,8 @@
           <h4>Свържете се с нас</h4>
 
           <label for="recipient"></label>
-          <input th:field="*{recipient}" type="text" placeholder="Въведете email за обратна връзка" id="recipient" name="recipient">
-          <div th:if="${#fields.hasErrors('recipient')}" th:class="error">Невалиден имейл!</div>
+          <input th:field="*{sender}" type="text" placeholder="Въведете email за обратна връзка" id="recipient" name="recipient">
+          <div th:if="${#fields.hasErrors('sender')}" th:class="error">Невалиден имейл!</div>
 
           <label for="subject"></label>
           <input th:field="*{subject}" type="text" placeholder="Въведете тема" id="subject" name="subject">

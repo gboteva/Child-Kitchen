@@ -42,6 +42,13 @@ body{
     background-color: coral;
 }
 
+nav button.logout{
+    border: none;
+    background-color: transparent;
+    font-size: 0.9rem;
+    font-weight: bold;
+}
+
 form{
     width: 100%;
     display: flex;

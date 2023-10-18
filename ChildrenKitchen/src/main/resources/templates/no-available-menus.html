@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/main-nav::clean-head}">
+</head>
+<body class="menu-body">
+<header th:replace="~{fragments/main-nav::main-nav}">
+</header>
+
+<main >
+  <div class="menu-info">
+    <p><strong>ВНИМАНИЕ:</strong> Детска кухня си запазва правото на промени в менюто при необходимост!</p>
+    <p><strong>ВНИМАНИЕ:</strong> Менютата за алергичните деца се изготвят индивидуално и не се показват в системата!</p>
+    <p><strong>ВНИМАНИЕ:</strong> Супите за малките деца са със застройка от жълтък, не с цяло яйце!</p>
+  </div>
+
+  <div class="menu-main">
+    <section class="kids">
+      <h3>10 МЕСЕЦА - 1 ГОДИНА</h3>
+      <div class="error-handler">Все още не са въведени менюта за текущата седмица!</div>
+    </section>
+
+    <section class="kids">
+      <h3>1 ГОДИНА - 3 ГОДИНИ</h3>
+      <div class="error-handler">Все още не са въведени менюта за текущата седмица!</div>
+    </section>
+
+  </div>
+</main>
+
+<script th:src="@{/js/toggleFunctions.js}"></script>
+</body>
+</html>
