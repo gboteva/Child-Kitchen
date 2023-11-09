@@ -63,7 +63,13 @@ button.large a {
   width: 40vw;
 }
 
+.success-edit{
+  background-color: lightgreen;
+  text-align: center;
+}
+
 .kids-wrapper {
+  width: 40vw;
   line-height: 30px;
   text-align: center;
 }

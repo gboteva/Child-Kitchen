@@ -1,13 +1,11 @@
 package bg.softuni.childrenkitchen.model.binding;
 
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 public class UserUpdateBindingModel {
     private Long id;
-    @Email
-    @NotBlank
+
     private String email;
     @NotBlank
     @Size(min = 7, max = 50)
@@ -29,79 +27,89 @@ public class UserUpdateBindingModel {
         return id;
     }
 
-    public void setId(Long id) {
+    public UserUpdateBindingModel setId(Long id) {
         this.id = id;
+        return this;
     }
 
     public String getEmail() {
         return email;
     }
 
-    public void setEmail(String email) {
+    public UserUpdateBindingModel setEmail(String email) {
         this.email = email;
+        return this;
     }
 
     public String getFullName() {
         return fullName;
     }
 
-    public void setFullName(String fullName) {
+    public UserUpdateBindingModel setFullName(String fullName) {
         this.fullName = fullName;
+        return this;
     }
 
     public String getPhoneNumber() {
         return phoneNumber;
     }
 
-    public void setPhoneNumber(String phoneNumber) {
+    public UserUpdateBindingModel setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+        return this;
     }
 
     public String getCityName() {
         return cityName;
     }
 
-    public void setCityName(String cityName) {
+    public UserUpdateBindingModel setCityName(String cityName) {
         this.cityName = cityName;
+        return this;
     }
 
     public String getServicePointName() {
         return servicePointName;
     }
 
-    public void setServicePointName(String servicePointName) {
+    public UserUpdateBindingModel setServicePointName(String servicePointName) {
         this.servicePointName = servicePointName;
+        return this;
     }
 
     public String getPassword() {
         return password;
     }
 
-    public void setPassword(String password) {
+    public UserUpdateBindingModel setPassword(String password) {
         this.password = password;
+        return this;
     }
 
     public Boolean getMakeAdmin() {
         return makeAdmin;
     }
 
-    public void setMakeAdmin(Boolean makeAdmin) {
+    public UserUpdateBindingModel setMakeAdmin(Boolean makeAdmin) {
         this.makeAdmin = makeAdmin;
+        return this;
     }
 
     public Boolean getMakeUser() {
         return makeUser;
     }
 
-    public void setMakeUser(Boolean makeUser) {
+    public UserUpdateBindingModel setMakeUser(Boolean makeUser) {
         this.makeUser = makeUser;
+        return this;
     }
 
     public String getNewEmail() {
         return newEmail;
     }
 
-    public void setNewEmail(String newEmail) {
+    public UserUpdateBindingModel setNewEmail(String newEmail) {
         this.newEmail = newEmail;
+        return this;
     }
 }

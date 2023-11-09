@@ -20,6 +20,7 @@
             placeholder="Въведете e-mail"
             name="email"
             id="reg-email"
+            required
             th:field="*{email}"
           />
           <div th:if="${#fields.hasErrors('email')}" th:class="error">Невалиден имейл!</div>
@@ -30,8 +31,9 @@
             placeholder="Въведете име и фамилия на родител"
             name="name"
             id="reg-name"
+            required
             th:field="*{fullName}"
-            size="50"
+            min="7" max="50"
           />
           <div th:if="${#fields.hasErrors('fullName')}" th:class="error">Името трябва да съръджа между 7 и 50 символа!</div>
 
@@ -51,7 +53,7 @@
             placeholder="Въведете телефон за връзка"
             name="phone"
             id="reg-tel"
-            size="15"
+            min="10"
             th:field="*{phoneNumber}"
           />
           <div th:if="${#fields.hasErrors('phoneNumber')}" th:class="error">Телефонният номер трябва да съръджа поне 10 символа!</div>

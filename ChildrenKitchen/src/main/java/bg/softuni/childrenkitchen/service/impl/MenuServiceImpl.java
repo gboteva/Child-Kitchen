@@ -9,13 +9,13 @@ import bg.softuni.childrenkitchen.exception.ObjectNotFoundException;
 import bg.softuni.childrenkitchen.model.view.FoodViewModel;
 import bg.softuni.childrenkitchen.model.view.MenuViewModel;
 import bg.softuni.childrenkitchen.repository.MenusRepository;
-import bg.softuni.childrenkitchen.service.FoodService;
-import bg.softuni.childrenkitchen.service.MenuService;
-import org.modelmapper.ModelMapper;
+import bg.softuni.childrenkitchen.service.interfaces.FoodService;
+import bg.softuni.childrenkitchen.service.interfaces.MenuService;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -24,12 +24,10 @@ import java.util.stream.Collectors;
 public class MenuServiceImpl implements MenuService {
     private final MenusRepository menusRepository;
     private final FoodService foodService;
-    private final ModelMapper modelMapper;
 
-    public MenuServiceImpl(MenusRepository menusRepository, FoodService foodService, ModelMapper modelMapper) {
+    public MenuServiceImpl(MenusRepository menusRepository, FoodService foodService) {
         this.menusRepository = menusRepository;
         this.foodService = foodService;
-        this.modelMapper = modelMapper;
     }
 
     @Override
@@ -158,7 +156,6 @@ public class MenuServiceImpl implements MenuService {
     }
 
 
-
     @Override
     public MenuViewModel getMenuViewModelByDateAndAgeGroup(LocalDate date, AgeGroupEnum ageGroup) {
         Optional<DailyManuEntity> dailyManuEntity = menusRepository.findByDateAndAgeGroup(date, ageGroup);
@@ -174,7 +171,6 @@ public class MenuServiceImpl implements MenuService {
         return viewModel;
 
     }
-
     private MenuViewModel mapToEmptyViewModel(LocalDate date, AgeGroupEnum ageGroup) {
         MenuViewModel model = new MenuViewModel();
         model.setDate(date.toString());
@@ -200,60 +196,53 @@ public class MenuServiceImpl implements MenuService {
     @Override
     public MenuViewModel mapToViewModel(DailyManuEntity entity) {
 
-        MenuViewModel menuViewModel = modelMapper.map(entity, MenuViewModel.class);
+        MenuViewModel menuViewModel = new MenuViewModel();
 
         String localDay = entity.getDate().getDayOfWeek().name().toLowerCase();
+
         String dayOfWeek = null;
         switch (localDay){
-            case "monday" -> dayOfWeek = "Понеделник, ";
-            case "tuesday" -> dayOfWeek = "Вторник, ";
-            case "wednesday" -> dayOfWeek = "Сряда, ";
-            case "thursday" -> dayOfWeek = "Четвъртък, ";
-            case "friday" -> dayOfWeek = "Петък, ";
+            case "monday" -> dayOfWeek = "Понеделник";
+            case "tuesday" -> dayOfWeek = "Вторник";
+            case "wednesday" -> dayOfWeek = "Сряда";
+            case "thursday" -> dayOfWeek = "Четвъртък";
+            case "friday" -> dayOfWeek = "Петък";
         }
 
         menuViewModel.setDayOfWeek(dayOfWeek);
         menuViewModel.setLocalDate(entity.getDate());
 
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd LLLL yyyy");
+
+        menuViewModel.setDate(", " + formatter.format(entity.getDate()));
+
         menuViewModel.setAgeGroupName(entity.getAgeGroup().name());
 
+        menuViewModel.setSoup(new FoodViewModel());
+        menuViewModel.getSoup().setName(entity.getSoup().getName());
         menuViewModel.getSoup().setCategoryName(entity.getSoup().getCategory().name());
         menuViewModel.getSoup().setAgeGroupName(entity.getSoup().getAgeGroup().name());
         menuViewModel.getSoup().setAllergens(entity.getSoup().getAllergens().stream()
                                                    .map(allergenEntity->allergenEntity.getName().toLowerCase())
-                                                   .map(str -> {
-                                                       if(str.contains("_")){
-                                                           str = str.replace("_", " ");
-                                                       }
-
-                                                       return str;
-                                                   })
+                                                   .map(this::mapToStringWithoutUnderscore)
                                                    .collect(Collectors.joining(", ")));
 
+        menuViewModel.setMain(new FoodViewModel());
+        menuViewModel.getMain().setName(entity.getMain().getName());
         menuViewModel.getMain().setCategoryName(entity.getMain().getCategory().name());
         menuViewModel.getMain().setAgeGroupName(entity.getMain().getAgeGroup().name());
         menuViewModel.getMain().setAllergens(entity.getMain().getAllergens().stream()
                                                    .map(allergenEntity->allergenEntity.getName().toLowerCase())
-                                                   .map(str -> {
-                                                       if(str.contains("_")){
-                                                           str = str.replace("_", " ");
-                                                       }
-
-                                                       return str;
-                                                   })
+                                                   .map(this::mapToStringWithoutUnderscore)
                                                    .collect(Collectors.joining(", ")));
 
+        menuViewModel.setDessert(new FoodViewModel());
+        menuViewModel.getDessert().setName(entity.getDessert().getName());
         menuViewModel.getDessert().setCategoryName(entity.getDessert().getCategory().name());
         menuViewModel.getDessert().setAgeGroupName(entity.getDessert().getAgeGroup().name());
         menuViewModel.getDessert().setAllergens(entity.getDessert().getAllergens().stream()
                                                       .map(allergenEntity->allergenEntity.getName().toLowerCase())
-                                                      .map(str -> {
-                                                          if(str.contains("_")){
-                                                              str = str.replace("_", " ");
-                                                          }
-
-                                                          return str;
-                                                      })
+                                                      .map(this::mapToStringWithoutUnderscore)
                                                       .collect(Collectors.joining(", ")));
 
         return menuViewModel;
@@ -270,6 +259,13 @@ public class MenuServiceImpl implements MenuService {
                                                               .collect(Collectors.toList());
 
         menusRepository.deleteAll(olderThanOneYear);
+    }
+
+    private String mapToStringWithoutUnderscore(String value){
+        if(value.contains("_")){
+            return value.replace("_", " ");
+        }
+        return value;
     }
 
     private void saveBigMenu() {

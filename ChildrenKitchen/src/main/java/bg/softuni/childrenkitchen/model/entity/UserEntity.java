@@ -37,63 +37,71 @@ public class UserEntity extends BaseEntity {
         return email;
     }
 
-    public void setEmail(String email) {
+    public UserEntity setEmail(String email) {
         this.email = email;
+        return this;
     }
 
     public String getPassword() {
         return password;
     }
 
-    public void setPassword(String password) {
+    public UserEntity setPassword(String password) {
         this.password = password;
+        return this;
     }
 
     public String getFullName() {
         return fullName;
     }
 
-    public void setFullName(String fullName) {
+    public UserEntity setFullName(String fullName) {
         this.fullName = fullName;
+        return this;
     }
 
     public String getPhoneNumber() {
         return phoneNumber;
     }
 
-    public void setPhoneNumber(String phoneNumber) {
+    public UserEntity setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+        return this;
     }
 
     public CityEnum getCity() {
         return city;
     }
 
-    public void setCity(CityEnum city) {
+    public UserEntity setCity(CityEnum city) {
         this.city = city;
+        return this;
     }
 
     public PointEntity getServicePoint() {
         return servicePoint;
     }
 
-    public void setServicePoint(PointEntity servicePoint) {
+    public UserEntity setServicePoint(PointEntity servicePoint) {
         this.servicePoint = servicePoint;
+        return this;
     }
 
     public Set<ChildEntity> getChildren() {
         return children;
     }
 
-    public void setChildren(Set<ChildEntity> children) {
+    public UserEntity setChildren(Set<ChildEntity> children) {
         this.children = children;
+        return this;
     }
 
     public Set<RoleEntity> getRoles() {
         return roles;
     }
 
-    public void setRoles(Set<RoleEntity> roles) {
+    public UserEntity setRoles(Set<RoleEntity> roles) {
         this.roles = roles;
+        return this;
     }
 }

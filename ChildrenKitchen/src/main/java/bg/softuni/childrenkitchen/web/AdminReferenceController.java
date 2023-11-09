@@ -5,9 +5,9 @@ import bg.softuni.childrenkitchen.model.entity.enums.AgeGroupEnum;
 import bg.softuni.childrenkitchen.model.view.AllergicChildViewModel;
 import bg.softuni.childrenkitchen.model.view.ReferenceAllPointsViewModel;
 import bg.softuni.childrenkitchen.model.view.ReferenceByPointsViewModel;
-import bg.softuni.childrenkitchen.service.ChildService;
-import bg.softuni.childrenkitchen.service.OrderService;
-import bg.softuni.childrenkitchen.service.PointService;
+import bg.softuni.childrenkitchen.service.interfaces.ChildService;
+import bg.softuni.childrenkitchen.service.interfaces.OrderService;
+import bg.softuni.childrenkitchen.service.interfaces.PointService;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -40,7 +40,7 @@ public class AdminReferenceController {
 
         model.addAttribute("points", pointService.getAllNames());
 
-        List<AllergicChildViewModel> allAllergicChildren = childService.getAllAllergicChildren();
+        List<AllergicChildViewModel> allAllergicChildren = childService.getAllAllergicChildrenFromDB();
 
         model.addAttribute("allergicKids", allAllergicChildren);
 
@@ -67,28 +67,11 @@ public class AdminReferenceController {
         if (!adminSearchBindingModel.getServicePoint().equals("All")){
             List<ReferenceByPointsViewModel> referenceForPoint = orderService.getReferenceForPoint(adminSearchBindingModel);
 
-            Integer totalCountOrders = referenceForPoint.stream()
-                                              .map(ReferenceByPointsViewModel::getCountOrders)
-                                              .reduce(0, Integer::sum);
+            Integer totalCountOrders = getTotalCountOrders(referenceForPoint);
 
-            Integer totalCountAllergicOrders = referenceForPoint.stream()
-                                                        .map(ReferenceByPointsViewModel::getCountAllergicOrders)
-                                                        .reduce(0, Integer::sum);
+            Integer totalCountAllergicOrders = getTotalCountAllergicOrders(referenceForPoint);
 
-           Set<AllergicChildViewModel> allergicList = new HashSet<>();
-            referenceForPoint.stream().map(ReferenceByPointsViewModel::getAllergicChild)
-                                     .forEach(list -> {
-                                         if (list.size() > 0){
-                                             list.forEach(c -> {
-                                                 if(!alreadyAdded(allergicList, c.getFullName())){
-                                                     allergicList.add(c);
-                                                 }
-                                             });
-                                         }
-
-                                     });
-
-
+            Set<AllergicChildViewModel> allergicList = getAllergicList(referenceForPoint);
 
             redirectAttributes.addFlashAttribute("referenceByPointsViewModelList", referenceForPoint);
             redirectAttributes.addFlashAttribute("totalCountOrders", totalCountOrders);
@@ -114,13 +97,9 @@ public class AdminReferenceController {
             }
 
 
-            Integer smallSum = referenceForAllPoints.stream()
-                                                        .map(ReferenceAllPointsViewModel::getSmallOrderCount)
-                                                        .reduce(0, Integer::sum);
+            Integer smallSum = getSmallOrderCount(referenceForAllPoints);
 
-            Integer bigSum = referenceForAllPoints.stream()
-                                                    .map(ReferenceAllPointsViewModel::getBigOrderCount)
-                                                    .reduce(0, Integer::sum);
+            Integer bigSum = getBigOrderCount(referenceForAllPoints);
 
             redirectAttributes.addFlashAttribute("allergicChildViewModelList",allergicList);
             redirectAttributes.addFlashAttribute("smallSum", smallSum);
@@ -132,7 +111,49 @@ public class AdminReferenceController {
 
     }
 
-    private boolean alreadyAdded(Set<AllergicChildViewModel> allergicList, String fullName) {
+    private static Integer getBigOrderCount(List<ReferenceAllPointsViewModel> referenceForAllPoints) {
+        return referenceForAllPoints.stream()
+                                    .map(ReferenceAllPointsViewModel::getBigOrderCount)
+                                    .reduce(0, Integer::sum);
+    }
+
+    private static Integer getSmallOrderCount(List<ReferenceAllPointsViewModel> referenceForAllPoints) {
+        return referenceForAllPoints.stream()
+                                    .map(ReferenceAllPointsViewModel::getSmallOrderCount)
+                                    .reduce(0, Integer::sum);
+    }
+
+    private Set<AllergicChildViewModel> getAllergicList(List<ReferenceByPointsViewModel> referenceForPoint) {
+        Set<AllergicChildViewModel> allergicList = new HashSet<>();
+
+        referenceForPoint.stream().map(ReferenceByPointsViewModel::getAllergicChild)
+                         .forEach(list -> {
+                                     if (list.size() > 0){
+                                         list.forEach(c -> {
+                                             if(!alreadyAdded(allergicList, c.getFullName())){
+                                                 allergicList.add(c);
+                                             }
+                                         });
+                                     }
+
+                                 });
+
+        return allergicList;
+    }
+
+    private static Integer getTotalCountAllergicOrders(List<ReferenceByPointsViewModel> referenceForPoint) {
+        return referenceForPoint.stream()
+                                .map(ReferenceByPointsViewModel::getCountAllergicOrders)
+                                .reduce(0, Integer::sum);
+    }
+
+    private static Integer getTotalCountOrders(List<ReferenceByPointsViewModel> referenceForPoint) {
+        return referenceForPoint.stream()
+                                .map(ReferenceByPointsViewModel::getCountOrders)
+                                .reduce(0, Integer::sum);
+    }
+
+     private boolean alreadyAdded(Set<AllergicChildViewModel> allergicList, String fullName) {
         for(AllergicChildViewModel c : allergicList){
             if (c.getFullName().equals(fullName)){
                 return true;

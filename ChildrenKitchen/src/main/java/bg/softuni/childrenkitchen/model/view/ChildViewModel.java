@@ -1,6 +1,7 @@
 package bg.softuni.childrenkitchen.model.view;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 
 public class ChildViewModel implements Serializable {
     private String fullName;
@@ -47,5 +48,28 @@ public class ChildViewModel implements Serializable {
 
     public void setAgeGroupName(String ageGroupName) {
         this.ageGroupName = ageGroupName;
+    }
+
+    public void defineAge(LocalDate birthDate){
+        String age = "";
+        if (birthDate.isBefore(LocalDate.now().minusMonths(12))){
+            int years = LocalDate.now().getYear() - birthDate.getYear();
+            int months = LocalDate.now().getMonth().getValue() - birthDate.getMonth().getValue();
+            age = years + "год. и " + months + " мес";
+
+        }else {
+            int months = LocalDate.now().getMonth().getValue() - birthDate.getMonth().getValue();
+
+            if (months == 0){
+                age = "1 год.";
+            }else if (months < 0){
+                int lastYearMonthsCount = 12 - birthDate.getMonth().getValue();
+                int thisYearMonthsCount = LocalDate.now().getMonth().getValue();
+                months = lastYearMonthsCount + thisYearMonthsCount;
+                age = months + " мес.";
+            }
+        }
+
+        this.setAge(age);
     }
 }

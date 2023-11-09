@@ -13,32 +13,36 @@ public class FoodViewModel {
         return name;
     }
 
-    public void setName(String name) {
+    public FoodViewModel setName(String name) {
         this.name = name;
+        return this;
     }
 
     public String getAgeGroupName() {
         return ageGroupName;
     }
 
-    public void setAgeGroupName(String ageGroupName) {
+    public FoodViewModel setAgeGroupName(String ageGroupName) {
         this.ageGroupName = ageGroupName;
+        return this;
     }
 
     public String getCategoryName() {
         return categoryName;
     }
 
-    public void setCategoryName(String categoryName) {
+    public FoodViewModel setCategoryName(String categoryName) {
         this.categoryName = categoryName;
+        return this;
     }
 
     public String getAllergens() {
         return allergens;
     }
 
-    public void setAllergens(String allergens) {
+    public FoodViewModel setAllergens(String allergens) {
         this.allergens = allergens;
+        return this;
     }
 
     @Override

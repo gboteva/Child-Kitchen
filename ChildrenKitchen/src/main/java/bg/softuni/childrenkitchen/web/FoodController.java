@@ -4,7 +4,7 @@ import bg.softuni.childrenkitchen.model.binding.AddRecipeBindingModel;
 import bg.softuni.childrenkitchen.model.entity.enums.AgeGroupEnum;
 import bg.softuni.childrenkitchen.model.entity.enums.FoodCategoryEnum;
 import bg.softuni.childrenkitchen.model.view.FoodViewModel;
-import bg.softuni.childrenkitchen.service.FoodService;
+import bg.softuni.childrenkitchen.service.interfaces.FoodService;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -42,7 +42,7 @@ public class FoodController {
                              ){
 
 
-        if (foodService.getByName(addRecipeBindingModel.getFoodName().toUpperCase()).isPresent()){
+        if (foodService.existByName(addRecipeBindingModel.getFoodName())){
             redirectAttributes.addFlashAttribute("existFood", "Храна с това име вече съществува в базата!");
             return "redirect:/admin/add-recipe";
         }

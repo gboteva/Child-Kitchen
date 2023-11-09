@@ -1,7 +1,7 @@
 package bg.softuni.childrenkitchen.service.impl;
 
 import bg.softuni.childrenkitchen.model.CloudinaryImage;
-import bg.softuni.childrenkitchen.service.CloudinaryService;
+import bg.softuni.childrenkitchen.service.interfaces.CloudinaryService;
 import com.cloudinary.Cloudinary;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -41,11 +41,8 @@ public class CloudinaryServiceImpl implements CloudinaryService {
             cloudinaryImage.setPublicKey(publicId);
 
             return cloudinaryImage;
-//        return this.cloudinary
-//                .uploader()
-//                .upload(file, Collections.emptyMap())
-//                .get(URL)
-//                .toString();
+
+
         } catch (IOException e) {
             throw new RuntimeException("Not uploaded pictures");
         } finally {

@@ -6,6 +6,7 @@ import bg.softuni.childrenkitchen.model.entity.enums.FoodCategoryEnum;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,4 +15,8 @@ public interface FoodRepository extends JpaRepository<FoodEntity, Long> {
     Optional<FoodEntity> findByName(String foodName);
 
     List<FoodEntity> findAllByCategoryAndAgeGroup(FoodCategoryEnum foodCategoryEnum, AgeGroupEnum ageGroup);
+
+    boolean existsByName(String foodName);
+
+    List<FoodEntity> findAllByCategory(FoodCategoryEnum foodCategoryEnum);
 }

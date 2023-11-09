@@ -1,9 +1,10 @@
 package bg.softuni.childrenkitchen.initDB;
 
-import bg.softuni.childrenkitchen.service.*;
+import bg.softuni.childrenkitchen.service.interfaces.*;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
-
+@Profile("!test")
 @Component
 public class DBInitialize implements CommandLineRunner {
     private final RoleService roleService;
@@ -42,5 +43,6 @@ public class DBInitialize implements CommandLineRunner {
         childService.initDB();
         couponService.initDB();
         orderService.initDB();
+
     }
 }

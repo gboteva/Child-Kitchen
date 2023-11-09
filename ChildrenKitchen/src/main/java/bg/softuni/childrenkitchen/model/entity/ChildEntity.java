@@ -28,6 +28,12 @@ public class ChildEntity extends BaseEntity {
     @Column(name = "birth_cert_url")
     private String birthCertificateURL;
 
+    @Column(name = "medical_list_public_id")
+    private String medicalListPublicId;
+
+    @Column(name = "birth_cert_public_id")
+    private String birthCertificatePublic_id;
+
     @ManyToMany(targetEntity = AllergyEntity.class,
             fetch = FetchType.EAGER)
     private Set<AllergyEntity> allergies = new HashSet<>();
@@ -42,64 +48,90 @@ public class ChildEntity extends BaseEntity {
         return fullName;
     }
 
-    public void setFullName(String fullName) {
+    public ChildEntity setFullName(String fullName) {
         this.fullName = fullName;
+        return this;
     }
 
     public LocalDate getBirthDate() {
         return birthDate;
     }
 
-    public void setBirthDate(LocalDate birthDate) {
+    public ChildEntity setBirthDate(LocalDate birthDate) {
         this.birthDate = birthDate;
+        return this;
     }
 
     public AgeGroupEnum getAgeGroup() {
         return ageGroup;
     }
 
-    public void setAgeGroup(AgeGroupEnum ageGroup) {
+    public ChildEntity setAgeGroup(AgeGroupEnum ageGroup) {
         this.ageGroup = ageGroup;
+        return this;
     }
 
     public String getMedicalListURL() {
         return medicalListURL;
     }
 
-    public void setMedicalListURL(String medicalListURL) {
+    public ChildEntity setMedicalListURL(String medicalListURL) {
         this.medicalListURL = medicalListURL;
+        return this;
     }
 
     public String getBirthCertificateURL() {
         return birthCertificateURL;
     }
 
-    public void setBirthCertificateURL(String birthCertificateURL) {
+    public ChildEntity setBirthCertificateURL(String birthCertificateURL) {
         this.birthCertificateURL = birthCertificateURL;
+        return this;
     }
 
     public Set<AllergyEntity> getAllergies() {
         return allergies;
     }
 
-    public void setAllergies(Set<AllergyEntity> allergies) {
+    public ChildEntity setAllergies(Set<AllergyEntity> allergies) {
         this.allergies = allergies;
+        return this;
     }
 
     public List<CouponEntity> getCoupons() {
         return coupons;
     }
 
-    public void setCoupons(List<CouponEntity> coupons) {
+    public ChildEntity setCoupons(List<CouponEntity> coupons) {
         this.coupons = coupons;
+        return this;
     }
 
     public UserEntity getParent() {
         return parent;
     }
 
-    public void setParent(UserEntity parent) {
+    public ChildEntity setParent(UserEntity parent) {
         this.parent = parent;
+        return this;
+    }
+
+    public String getMedicalListPublicId() {
+        return medicalListPublicId;
+    }
+
+    public ChildEntity setMedicalListPublicId(String medicalListPublicId) {
+        this.medicalListPublicId = medicalListPublicId;
+        return this;
+    }
+
+    public String getBirthCertificatePublic_id() {
+        return birthCertificatePublic_id;
+    }
+
+    public ChildEntity setBirthCertificatePublic_id(String birthCertificatePublic_id) {
+        this.birthCertificatePublic_id = birthCertificatePublic_id;
+        return this;
     }
 
     public boolean isAllergic(){

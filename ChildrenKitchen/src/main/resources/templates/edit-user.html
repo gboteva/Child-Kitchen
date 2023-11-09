@@ -37,9 +37,10 @@
                     placeholder="Въведете e-mail"
                     name="email"
                     id="edit-email"
+                    required
                     th:field="*{newEmail}"
             />
-            <div th:if="${#fields.hasErrors('email')}" th:class="error">Невалиден имейл!</div>
+            <div th:if="${#fields.hasErrors('newEmail')}" th:class="error">Невалиден имейл!</div>
 
             <label for="edit-name">Име на потребител:</label>
             <input
@@ -47,6 +48,7 @@
                     placeholder="Въведете име и фамилия на родител"
                     name="fullName"
                     id="edit-name"
+                    min="7" max="50"
                     th:field="*{fullName}"
                     th:value="${userUpdateBindingModel.fullName} ?: *{fullName}"
             />
@@ -55,6 +57,7 @@
             <label for="edit-city">Населено място:</label>
             <select name="cityName"
                     id="edit-city"
+                    th:field="*{cityName}"
                     th:value="${userUpdateBindingModel.cityName} ?: *{cityName}"
             >
               <option th:each="c : ${cities}"
@@ -86,6 +89,7 @@
                     placeholder="Въведете телефон за връзка"
                     name="phoneNumber"
                     id="info-tel-edit"
+                    min="10"
                     th:value="${userUpdateBindingModel.phoneNumber}  ?: *{phoneNumber}"
             />
             <div th:if="${#fields.hasErrors('phoneNumber')}" th:class="error">Телефонният номер трябва да съръджа поне 10 символа!</div>
@@ -107,6 +111,12 @@
             <div th:if="${notPossible} != null" class="error"> Можете да направите само един избор!</div>
 
             <button class="main-btn">Редактирай</button>
+
+          </form>
+
+          <form th:action="@{/users/delete}" th:method="DELETE" style="margin-top: 12px">
+            <input type="hidden" id="hiddenMail" name="email">
+            <button class="main-btn" onclick="alert('Сигурни ли сте, че искате да изтриете потребителя?')">Изтрий</button>
           </form>
 
         </div>
@@ -146,7 +156,67 @@
           <div class="modal-footer">
             <button
                     type="button"
-                    class="btn btn-secondary"
+                    class="btn btn-secondary main-btn"
+                    onclick=" closeModal()"
+            >
+              Затвори
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal -->
+    <div th:if="${successfullyDeleted} != null" class="custom-modal">
+      <div class="modal-dialog modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="staticBackdropLabelSuccessDelete">
+              Успешно изтрихте потребител!
+            </h1>
+            <button
+                    type="button"
+                    class="btn-close"
+                    onclick=" closeModal()"
+            >X</button>
+          </div>
+          <div class="modal-body">
+            Успешно изтрихте потербител с email <span th:text="${successfullyDeleted}"></span>!
+          </div>
+          <div class="modal-footer">
+            <button
+                    type="button"
+                    class="btn btn-secondary main-btn"
+                    onclick=" closeModal()"
+            >
+              Затвори
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal -->
+    <div th:if="${notSuccessDelete} != null" class="custom-modal">
+      <div class="modal-dialog modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="staticBackdropLabelNotSuccessDelete">
+              Не успяхте да изтриете потребител! Моля сържете се с поддръжка!
+            </h1>
+            <button
+                    type="button"
+                    class="btn-close"
+                    onclick=" closeModal()"
+            >X</button>
+          </div>
+          <div class="modal-body">
+            Не успяхте да изтриете потербител
+          </div>
+          <div class="modal-footer">
+            <button
+                    type="button"
+                    class="btn btn-secondary main-btn"
                     onclick=" closeModal()"
             >
               Затвори

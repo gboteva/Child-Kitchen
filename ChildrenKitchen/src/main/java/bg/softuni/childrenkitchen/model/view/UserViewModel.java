@@ -15,55 +15,62 @@ public class UserViewModel {
         return id;
     }
 
-    public void setId(Long id) {
+    public UserViewModel setId(Long id) {
         this.id = id;
+        return this;
     }
 
     public String getFullName() {
         return fullName;
     }
 
-    public void setFullName(String fullName) {
+    public UserViewModel setFullName(String fullName) {
         this.fullName = fullName;
+        return this;
     }
 
     public String getEmail() {
         return email;
     }
 
-    public void setEmail(String email) {
+    public UserViewModel setEmail(String email) {
         this.email = email;
+        return this;
     }
 
     public String getPhoneNumber() {
         return phoneNumber;
     }
 
-    public void setPhoneNumber(String phoneNumber) {
+    public UserViewModel setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+        return this;
     }
 
     public String getCityName() {
         return cityName;
     }
 
-    public void setCityName(String cityName) {
+    public UserViewModel setCityName(String cityName) {
         this.cityName = cityName;
+        return this;
     }
 
     public String getServicePointName() {
         return servicePointName;
     }
 
-    public void setServicePointName(String servicePointName) {
+    public UserViewModel setServicePointName(String servicePointName) {
         this.servicePointName = servicePointName;
+        return this;
     }
 
     public List<ChildViewModel> getChildren() {
         return children;
     }
 
-    public void setChildren(List<ChildViewModel> children) {
+    public UserViewModel setChildren(List<ChildViewModel> children) {
         this.children = children;
+        return this;
     }
 }

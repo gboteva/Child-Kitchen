@@ -3,7 +3,7 @@ package bg.softuni.childrenkitchen.service.impl;
 import bg.softuni.childrenkitchen.model.entity.RoleEntity;
 import bg.softuni.childrenkitchen.model.entity.enums.UserRoleEnum;
 import bg.softuni.childrenkitchen.repository.RoleRepository;
-import bg.softuni.childrenkitchen.service.RoleService;
+import bg.softuni.childrenkitchen.service.interfaces.RoleService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

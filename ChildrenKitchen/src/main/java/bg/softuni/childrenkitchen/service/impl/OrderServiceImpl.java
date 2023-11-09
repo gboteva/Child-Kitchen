@@ -1,14 +1,14 @@
 package bg.softuni.childrenkitchen.service.impl;
 
-import bg.softuni.childrenkitchen.model.CustomUserDetails;
 import bg.softuni.childrenkitchen.model.binding.AdminSearchBindingModel;
 import bg.softuni.childrenkitchen.model.entity.*;
 import bg.softuni.childrenkitchen.model.entity.enums.AgeGroupEnum;
 import bg.softuni.childrenkitchen.exception.ObjectNotFoundException;
 import bg.softuni.childrenkitchen.model.view.*;
 import bg.softuni.childrenkitchen.repository.OrderRepository;
-import bg.softuni.childrenkitchen.service.*;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import bg.softuni.childrenkitchen.service.interfaces.*;
+import org.modelmapper.ModelMapper;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -23,16 +23,16 @@ public class OrderServiceImpl implements OrderService {
     private final MenuService menuService;
     private final CouponService couponService;
     private final PointService pointService;
-    private final AllergyService allergyService;
+    private final ModelMapper modelMapper;
 
 
-    public OrderServiceImpl(OrderRepository orderRepository, UserService userService, MenuService menuService, CouponService couponService, PointService pointService, AllergyService allergyService) {
+    public OrderServiceImpl(OrderRepository orderRepository, UserService userService, MenuService menuService, CouponService couponService, PointService pointService, ModelMapper modelMapper) {
         this.orderRepository = orderRepository;
         this.userService = userService;
         this.menuService = menuService;
         this.couponService = couponService;
         this.pointService = pointService;
-        this.allergyService = allergyService;
+        this.modelMapper = modelMapper;
     }
 
     @Override
@@ -85,9 +85,6 @@ public class OrderServiceImpl implements OrderService {
         order.setDate(order.getCoupon()
                            .getVerifiedDate());
 
-//        order.setMenu(menuService.getMenuByDateAndAgeGroup(order.getCoupon()
-//                                                                .getVerifiedDate(), order.getChild()
-//                                                                                         .getAgeGroup()));
     }
 
     @Override
@@ -187,22 +184,9 @@ public class OrderServiceImpl implements OrderService {
 
 
     private AllergicChildViewModel mapToAllergicChildViewModel(ChildEntity allergicChild) {
-        AllergicChildViewModel allergicChildViewModel = new AllergicChildViewModel();
+        AllergicChildViewModel allergicChildViewModel =  modelMapper.map(allergicChild, AllergicChildViewModel.class);
+        allergicChildViewModel.setServicePoint(allergicChild.getParent().getServicePoint().getName());
 
-        allergicChildViewModel.setFullName(allergicChild.getFullName());
-
-        allergicChildViewModel.setServicePoint(allergicChild.getParent()
-                                                            .getServicePoint()
-                                                            .getName());
-
-        allergicChildViewModel.setAgeGroup(allergicChild.getAgeGroup());
-
-        allergicChildViewModel.setAllergies(allergicChild
-                .getAllergies()
-                .stream()
-                .map(allergyEntity -> allergyEntity.getAllergenName()
-                                                   .name())
-                .collect(Collectors.joining(", ")));
         return allergicChildViewModel;
     }
 
@@ -319,31 +303,33 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderViewModel makeOrder(LocalDate date, String servicePointName, String userEmail, String childFullName, String loggedInUserEmail) {
+
         UserEntity loggedInUser = userService.getByEmail(loggedInUserEmail).orElseThrow(ObjectNotFoundException::new);
+
+        UserEntity userToAddOrder = loggedInUser;
+
+        if(!userEmail.equals(loggedInUserEmail)){
+            userToAddOrder = userService.getByEmail(userEmail).orElseThrow(ObjectNotFoundException::new);
+        }
 
         //only admin may add more than one order per day
         if (!userService.isAdmin(loggedInUser)){
-            List<OrderEntity> allByDate = orderRepository.findAllByDate(date);
+            List<OrderEntity> allByDate = orderRepository.findAllByDateAndChildFullName(date, childFullName);
             if (!allByDate.isEmpty()){
                 return null;
             }
         }
 
-        UserEntity user = userService.getByEmail(userEmail)
-                                     .orElseThrow(ObjectNotFoundException::new);
-
         OrderEntity orderEntity = new OrderEntity();
-
         orderEntity.setDate(date);
-
         orderEntity.setServicePoint(pointService.getByName(servicePointName)
                                                 .orElseThrow(ObjectNotFoundException::new));
 
-        orderEntity.setUser(user);
-
-        orderEntity.setChild(userService.getChildByNames(childFullName, userEmail));
+        orderEntity.setUser(userToAddOrder);
 
         orderEntity.setCoupon(couponService.getAndVerifyCoupon(userEmail, childFullName, date));
+
+        orderEntity.setChild(userService.getChildByNames(childFullName, userEmail));
 
         OrderEntity saved = orderRepository.save(orderEntity);
 
@@ -360,11 +346,15 @@ public class OrderServiceImpl implements OrderService {
        MenuViewModel menuViewModel = menuService.getMenuViewModelByDateAndAgeGroup(orderEntity.getDate(), orderEntity.getChild().getAgeGroup());
        orderViewModel.setMenuViewModel(menuViewModel);
 
+       orderViewModel.setRemainingCouponsCount(saved
+               .getChild().getCoupons().stream()
+               .filter(c -> c.getVerifiedDate()==null).toList().size());
+
         return orderViewModel;
     }
 
     @Override
-    public List<LocalDate> getOrdersOfChild(String childName, String userEmail) {
+    public List<LocalDate> getOrdersDateOfChild(String childName, String userEmail) {
 
         List<OrderEntity> allByChildFullName = orderRepository.findAllByChildFullName(childName);
 
@@ -382,18 +372,18 @@ public class OrderServiceImpl implements OrderService {
         }
 
         if (ordersToDelete.size() == 1){
-            couponService.unverifyCoupon(ordersToDelete.get(0).getCoupon().getId());
+            couponService.unverifiedCoupon(ordersToDelete.get(0).getCoupon().getId());
             orderRepository.delete(ordersToDelete.get(0));
         }else {
             OrderEntity toDelete = ordersToDelete.get(ordersToDelete.size()-1);
-            couponService.unverifyCoupon(toDelete.getCoupon().getId());
+            couponService.unverifiedCoupon(toDelete.getCoupon().getId());
             orderRepository.delete(toDelete);
         }
 
     }
 
     @Override
-    public List<OrderViewModel> getOrdersFromToday(String userEmail) {
+    public List<OrderViewModel> getActiveOrders(String userEmail) {
         Optional<List<OrderEntity>> allByUserEmail = orderRepository.findAllByUserEmail(userEmail);
 
         if (allByUserEmail.isEmpty()) {
@@ -414,11 +404,30 @@ public class OrderServiceImpl implements OrderService {
                                                                     .getVerifiedDate()
                                                                     .compareTo(a.getCoupon()
                                                                                 .getVerifiedDate()))
-                                                 .collect(Collectors.toList());
+                                                 .toList();
 
         return sorted.stream()
                      .map(this::mapToOrderViewModel)
                      .collect(Collectors.toList());
+    }
+
+    @Override
+    public void deleteAllOrderByUserId(Long userId) {
+        List<OrderEntity> allByUserId = orderRepository.findAllByUserId(userId);
+
+        orderRepository.deleteAll(allByUserId);
+    }
+
+
+    @Scheduled(cron = "00 00 00 20 02 *")
+    public void yearlyDeleteOrdersOlderThanOneYear() {
+        List<OrderEntity> olderThanOneYear = orderRepository.findAll()
+                                                              .stream()
+                                                              .filter(order -> order.getCoupon().getVerifiedDate()
+                                                                            .isBefore(LocalDate.now()))
+                                                              .collect(Collectors.toList());
+
+        orderRepository.deleteAll(olderThanOneYear);
     }
 
     private OrderViewModel mapToOrderViewModel(OrderEntity order) {
@@ -436,12 +445,11 @@ public class OrderServiceImpl implements OrderService {
                                                      .getCoupons()
                                                      .stream()
                                                      .filter(c -> c.getVerifiedDate() == null)
-                                                     .collect(Collectors.toList())
+                                                     .toList()
                                                      .size());
 
         MenuViewModel menuViewModel = menuService.getMenuViewModelByDateAndAgeGroup(order.getDate(), order.getCoupon()
                                                                                                           .getAgeGroup());
-
         orderViewModel.setMenuViewModel(menuViewModel);
 
         return orderViewModel;
@@ -451,21 +459,7 @@ public class OrderServiceImpl implements OrderService {
         return allOrdersPerServicePoint.stream()
                                        .map(OrderEntity::getChild)
                                        .filter(ChildEntity::isAllergic)
-                                       .map(child -> {
-                                           AllergicChildViewModel allergicChildViewModel = new AllergicChildViewModel();
-                                           allergicChildViewModel.setFullName(child.getFullName());
-                                           allergicChildViewModel.setServicePoint(child.getParent()
-                                                                                       .getServicePoint()
-                                                                                       .getName());
-                                           allergicChildViewModel.setAgeGroup(child.getAgeGroup());
-                                           allergicChildViewModel.setAllergies(child.getAllergies()
-                                                                                    .stream()
-                                                                                    .map(a -> a.getAllergenName()
-                                                                                               .name())
-                                                                                    .collect(Collectors.joining(", ")));
-
-                                           return allergicChildViewModel;
-                                       })
+                                       .map(this::mapToAllergicChildViewModel)
                                        .collect(Collectors.toList());
     }
 

@@ -32,6 +32,7 @@ body.menu-body{
 }
 .kids {
     width: 45%;
+    margin-bottom: 12px;
     -webkit-animation-name: fadeInDown;
   animation-name: fadeInDown;
   -webkit-animation-duration: 1s;

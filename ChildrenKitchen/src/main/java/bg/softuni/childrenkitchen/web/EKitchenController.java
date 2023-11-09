@@ -3,18 +3,18 @@ package bg.softuni.childrenkitchen.web;
 import bg.softuni.childrenkitchen.model.CustomUserDetails;
 import bg.softuni.childrenkitchen.model.binding.BuyCouponsBindingModel;
 import bg.softuni.childrenkitchen.model.binding.VerifyCouponBindingModel;
-import bg.softuni.childrenkitchen.model.entity.enums.AgeGroupEnum;
 import bg.softuni.childrenkitchen.exception.NoAvailableCouponsException;
-import bg.softuni.childrenkitchen.exception.ObjectNotFoundException;
-import bg.softuni.childrenkitchen.model.service.BuyCouponsServiceModel;
 import bg.softuni.childrenkitchen.model.view.ChildViewModel;
 import bg.softuni.childrenkitchen.model.view.OrderViewModel;
-import bg.softuni.childrenkitchen.service.CouponService;
-import bg.softuni.childrenkitchen.service.OrderService;
+import bg.softuni.childrenkitchen.service.interfaces.CouponService;
+import bg.softuni.childrenkitchen.service.interfaces.OrderService;
+import bg.softuni.childrenkitchen.service.interfaces.UserService;
 import jakarta.validation.Valid;
-import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -27,12 +27,12 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class EKitchenController {
     private final CouponService couponService;
     private final OrderService orderService;
-    private final ModelMapper modelMapper;
+    private final UserService userService;
 
-    public EKitchenController(CouponService couponService, OrderService orderService, ModelMapper modelMapper) {
+    public EKitchenController(CouponService couponService, OrderService orderService, UserService userService) {
         this.couponService = couponService;
         this.orderService = orderService;
-        this.modelMapper = modelMapper;
+        this.userService = userService;
     }
 
     @GetMapping("/e-kitchen")
@@ -51,11 +51,7 @@ public class EKitchenController {
                              @AuthenticationPrincipal CustomUserDetails loggedInUser,
                              RedirectAttributes redirectAttributes){
 
-        ChildViewModel couponsOwner = loggedInUser.getChildren()
-                                     .stream()
-                                     .filter(c -> c.getFullName()
-                                                   .equals(buyCouponsBindingModel.getChildName()))
-                                           .findFirst().orElseThrow(ObjectNotFoundException::new);
+        ChildViewModel couponsOwner = userService.getPrincipalChildByName(loggedInUser, buyCouponsBindingModel.getChildName());
 
         String ageGroupName = couponsOwner.getAgeGroupName();
 
@@ -64,17 +60,24 @@ public class EKitchenController {
             return "redirect:/e-kitchen";
         }
 
-        BuyCouponsServiceModel serviceModel = modelMapper.map(buyCouponsBindingModel, BuyCouponsServiceModel.class);
 
-        serviceModel.setParentEmail(loggedInUser.getUsername());
-
-        int countCoupons = couponService.buyCoupons(serviceModel);
+        int countCoupons = couponService.buyCoupons(buyCouponsBindingModel, loggedInUser.getUsername());
 
         couponsOwner.setCountCoupons(couponsOwner.getCountCoupons() + countCoupons);
 
         redirectAttributes.addFlashAttribute("countCoupons", countCoupons);
         redirectAttributes.addFlashAttribute("kidName", buyCouponsBindingModel.getChildName());
         redirectAttributes.addFlashAttribute("success",true);
+
+
+        loggedInUser.getChildren().stream()
+                    .filter(c -> c.getFullName().equals(buyCouponsBindingModel.getChildName()))
+                .findFirst()
+                    .get()
+                    .setCountCoupons(couponsOwner.getCountCoupons());
+
+        Authentication authentication = new UsernamePasswordAuthenticationToken(loggedInUser, loggedInUser.getPassword(), loggedInUser.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(authentication);
 
         return "redirect:/e-kitchen";
     }
@@ -101,6 +104,15 @@ public class EKitchenController {
             redirectAttributes.addFlashAttribute("noMoreOrdersPerDay", true);
             return "redirect:/e-kitchen";
         }
+
+        customUserDetails.getChildren().stream()
+                    .filter(c -> c.getFullName().equals(verifyCouponBindingModel.getChildName()))
+                    .findFirst()
+                    .get()
+                    .setCountCoupons(orderViewModel.getRemainingCouponsCount());
+
+        Authentication authentication = new UsernamePasswordAuthenticationToken(customUserDetails, customUserDetails.getPassword(), customUserDetails.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(authentication);
 
 
         redirectAttributes.addFlashAttribute("successVerify", true);

@@ -9,9 +9,9 @@ public class ReferenceAllPointsViewModel {
     private String servicePoint;
     private Integer smallOrderCount;
     private Integer bigOrderCount;
-
     private AgeGroupEnum ageGroup;
     List<AllergicChildViewModel> allergicChildren = new ArrayList<>();
+
 
     public String getServicePoint() {
         return servicePoint;

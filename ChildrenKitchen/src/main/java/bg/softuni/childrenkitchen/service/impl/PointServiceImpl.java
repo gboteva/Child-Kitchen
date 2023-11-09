@@ -3,9 +3,8 @@ package bg.softuni.childrenkitchen.service.impl;
 import bg.softuni.childrenkitchen.model.entity.PointEntity;
 import bg.softuni.childrenkitchen.model.view.PointViewModel;
 import bg.softuni.childrenkitchen.repository.PointRepository;
-import bg.softuni.childrenkitchen.service.PointService;
+import bg.softuni.childrenkitchen.service.interfaces.PointService;
 import org.modelmapper.ModelMapper;
-import org.springframework.boot.autoconfigure.web.reactive.function.client.WebClientAutoConfiguration;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +22,6 @@ public class PointServiceImpl implements PointService {
     public PointServiceImpl(PointRepository pointRepository, ModelMapper modelMapper) {
         this.pointRepository = pointRepository;
         this.modelMapper = modelMapper;
-
     }
 
     @Override

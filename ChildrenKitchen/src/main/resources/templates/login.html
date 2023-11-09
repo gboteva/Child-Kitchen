@@ -22,6 +22,7 @@
             placeholder="Въведете e-mail"
             name="email"
             id="login-email"
+            required
           />
 
          
@@ -34,6 +35,7 @@
             min="4"
           />
 
+          <div th:if="${badCredentials}" th:class="error">Невалидни email или парола!</div>
 
           <button type="submit" id="register-btn" class="main-btn">Влез в профил</button>
         </form>

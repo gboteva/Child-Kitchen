@@ -10,5 +10,5 @@ import java.util.Optional;
 
 @Repository
 public interface CouponRepository extends JpaRepository<CouponEntity, Long> {
-
+    void deleteAllByOwnerId(Long ownerId);
 }

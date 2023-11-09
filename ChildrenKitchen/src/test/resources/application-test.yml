@@ -1,0 +1,26 @@
+spring:
+  datasource:
+    url: jdbc:hsqldb:mem:testdb;DB_CLOSE_DELAY=-1
+    username: "sa"
+    password:
+    driver-class-name: org.hsqldb.jdbc.JDBCDriver
+  jpa:
+    database-platform: org.hibernate.dialect.HSQLDialect
+    hibernate:
+      ddl-auto: create-drop
+    defer-datasource-initialization: true
+
+
+  mail:
+    host: localhost
+    port: 1025
+    username: "test@example.com"
+    password: "password"
+
+
+cloudinary:
+  cloud-name: "${CLOUDINARY_NAME}"
+  api-key: "${API_KEY}"
+  api-secret: "${CLOUDINARY_SECRET}"
+
+

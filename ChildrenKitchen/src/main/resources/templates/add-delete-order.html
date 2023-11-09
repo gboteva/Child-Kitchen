@@ -31,7 +31,7 @@
             </select>
             <div th:if="${#fields.hasErrors('userEmail')}" class="error">Няма избран потребител! </div>
 
-            <label for="order-date">Избери дата</label>
+            <label for="add-order-date">Избери дата</label>
             <input type="date" id="add-order-date" th:field="*{date}"/>
             <div th:if="${#fields.hasErrors('date')}" class="error">Не сте въвели дата или сте въвели минала такава! </div>
 
@@ -43,7 +43,7 @@
 
 
             <label for="add-order-point">Избери пункт: </label>
-            <select name="order-punct" id="add-order-point" th:field="*{servicePoint}">
+            <select name="order-point" id="add-order-point" th:field="*{servicePoint}">
               <option value="Детска кухня" >Детска кухня</option>
               <option value="9-ти квартал">9-ти квартал</option>
               <option value="ДГ Теменуга">ДГ Теменуга</option>

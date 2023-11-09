@@ -6,6 +6,7 @@ let soupsSelectEdit = document.getElementById("first-food-edit");
 let mainSelectEdit = document.getElementById("main-food-edit");
 let dessertSelectEdit = document.getElementById("dessert-food-edit");
 let ageGroupSelectEdit = document.getElementById("edit-menu-age-group");
+let dateSelectEdit = document.getElementById("select-date")
 
 let ageGroupSelect = document.getElementById("add-menu-age-group");
 
@@ -44,8 +45,7 @@ async function fillFoods() {
         }
     })
 
-   generateOptions(soupsSelect, mainSelect, dessertSelect, ageGroupSelect.value );
-
+   generateOptions(soupsSelect, mainSelect, dessertSelect, ageGroupSelect.value, null);
 
 }
 
@@ -54,17 +54,33 @@ async function fillEditForm(){
     mainSelectEdit.innerHTML = '';
     dessertSelectEdit.innerHTML = ''
     await fillFoods()
-    generateOptions(soupsSelectEdit, mainSelectEdit, dessertSelectEdit, ageGroupSelectEdit.value)
+
+    let response = await fetch(`http://localhost:8080/api/get-menu-by-date?date=${dateSelectEdit.value}&&ageGroup=${ageGroupSelectEdit.value}`);
+    let existingMenu = await response.json();
+
+    generateOptions(soupsSelectEdit, mainSelectEdit, dessertSelectEdit, ageGroupSelectEdit.value, existingMenu)
 
 }
 
-function generateOptions(soupSrc, mainSrc, dessertSrc, ageGroup){
+function generateOptions(soupSrc, mainSrc, dessertSrc, ageGroup, existingMenu){
+    let existingSoup;
+    let existingMain;
+    let existingDessert;
+
+    if (existingMenu != null){
+        existingSoup = existingMenu.soup.name;
+        existingMain = existingMenu.main.name;
+        existingDessert = existingMenu.dessert.name;
+    }
 
     if (ageGroup !== "") {
     soups.forEach(s => {
         let option = document.createElement("option");
         option.value = s;
         option.text = s;
+        if (s === existingSoup){
+            option.selected = true;
+        }
         soupSrc.appendChild(option);
     })
 }
@@ -74,6 +90,9 @@ function generateOptions(soupSrc, mainSrc, dessertSrc, ageGroup){
             let option = document.createElement("option");
             option.value = p;
             option.text = p;
+            if (p === existingMain){
+                option.selected = true;
+            }
             mainSrc.appendChild(option);
         })
 
@@ -81,6 +100,10 @@ function generateOptions(soupSrc, mainSrc, dessertSrc, ageGroup){
             let option = document.createElement("option");
             option.value = d;
             option.text = d;
+
+            if (d === existingDessert){
+                option.selected = true;
+            }
             dessertSrc.appendChild(option);
         })
 
@@ -90,6 +113,10 @@ function generateOptions(soupSrc, mainSrc, dessertSrc, ageGroup){
             let option = document.createElement("option");
             option.value = m;
             option.text = m;
+
+            if (m === existingMain){
+                option.selected = true;
+            }
             mainSrc.appendChild(option);
         })
 
@@ -97,6 +124,10 @@ function generateOptions(soupSrc, mainSrc, dessertSrc, ageGroup){
             let option = document.createElement("option");
             option.value = d;
             option.text = d;
+
+            if (d === existingDessert){
+                option.selected = true;
+            }
             dessertSrc.appendChild(option);
         })
     }

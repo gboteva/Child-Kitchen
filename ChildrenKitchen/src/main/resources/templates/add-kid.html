@@ -20,6 +20,8 @@
               type="text"
               name="kid-name"
               id="add-kid-name"
+              min="10"
+              max="50"
               placeholder="Въведете трите имена на детето"
               th:field="*{fullName}"
             />
@@ -160,7 +162,7 @@
 
               <label for="private-data"
                 >Съгласявам се Детска кухня да обработва лични ми данни</label>
-              <input type="checkbox" name="private-date" id="private-data" th:field="*{isChecked}"/>
+              <input type="checkbox" name="private-date" id="private-data" th:field="*{isChecked}" required/>
 
               <button type="submit" class="main-btn">Добави</button>
 

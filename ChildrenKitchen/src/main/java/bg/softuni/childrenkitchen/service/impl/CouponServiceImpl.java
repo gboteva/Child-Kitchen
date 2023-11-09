@@ -1,16 +1,16 @@
 package bg.softuni.childrenkitchen.service.impl;
 
+import bg.softuni.childrenkitchen.model.binding.BuyCouponsBindingModel;
 import bg.softuni.childrenkitchen.model.entity.ChildEntity;
 import bg.softuni.childrenkitchen.model.entity.CouponEntity;
 import bg.softuni.childrenkitchen.model.entity.UserEntity;
 import bg.softuni.childrenkitchen.exception.NoAvailableCouponsException;
 import bg.softuni.childrenkitchen.exception.ObjectNotFoundException;
-import bg.softuni.childrenkitchen.model.service.BuyCouponsServiceModel;
+import bg.softuni.childrenkitchen.model.entity.enums.AgeGroupEnum;
 import bg.softuni.childrenkitchen.repository.CouponRepository;
-import bg.softuni.childrenkitchen.service.CouponService;
-import bg.softuni.childrenkitchen.service.MenuService;
-import bg.softuni.childrenkitchen.service.UserService;
-import org.modelmapper.ModelMapper;
+import bg.softuni.childrenkitchen.service.interfaces.CouponService;
+import bg.softuni.childrenkitchen.service.interfaces.MenuService;
+import bg.softuni.childrenkitchen.service.interfaces.UserService;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -26,13 +26,11 @@ public class CouponServiceImpl implements CouponService {
     private final CouponRepository couponRepository;
     private final UserService userService;
     private final MenuService menuService;
-    private final ModelMapper modelMapper;
 
-    public CouponServiceImpl(CouponRepository couponRepository, UserService userService, MenuService menuService, ModelMapper modelMapper) {
+    public CouponServiceImpl(CouponRepository couponRepository, UserService userService, MenuService menuService) {
         this.couponRepository = couponRepository;
         this.userService = userService;
         this.menuService = menuService;
-        this.modelMapper = modelMapper;
     }
 
 
@@ -108,8 +106,9 @@ public class CouponServiceImpl implements CouponService {
     }
 
     @Override
-    public int buyCoupons(BuyCouponsServiceModel serviceModel) {
-        List<CouponEntity> couponsToBuy = createCoupons(serviceModel);
+    public int buyCoupons(BuyCouponsBindingModel buyCouponsBindingModel, String parentEmail) {
+
+        List<CouponEntity> couponsToBuy = createCoupons(buyCouponsBindingModel, parentEmail);
 
         return couponRepository.saveAll(couponsToBuy).size();
     }
@@ -129,20 +128,25 @@ public class CouponServiceImpl implements CouponService {
     }
 
     @Override
-    public Long unverifyCoupon(Long couponId) {
-        Optional<CouponEntity> couponToUnverify = couponRepository.findById(couponId);
+    public Long unverifiedCoupon(Long couponId) {
+        Optional<CouponEntity> couponToUnverified = couponRepository.findById(couponId);
 
 
-        if (couponToUnverify.isEmpty()){
+        if (couponToUnverified.isEmpty()){
             throw new ObjectNotFoundException();
         }
 
-        CouponEntity couponEntity = couponToUnverify.get();
+        CouponEntity couponEntity = couponToUnverified.get();
         couponEntity.setVerifiedDate(null);
 
         couponRepository.save(couponEntity);
 
         return couponEntity.getId();
+    }
+
+    @Override
+    public void deleteCouponsByOwnerId(Long ownerId) {
+        couponRepository.deleteAllByOwnerId(ownerId);
     }
 
 
@@ -160,10 +164,10 @@ public class CouponServiceImpl implements CouponService {
     }
 
 
-    private List<CouponEntity> createCoupons(BuyCouponsServiceModel buyCouponServiceModel) {
-        int countCoupons = buyCouponServiceModel.getCountCoupons();
+    private List<CouponEntity> createCoupons(BuyCouponsBindingModel buyCouponsBindingModel, String parentEmail) {
+        int countCoupons = buyCouponsBindingModel.getCountCoupons();
 
-        Optional<UserEntity> userEntity = userService.getByEmail(buyCouponServiceModel.getParentEmail());
+        Optional<UserEntity> userEntity = userService.getByEmail(parentEmail);
 
         if(userEntity.isEmpty()){
             throw new ObjectNotFoundException();
@@ -178,18 +182,25 @@ public class CouponServiceImpl implements CouponService {
                                               .stream()
                                               .filter(childEntity ->
                                                       childEntity.getFullName()
-                                                                 .equals(buyCouponServiceModel.getChildName()))
+                                                                 .equals(buyCouponsBindingModel.getChildName()))
                                               .limit(1).toList()
                                                 .get(0);
 
         List<CouponEntity> coupons = new ArrayList<>();
 
+        String priceString = buyCouponsBindingModel.getPrice();
+        priceString = priceString.substring(0, priceString.indexOf(" "));
+        priceString = priceString.replace(",", ".");
+
+        double price = Double.parseDouble(priceString);
+        AgeGroupEnum ageGroupEnum = AgeGroupEnum.valueOf(buyCouponsBindingModel.getAgeGroupName());
+
         for (int i = 0; i < countCoupons; i++) {
             CouponEntity couponEntity = new CouponEntity();
 
             couponEntity.setOwner(child);
-            couponEntity.setPrice(buyCouponServiceModel.getPrice());
-            couponEntity.setAgeGroup(buyCouponServiceModel.getAgeGroup());
+            couponEntity.setPrice(BigDecimal.valueOf(price));
+            couponEntity.setAgeGroup(ageGroupEnum);
 
             coupons.add(couponEntity);
         }
@@ -198,14 +209,14 @@ public class CouponServiceImpl implements CouponService {
     }
 
 
-    @Scheduled(cron = "00 00 11 20 02 *")
-    public void YearlyDeleteCoupons(){
-        //delete all coupons with verify date older than 1 year before 20.01 yearly
+    @Scheduled(cron = "00 30 00 20 02 *")
+    public void yearlyDeleteCoupons(){
 
         List<CouponEntity> olderThanOneYear = couponRepository.findAll()
                                                      .stream()
-                                                     .filter(coupon -> coupon.getVerifiedDate()
-                                                                             .isBefore(LocalDate.now()))
+                                                     .filter(coupon -> coupon.getVerifiedDate()!=null &&
+                                                             coupon.getVerifiedDate()
+                                                                   .isBefore(LocalDate.now()))
                                                      .collect(Collectors.toList());
 
         couponRepository.deleteAll(olderThanOneYear);

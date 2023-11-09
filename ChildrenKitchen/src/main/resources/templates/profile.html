@@ -11,12 +11,15 @@
     </header>
 
     <main>
-      <h2>Добре дошли, <span sec:authorize="isAuthenticated()" th:text="${loggedInUser.fullName.substring(0, loggedInUser.getFullName().indexOf(' '))}"></span>!</h2>
+
+      <h2>Добре дошли, <span sec:authorize="isAuthenticated()" th:text="${#strings.substringBefore(loggedInUser.fullName, ' ')}"></span>!</h2>
 
       <div class="profile" th:object="${loggedInUser}">
         <div class="info-wrapper">
           <article class="main-info shadow-ctn">
             <h4>Основна информация</h4>
+
+            <div class="success-edit" th:if="${successEdit} != null">Успешно редактирахте профила си!</div>
   
             <form th:action="@{/users/profile}" th:method="PATCH" class="info" th:object="${userUpdateBindingModel}">
 
@@ -24,9 +27,9 @@
               <input
                 type="email"
                 placeholder="Въведете e-mail"
-                name="email"
                 id="info-email"
-                th:value="${userUpdateBindingModel.email} == null ? ${loggedInUser.username} : *{email}"
+                th:value="${loggedInUser.username}"
+                disabled
               />
               <div th:if="${#fields.hasErrors('email')}" th:class="error">Невалиден имейл!</div>
 
@@ -36,6 +39,7 @@
                 placeholder="Въведете име и фамилия на родител"
                 name="fullName"
                 id="info-name"
+                min="7" max="50"
                 th:value="${userUpdateBindingModel.fullName} == null ? ${loggedInUser.fullName} : *{fullName}"
               />
               <div th:if="${#fields.hasErrors('fullName')}" th:class="error">Името трябва да съръджа между 7 и 50 символа!</div>
@@ -68,6 +72,7 @@
                 placeholder="Въведете телефон за връзка"
                 name="phoneNumber"
                 id="info-tel"
+                min="10"
                 th:value="${userUpdateBindingModel.phoneNumber} == null ? ${loggedInUser.phoneNumber} : *{phoneNumber}"
               />
               <div th:if="${#fields.hasErrors('phoneNumber')}" th:class="error">Телефонният номер трябва да съръджа поне 10 символа!</div>
@@ -78,14 +83,14 @@
                       placeholder="Въведете нова парола"
                       name="password"
                       id="info-pass"
+                      min="4"
               />
 
               <button type="submit" class="large main-btn" name="edit">Редактирай</button>
             </form>
           </article>
 
-          <article class="shadow-ctn">
-            <div class="kids-wrapper">
+          <article class="shadow-ctn kids-wrapper">
               <p>Деца:</p>
               <ul>
                 <li th:each="c : *{children}">
@@ -100,7 +105,7 @@
               <button class="large main-btn">
                 <a th:href="@{/users/profile/add-kid}">Добави дете</a>
               </button>
-            </div>
+
           </article>
         </div>
 

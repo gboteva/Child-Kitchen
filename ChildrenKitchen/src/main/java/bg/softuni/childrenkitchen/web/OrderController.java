@@ -5,7 +5,7 @@ import bg.softuni.childrenkitchen.model.binding.AddOrderBindingModel;
 import bg.softuni.childrenkitchen.model.binding.DeleteOrderBindingModel;
 import bg.softuni.childrenkitchen.exception.NoAvailableCouponsException;
 import bg.softuni.childrenkitchen.model.view.OrderViewModel;
-import bg.softuni.childrenkitchen.service.OrderService;
+import bg.softuni.childrenkitchen.service.interfaces.OrderService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -34,7 +34,8 @@ public class OrderController {
     @PostMapping("/admin/add-delete-order")
     public String addOrder(@Valid AddOrderBindingModel addOrderBindingModel,
                            BindingResult bindingResult,
-                           RedirectAttributes redirectAttributes, @AuthenticationPrincipal CustomUserDetails loggedInUser){
+                           RedirectAttributes redirectAttributes,
+                           @AuthenticationPrincipal CustomUserDetails loggedInUser){
 
         if(bindingResult.hasErrors()){
             redirectAttributes.addFlashAttribute("addOrderBindingModel", addOrderBindingModel);
@@ -57,7 +58,8 @@ public class OrderController {
     }
 
     @DeleteMapping("/admin/add-delete-order")
-    public String deleteOrder(DeleteOrderBindingModel deleteOrderBindingModel, RedirectAttributes redirectAttributes){
+    public String deleteOrder(DeleteOrderBindingModel deleteOrderBindingModel,
+                              RedirectAttributes redirectAttributes){
 
         if(deleteOrderBindingModel.getDeleteOrderDate() == null ||
                 deleteOrderBindingModel.getChildName().equals("")){

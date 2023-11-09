@@ -16,7 +16,8 @@ public class AllergenEntity extends BaseEntity {
         return name;
     }
 
-    public void setName(String name) {
+    public AllergenEntity setName(String name) {
         this.name = name;
+        return this;
     }
 }

@@ -6,7 +6,7 @@ import bg.softuni.childrenkitchen.model.binding.ViewMenuByDateBindingModel;
 import bg.softuni.childrenkitchen.model.entity.enums.AgeGroupEnum;
 import bg.softuni.childrenkitchen.model.view.FoodViewModel;
 import bg.softuni.childrenkitchen.model.view.MenuViewModel;
-import bg.softuni.childrenkitchen.service.MenuService;
+import bg.softuni.childrenkitchen.service.interfaces.MenuService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -35,12 +35,11 @@ public class MenuController {
                                                         .filter(m -> m.getAgeGroupName().equals("МАЛКИ"))
                                                         .collect(Collectors.toList()));
 
-
         model.addAttribute("bigWeeklyMenu",weeklyMenu.stream()
                                                      .filter(m -> m.getAgeGroupName().equals("ГОЛЕМИ"))
                                                      .collect(Collectors.toList()));
 
-        return "/menus";
+        return "menus";
     }
 
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
@@ -61,7 +60,15 @@ public class MenuController {
     }
 
     @PostMapping("/admin/view-menu-by-date")
-    public String viewMenuByDate(ViewMenuByDateBindingModel viewMenuByDateBindingModel, RedirectAttributes redirectAttributes) {
+    public String viewMenuByDate(@Valid ViewMenuByDateBindingModel viewMenuByDateBindingModel,
+                                 BindingResult bindingResult,
+                                 RedirectAttributes redirectAttributes) {
+
+        if (bindingResult.hasErrors()) {
+            redirectAttributes.addFlashAttribute("viewMenuByDateBindingModel", viewMenuByDateBindingModel);
+            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.viewMenuByDateBindingModel", bindingResult);
+            return "redirect:/admin/view-menu-by-date";
+        }
 
         MenuViewModel dailyMenu = menuService.getMenuViewModelByDateAndAgeGroup(viewMenuByDateBindingModel.getDate(), AgeGroupEnum.valueOf(viewMenuByDateBindingModel.getAgeGroup()));
 
@@ -105,7 +112,7 @@ public class MenuController {
 
 
     @PatchMapping("/admin/add-menu")
-    public String editMenu(AddMenuBindingModel addMenuBindingModel, RedirectAttributes redirectAttributes) {
+    public String editMenuMustSuccess(AddMenuBindingModel addMenuBindingModel, RedirectAttributes redirectAttributes) {
 
         MenuViewModel edited = menuService.editMenu(addMenuBindingModel.getDate(), AgeGroupEnum.valueOf(addMenuBindingModel.getAgeGroup()), addMenuBindingModel);
 
@@ -134,5 +141,10 @@ public class MenuController {
     @ModelAttribute
     public AddMenuBindingModel addMenuBindingModel() {
         return new AddMenuBindingModel();
+    }
+
+    @ModelAttribute
+    public ViewMenuByDateBindingModel viewMenuByDateBindingModel() {
+        return new ViewMenuByDateBindingModel();
     }
 }

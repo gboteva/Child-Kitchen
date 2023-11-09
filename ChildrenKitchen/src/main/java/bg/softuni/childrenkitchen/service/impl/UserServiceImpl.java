@@ -1,18 +1,20 @@
 package bg.softuni.childrenkitchen.service.impl;
 
+import bg.softuni.childrenkitchen.model.CustomUserDetails;
+import bg.softuni.childrenkitchen.model.binding.UserRegisterBindingModel;
 import bg.softuni.childrenkitchen.model.binding.UserUpdateBindingModel;
 import bg.softuni.childrenkitchen.model.entity.ChildEntity;
 import bg.softuni.childrenkitchen.model.entity.RoleEntity;
 import bg.softuni.childrenkitchen.model.entity.UserEntity;
 import bg.softuni.childrenkitchen.model.entity.enums.CityEnum;
 import bg.softuni.childrenkitchen.exception.ObjectNotFoundException;
-import bg.softuni.childrenkitchen.model.service.UserRegisterServiceModel;
+import bg.softuni.childrenkitchen.model.view.ChildViewModel;
 import bg.softuni.childrenkitchen.model.view.UserAndChildViewModel;
 import bg.softuni.childrenkitchen.model.view.UserViewModel;
 import bg.softuni.childrenkitchen.repository.UserRepository;
-import bg.softuni.childrenkitchen.service.PointService;
-import bg.softuni.childrenkitchen.service.RoleService;
-import bg.softuni.childrenkitchen.service.UserService;
+import bg.softuni.childrenkitchen.service.interfaces.PointService;
+import bg.softuni.childrenkitchen.service.interfaces.RoleService;
+import bg.softuni.childrenkitchen.service.interfaces.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -94,52 +96,67 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserUpdateBindingModel editUser(UserUpdateBindingModel userUpdateBindingModel) {
-        UserEntity userEntity = userRepository.findByEmail(userUpdateBindingModel.getEmail())
-                                              .orElseThrow(ObjectNotFoundException::new);
+    public UserUpdateBindingModel editUser(UserUpdateBindingModel userUpdateBindingModel, String loggedInUserEmail) {
 
-        if (!userUpdateBindingModel.getNewEmail().equals(userEntity.getEmail())){
-            userEntity.setEmail(userUpdateBindingModel.getNewEmail());
+        UserEntity loggedInUser = userRepository.findByEmail(loggedInUserEmail)
+                                                .orElseThrow(ObjectNotFoundException::new);
+
+        UserEntity userToEdit;
+
+        if (isAdmin(loggedInUser)){
+            userToEdit = userRepository.findByEmail(userUpdateBindingModel.getEmail())
+                                       .orElseThrow(ObjectNotFoundException::new);
+
+            if (userUpdateBindingModel.getNewEmail() !=null &&
+                    !userUpdateBindingModel.getNewEmail().equals(userToEdit.getEmail())){
+                userToEdit.setEmail(userUpdateBindingModel.getNewEmail());
+            }
+
+
+            if (userUpdateBindingModel.getMakeAdmin() != null){
+                if (userUpdateBindingModel.getMakeAdmin()){
+                    userToEdit.getRoles().add(roleService.getRole("ADMIN").orElseThrow(ObjectNotFoundException::new));
+                }
+            }
+
+            if (userUpdateBindingModel.getMakeUser() != null){
+                if (userUpdateBindingModel.getMakeUser()){
+                    userToEdit.getRoles().clear();
+                    userToEdit.getRoles().add(roleService.getRole("USER").orElseThrow(ObjectNotFoundException::new));
+                }
+            }
+
+        }else {
+            userToEdit = loggedInUser;
         }
 
-        if (!userEntity.getFullName().equals(userUpdateBindingModel.getFullName())){
-            userEntity.setFullName(userUpdateBindingModel.getFullName()
+
+        if (!userToEdit.getFullName().equals(userUpdateBindingModel.getFullName())){
+            userToEdit.setFullName(userUpdateBindingModel.getFullName()
                                                          .toUpperCase());
         }
 
-        if (!userEntity.getPhoneNumber().equals(userUpdateBindingModel.getPhoneNumber())){
-            userEntity.setPhoneNumber(userUpdateBindingModel.getPhoneNumber());
+        if (!userToEdit.getPhoneNumber().equals(userUpdateBindingModel.getPhoneNumber())){
+            userToEdit.setPhoneNumber(userUpdateBindingModel.getPhoneNumber());
         }
 
-        if (!userEntity.getCity().name().equals(userUpdateBindingModel.getCityName())){
-            userEntity.setCity(CityEnum.valueOf(userUpdateBindingModel.getCityName()));
+        if (!userToEdit.getCity().name().equals(userUpdateBindingModel.getCityName())){
+            userToEdit.setCity(CityEnum.valueOf(userUpdateBindingModel.getCityName()));
         }
 
-        if (!userEntity.getServicePoint().getName().equals(userUpdateBindingModel.getServicePointName())){
-            userEntity.setServicePoint(pointService.getByName(userUpdateBindingModel.getServicePointName())
+        if (!userToEdit.getServicePoint().getName().equals(userUpdateBindingModel.getServicePointName())){
+            userToEdit.setServicePoint(pointService.getByName(userUpdateBindingModel.getServicePointName())
                                                    .orElseThrow(ObjectNotFoundException::new));
         }
 
         if (!userUpdateBindingModel.getPassword().equals("") && userUpdateBindingModel.getPassword()!=null){
-            if (!passwordEncoder.matches(userUpdateBindingModel.getPassword(), userEntity.getPassword())){
-                userEntity.setPassword(passwordEncoder.encode(userUpdateBindingModel.getPassword()));
+            if (!passwordEncoder.matches(userUpdateBindingModel.getPassword(), userToEdit.getPassword())){
+                userToEdit.setPassword(passwordEncoder.encode(userUpdateBindingModel.getPassword()));
             }
         }
 
-        if (userUpdateBindingModel.getMakeAdmin() != null){
-            if (userUpdateBindingModel.getMakeAdmin() && !isAdmin(userEntity)){
-                userEntity.getRoles().add(roleService.getRole("ADMIN").orElseThrow(ObjectNotFoundException::new));
-            }
-        }
 
-        if (userUpdateBindingModel.getMakeUser() != null){
-            if (userUpdateBindingModel.getMakeUser() && isAdmin(userEntity)){
-                userEntity.getRoles().clear();
-                userEntity.getRoles().add(roleService.getRole("USER").orElseThrow(ObjectNotFoundException::new));
-            }
-        }
-
-        UserEntity saved = userRepository.save(userEntity);
+        UserEntity saved = userRepository.save(userToEdit);
         UserUpdateBindingModel mapped = modelMapper.map(saved, UserUpdateBindingModel.class);
         mapped.setCityName(saved.getCity().name());
         mapped.setMakeAdmin(isAdmin(saved));
@@ -159,6 +176,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public ChildViewModel getPrincipalChildByName(CustomUserDetails loggedInUser, String childName) {
+
+       return loggedInUser.getChildren()
+                    .stream()
+                    .filter(c -> c.getFullName()
+                                  .equals(childName))
+                    .findFirst()
+                    .orElseThrow(ObjectNotFoundException::new);
+    }
+
+
+
+    @Override
     public List<UserAndChildViewModel> getUserByKeyWord(String keyWord) {
         List<UserEntity> matchedUser = userRepository.findAllByEmailContaining(keyWord);
 
@@ -175,6 +205,7 @@ public class UserServiceImpl implements UserService {
                                     .map(ChildEntity::getFullName)
                                     .collect(Collectors.toSet()));
             model.setPhoneNumber(u.getPhoneNumber());
+            model.setCityName(u.getCity().name());
             list.add(model);
         });
 
@@ -196,19 +227,21 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public UserViewModel registerUser(UserRegisterServiceModel userRegisterServiceModel) {
+    public UserViewModel registerUser(UserRegisterBindingModel userRegisterBindingModel) {
 
-        UserEntity user = modelMapper.map(userRegisterServiceModel, UserEntity.class);
-        user.setFullName(userRegisterServiceModel.getFullName()
+        UserEntity user = modelMapper.map(userRegisterBindingModel, UserEntity.class);
+        user.setFullName(userRegisterBindingModel.getFullName()
                                                  .toUpperCase());
-        user.setPassword(passwordEncoder.encode(userRegisterServiceModel.getPassword()));
+        user.setPassword(passwordEncoder.encode(userRegisterBindingModel.getPassword()));
 
         user.setRoles(Set.of(roleService.getRole("USER")
                                         .orElseThrow(ObjectNotFoundException::new)));
         user.setServicePoint(pointService.getByName("Детска кухня")
                                          .orElseThrow(ObjectNotFoundException::new));
 
-        UserViewModel userViewModel = modelMapper.map(userRepository.save(user), UserViewModel.class);
+        UserEntity saved = userRepository.save(user);
+
+        UserViewModel userViewModel = modelMapper.map(saved, UserViewModel.class);
         userViewModel.setCityName(user.getCity()
                                       .name());
 

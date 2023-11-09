@@ -27,5 +27,7 @@ public interface OrderRepository extends JpaRepository<OrderEntity, Long> {
 
     Optional<List<OrderEntity>> findAllByUserEmail(String userEmail);
 
-    List<OrderEntity> findAllByDate(LocalDate date);
+    List<OrderEntity> findAllByDateAndChildFullName(LocalDate date, String childName);
+
+    List<OrderEntity> findAllByUserId(Long userId);
 }

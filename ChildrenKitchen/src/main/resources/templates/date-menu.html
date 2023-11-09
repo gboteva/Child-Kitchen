@@ -14,15 +14,18 @@
       <section class="see-menu">
 
         <div class="menu-ctn shadow-ctn">
-          <form th:action="@{/admin/view-menu-by-date}" th:method="POST">
+          <form th:action="@{/admin/view-menu-by-date}" th:method="POST" th:object="${viewMenuByDateBindingModel}">
             <label for="choose-date">Избери дата</label>
-            <input type="date" id="choose-date" name="date" />
+            <input type="date" id="choose-date" name="date" th:field="*{date}"/>
+              <div class="error" th:if="${#fields.hasErrors('date')}">Трябва да изберете дата!</div>
 
             <label for="ageGroup">Избери възрастова група</label>
-            <select name="ageGroup" id="ageGroup">
+            <select name="ageGroup" id="ageGroup" th:field="*{ageGroup}">
               <option value="МАЛКИ" selected>10 МЕСЕЦА - 1 ГОДИНА</option>
               <option value="ГОЛЕМИ">1 ГОДИНА - 3 ГОДИНИ</option>
             </select>
+
+              <div class="error" th:if="${#fields.hasErrors('ageGroup')}">Трябва да изберете възрастова група!</div>
 
             <button type="submit" class="main-btn">ВИЖ</button>
           </form>

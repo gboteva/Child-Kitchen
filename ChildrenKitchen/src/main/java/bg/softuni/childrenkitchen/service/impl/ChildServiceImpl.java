@@ -1,8 +1,7 @@
 package bg.softuni.childrenkitchen.service.impl;
 
-import bg.softuni.childrenkitchen.exception.EmailProblemException;
 import bg.softuni.childrenkitchen.model.CloudinaryImage;
-import bg.softuni.childrenkitchen.model.CustomUserDetails;
+import bg.softuni.childrenkitchen.model.RegistrationChildEvent;
 import bg.softuni.childrenkitchen.model.binding.ChildRegisterBindingModel;
 import bg.softuni.childrenkitchen.model.entity.AllergyEntity;
 import bg.softuni.childrenkitchen.model.entity.ChildEntity;
@@ -12,10 +11,12 @@ import bg.softuni.childrenkitchen.exception.ObjectNotFoundException;
 import bg.softuni.childrenkitchen.model.view.AllergicChildViewModel;
 import bg.softuni.childrenkitchen.model.view.ChildViewModel;
 import bg.softuni.childrenkitchen.repository.ChildRepository;
-import bg.softuni.childrenkitchen.service.*;
-import jakarta.mail.MessagingException;
+import bg.softuni.childrenkitchen.service.interfaces.AllergyService;
+import bg.softuni.childrenkitchen.service.interfaces.ChildService;
+import bg.softuni.childrenkitchen.service.interfaces.CloudinaryService;
+import bg.softuni.childrenkitchen.service.interfaces.UserService;
 import org.modelmapper.ModelMapper;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -26,22 +27,21 @@ import java.util.stream.Collectors;
 @Service
 public class ChildServiceImpl implements ChildService {
 
-    private static final String recipientEmail = "childrens.kitchen.pl@gmail.com";
-    private final static String subjectAddKid = "Регистрирано ново дете в системата!";
     private final ChildRepository childRepository;
     private final UserService userService;
     private final AllergyService allergyService;
     private final ModelMapper modelMapper;
     private final CloudinaryService cloudinaryService;
-    private final EmailService emailService;
 
-    public ChildServiceImpl(ChildRepository childRepository, UserService userService, AllergyService allergyService, ModelMapper modelMapper, CloudinaryService cloudinaryService, EmailService emailService) {
+    private final ApplicationEventPublisher applicationEventPublisher;
+
+    public ChildServiceImpl(ChildRepository childRepository, UserService userService, AllergyService allergyService, ModelMapper modelMapper, CloudinaryService cloudinaryService, ApplicationEventPublisher applicationEventPublisher) {
         this.childRepository = childRepository;
         this.userService = userService;
         this.allergyService = allergyService;
         this.modelMapper = modelMapper;
         this.cloudinaryService = cloudinaryService;
-        this.emailService = emailService;
+        this.applicationEventPublisher = applicationEventPublisher;
     }
 
     @Override
@@ -64,7 +64,9 @@ public class ChildServiceImpl implements ChildService {
                                    .orElseThrow(ObjectNotFoundException::new));
 
         misho.setBirthCertificateURL("https://res.cloudinary.com/galkab/image/upload/v1694687128/DK_PROJECT/ChildrenDocuments/birth-cert-example-2_ul05f9.jpg");
+        misho.setBirthCertificatePublic_id("DK_PROJECT/ChildrenDocuments/birth-cert-example-2_ul05f9");
         misho.setMedicalListURL("https://res.cloudinary.com/galkab/image/upload/v1694686942/DK_PROJECT/ChildrenDocuments/medicalList-example-3_mefusb.jpg");
+        misho.setMedicalListPublicId("DK_PROJECT/ChildrenDocuments/medicalList-example-3_mefusb");
 
         ChildEntity gosho = new ChildEntity();
         gosho.setFullName("ГЕОРГИ ИВАНОВ ИВАНОВ");
@@ -73,7 +75,9 @@ public class ChildServiceImpl implements ChildService {
         gosho.setAgeGroup(defineAgeGroup(gosho.getBirthDate()));
 
         gosho.setMedicalListURL("https://res.cloudinary.com/galkab/image/upload/v1694686942/DK_PROJECT/ChildrenDocuments/medicalList-example-2_ksnivh.jpg");
+        gosho.setMedicalListPublicId("DK_PROJECT/ChildrenDocuments/medicalList-example-2_ksnivh");
         gosho.setBirthCertificateURL("https://res.cloudinary.com/galkab/image/upload/v1694686942/DK_PROJECT/ChildrenDocuments/Birth-Certificate-example-1_oudx0u.jpg");
+        gosho.setBirthCertificatePublic_id("DK_PROJECT/ChildrenDocuments/Birth-Certificate-example-1_oudx0u");
 
         gosho.setCoupons(new ArrayList<>());
 
@@ -88,10 +92,11 @@ public class ChildServiceImpl implements ChildService {
         ivan.setAgeGroup(defineAgeGroup(ivan.getBirthDate()));
 
         ivan.setMedicalListURL("https://res.cloudinary.com/galkab/image/upload/v1694686942/DK_PROJECT/ChildrenDocuments/medicalList-example-1_i2rary.jpg");
+        ivan.setMedicalListPublicId("DK_PROJECT/ChildrenDocuments/medicalList-example-1_i2rary");
         ivan.setBirthCertificateURL("https://res.cloudinary.com/galkab/image/upload/v1694687305/DK_PROJECT/ChildrenDocuments/birth-cert-example-3_rzi5wo.png");
+        ivan.setBirthCertificatePublic_id("DK_PROJECT/ChildrenDocuments/birth-cert-example-3_rzi5wo.png");
 
         ivan.setCoupons(new ArrayList<>());
-
 
         ivan.setAllergies(Set.of(allergyService.findByName(AllergyEnum.НЯМА)
                                                .orElseThrow(ObjectNotFoundException::new)));
@@ -126,9 +131,12 @@ public class ChildServiceImpl implements ChildService {
         CloudinaryImage medicalList = cloudinaryService.uploadImage(childRegisterBindingModel.getMedicalList());
         CloudinaryImage birthCert = cloudinaryService.uploadImage(childRegisterBindingModel.getBirthCertificate());
 
-
         childEntity.setBirthCertificateURL(birthCert.getUrl());
         childEntity.setMedicalListURL(medicalList.getUrl());
+
+        childEntity.setBirthCertificatePublic_id(birthCert.getPublicKey());
+        childEntity.setMedicalListPublicId(medicalList.getPublicKey());
+
         childEntity.setFullName(childRegisterBindingModel.getFullName()
                                                          .toUpperCase());
 
@@ -136,39 +144,56 @@ public class ChildServiceImpl implements ChildService {
 
         ChildViewModel childViewModel = modelMapper.map(savedChild, ChildViewModel.class);
 
-        childViewModel.setAllergies(savedChild.getAllergies()
-                                              .stream()
-                                              .map(allergyEntity -> allergyEntity.getAllergenName()
-                                                                                 .name())
-                                              .map(string -> {
-                                                  if (string.contains("_")) {
-                                                      string = string.replace("_", " ");
-                                                  }
-
-                                                  return string;
-                                              })
-                                              .collect(Collectors.joining(", ")));
+        childViewModel.setAllergies(getStringWithAllAllergies(savedChild));
 
         childViewModel.setAgeGroupName(childEntity.getAgeGroup().name());
+        childViewModel.defineAge(childRegisterBindingModel.getBirthDate());
 
-        String emailContent = String.format("В базата данни е регистрирано ново дете с id = %d! Моля проверете приложените документи и извършете необходимите действия, ако е необходимо!", savedChild.getId());
 
-        try {
-            emailService.sendEmail(recipientEmail, subjectAddKid, emailContent);
-        } catch (MessagingException e) {
-            throw new EmailProblemException();
-        }
+        RegistrationChildEvent registrationChildEvent = new RegistrationChildEvent(this).setChildId(savedChild.getId());
+
+        applicationEventPublisher.publishEvent(registrationChildEvent);
 
         return childViewModel;
 
     }
 
-    @Override
-    public List<AllergicChildViewModel> getAllAllergicChildren() {
+    private String getStringWithAllAllergies(ChildEntity childEntity){
+        return childEntity.getAllergies()
+                         .stream()
+                         .map(allergyEntity -> allergyEntity.getAllergenName()
+                                                            .name())
+                         .map(string -> {
+                             if (string.contains("_")) {
+                                 string = string.replace("_", " ");
+                             }
 
+                             return string;
+                         })
+                         .collect(Collectors.joining(", "));
+    }
+
+    @Override
+    public List<AllergicChildViewModel> getAllAllergicChildrenFromDB() {
         return childRepository.findAll().stream().filter(ChildEntity::isAllergic)
                 .map(this::mapToAllergicChildViewModel)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public void deleteAllChildByUserId(Long parentId) {
+        List<ChildEntity> allByParentId = childRepository.findAllByParentId(parentId);
+
+        List<String> allBirtCert = allByParentId.stream()
+                                            .map(ChildEntity::getBirthCertificatePublic_id)
+                                            .toList();
+
+        List<String> allMedicalLists = allByParentId.stream()
+                                                .map(ChildEntity::getMedicalListPublicId)
+                                                .toList();
+
+        childRepository.deleteAll(allByParentId);
+
 
     }
 
@@ -178,19 +203,6 @@ public class ChildServiceImpl implements ChildService {
         allergicChildViewModel.setServicePoint(entity.getParent()
                                                      .getServicePoint()
                                                      .getName());
-
-        allergicChildViewModel.setAllergies(entity.getAllergies()
-                                                  .stream()
-                                                  .map(allergyEntity -> allergyEntity.getAllergenName()
-                                                                                     .name())
-                                                  .map(str -> {
-                                                      if (str.contains("_")) {
-                                                          str = str.replace("_", " ");
-                                                      }
-
-                                                      return str;
-                                                  })
-                                                  .collect(Collectors.joining(", ")));
 
         return allergicChildViewModel;
     }

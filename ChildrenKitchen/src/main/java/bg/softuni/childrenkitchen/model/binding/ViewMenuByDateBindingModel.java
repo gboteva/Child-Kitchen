@@ -1,9 +1,15 @@
 package bg.softuni.childrenkitchen.model.binding;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
 import java.time.LocalDate;
 
 public class ViewMenuByDateBindingModel {
+    @NotNull
     private LocalDate date;
+
+    @NotBlank
     private String ageGroup;
 
     public LocalDate getDate() {

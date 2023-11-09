@@ -1,7 +1,11 @@
 package bg.softuni.childrenkitchen.model;
 
+import bg.softuni.childrenkitchen.exception.ObjectNotFoundException;
 import bg.softuni.childrenkitchen.model.view.ChildViewModel;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 
 import java.util.Collection;
@@ -76,4 +80,5 @@ public class CustomUserDetails extends User {
     public void setChildren(Set<ChildViewModel> children) {
         this.children = children;
     }
+
 }

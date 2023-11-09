@@ -1,7 +1,7 @@
 package bg.softuni.childrenkitchen.web;
 
 import bg.softuni.childrenkitchen.model.binding.ContactBindingModel;
-import bg.softuni.childrenkitchen.service.EmailService;
+import bg.softuni.childrenkitchen.service.interfaces.EmailService;
 import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;

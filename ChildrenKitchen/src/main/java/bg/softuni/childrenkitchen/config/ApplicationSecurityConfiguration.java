@@ -7,6 +7,7 @@ import bg.softuni.childrenkitchen.service.impl.UserDetailService;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -17,6 +18,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.context.DelegatingSecurityContextRepository;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
+import org.springframework.security.web.context.RequestAttributeSecurityContextRepository;
+import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
@@ -29,12 +34,12 @@ public class ApplicationSecurityConfiguration {
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                 .requestMatchers("/admin",  "/admin/**", "/api/admin/**").hasRole(UserRoleEnum.ADMIN.name())
                 .requestMatchers("/", "/users/login", "/users/register", "/about-us", "/contacts",
-                        "/healthy-food", "/menus", "/api/points", "/thanks-feedback").permitAll()
+                        "/healthy-food", "/menus", "/api/points", "/thanks-feedback", "users/login-error").permitAll()
                 .anyRequest().authenticated()
 
         ).formLogin(loginConfigurer -> {loginConfigurer
                         .loginPage("/users/login")
-                        .defaultSuccessUrl("/e-kitchen", true)
+                        .defaultSuccessUrl("/users/profile", true)
                         .usernameParameter("email")
                         .passwordParameter("password")
                         .failureForwardUrl("/users/login-error");
@@ -48,7 +53,6 @@ public class ApplicationSecurityConfiguration {
                         .logoutSuccessUrl("/");
             })
             .csrf(Customizer.withDefaults());
-//                .csrf(AbstractHttpConfigurer::disable);
 
         return http.build();
     }
@@ -58,9 +62,11 @@ public class ApplicationSecurityConfiguration {
         return new BCryptPasswordEncoder();
     }
 
+    @Primary
     @Bean
     public UserDetailsService userDetailsService(UserRepository userRepository){
         return new UserDetailService(userRepository);
     }
+
 
 }

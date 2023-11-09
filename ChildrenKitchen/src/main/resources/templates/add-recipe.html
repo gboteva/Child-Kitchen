@@ -27,7 +27,7 @@
             </select>
 
             <label for="food-name">Въведи име на храна:</label>
-            <input type="text" name="foodName" id="food-name" th:field="*{foodName}">
+            <input type="text" name="foodName" id="food-name" th:field="*{foodName}" required>
             <div th:if="${existFood != null}" th:class="error" th:text="${existFood}">Грешка при въвеждане</div>
             <div th:if="${#fields.hasErrors('foodName')}" th:class="error">Въведете име на храната</div>
 
@@ -129,7 +129,7 @@
              </div>
 
              <label for="other-allergen">Въведи друг алерген</label>
-             <input type="text" name="otherAllergen" id="other-allergen">
+             <input type="text" name="otherAllergen" id="other-allergen" placeholder="Въведете алергените, отделени със запетая!">
 
             <button class="main-btn" type="submit">Добави</button>
           </form>

@@ -36,6 +36,8 @@ function populateFields(){
 
     let deleteOrderChildren = document.getElementById("delete-applicant-child");
 
+    let hiddenMail = document.getElementById("hiddenMail");
+
     childrenSelect.innerHTML = '';
 
     deleteOrderChildren.innerHTML = '';
@@ -92,18 +94,18 @@ function populateUserData(){
     let servicePointSelect = document.getElementById("edit-service-point");
     let phoneInput = document.getElementById("info-tel-edit");
     let emailInput = document.getElementById("edit-email");
-    let deleteEmailInput = document.getElementById("delete-email");
+    let deleteEmailInput = document.getElementById("hiddenMail");
 
     let userData = resultCollection[resultSelect.value];
 
-    for(op of servicePointSelect.options){
-        if (op.text === userData.servicePointName){
-            op.selected = "true";
+    for(let option of servicePointSelect.options){
+        if (option.value === userData.servicePointName){
+            option.selected = true;
         }
     }
 
-    for(op of citySelect.options){
-        if (op.text === userData.city){
+    for(let op of citySelect.options){
+        if (op.value === userData.cityName){
             op.selected = "true";
         }
     }

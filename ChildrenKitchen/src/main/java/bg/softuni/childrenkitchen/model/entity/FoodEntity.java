@@ -23,31 +23,35 @@ public class FoodEntity extends BaseEntity {
         return name;
     }
 
-    public void setName(String name) {
+    public FoodEntity setName(String name) {
         this.name = name;
-    }
-
-    public FoodCategoryEnum getCategory() {
-        return category;
-    }
-
-    public void setCategory(FoodCategoryEnum category) {
-        this.category = category;
-    }
-
-    public Set<AllergenEntity> getAllergens() {
-        return allergens;
-    }
-
-    public void setAllergens(Set<AllergenEntity> allergens) {
-        this.allergens = allergens;
+        return this;
     }
 
     public AgeGroupEnum getAgeGroup() {
         return ageGroup;
     }
 
-    public void setAgeGroup(AgeGroupEnum ageGroup) {
+    public FoodEntity setAgeGroup(AgeGroupEnum ageGroup) {
         this.ageGroup = ageGroup;
+        return this;
+    }
+
+    public FoodCategoryEnum getCategory() {
+        return category;
+    }
+
+    public FoodEntity setCategory(FoodCategoryEnum category) {
+        this.category = category;
+        return this;
+    }
+
+    public Set<AllergenEntity> getAllergens() {
+        return allergens;
+    }
+
+    public FoodEntity setAllergens(Set<AllergenEntity> allergens) {
+        this.allergens = allergens;
+        return this;
     }
 }
