@@ -1,7 +1,7 @@
 package bg.softuni.childrenkitchen.config;
 
 
-import bg.softuni.childrenkitchen.service.StatisticInterceptor;
+import bg.softuni.childrenkitchen.service.interceptor.StatisticInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;

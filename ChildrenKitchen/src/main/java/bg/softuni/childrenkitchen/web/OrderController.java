@@ -1,6 +1,6 @@
 package bg.softuni.childrenkitchen.web;
 
-import bg.softuni.childrenkitchen.model.CustomUserDetails;
+import bg.softuni.childrenkitchen.model.userDetail.CustomUserDetails;
 import bg.softuni.childrenkitchen.model.binding.AddOrderBindingModel;
 import bg.softuni.childrenkitchen.model.binding.DeleteOrderBindingModel;
 import bg.softuni.childrenkitchen.exception.NoAvailableCouponsException;

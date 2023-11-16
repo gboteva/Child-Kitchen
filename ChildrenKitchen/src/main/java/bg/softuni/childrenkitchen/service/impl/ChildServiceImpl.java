@@ -1,7 +1,7 @@
 package bg.softuni.childrenkitchen.service.impl;
 
-import bg.softuni.childrenkitchen.model.CloudinaryImage;
-import bg.softuni.childrenkitchen.model.RegistrationChildEvent;
+import bg.softuni.childrenkitchen.model.cloudinary.CloudinaryImage;
+import bg.softuni.childrenkitchen.model.event.RegistrationChildEvent;
 import bg.softuni.childrenkitchen.model.binding.ChildRegisterBindingModel;
 import bg.softuni.childrenkitchen.model.entity.AllergyEntity;
 import bg.softuni.childrenkitchen.model.entity.ChildEntity;

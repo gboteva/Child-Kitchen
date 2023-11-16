@@ -1,4 +1,4 @@
-package bg.softuni.childrenkitchen.service;
+package bg.softuni.childrenkitchen.service.interceptor;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -12,7 +12,7 @@ import java.time.format.DateTimeFormatter;
 
 @Component
 public class StatisticInterceptor implements HandlerInterceptor {
-    private static final String BASE_PATH = ".\\src\\main\\resources\\visit-statistic";
+    private static final String BASE_PATH = ".\\src\\main\\resources\\visit-statistic.txt";
 
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler,

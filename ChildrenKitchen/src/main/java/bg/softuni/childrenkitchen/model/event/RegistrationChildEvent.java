@@ -1,4 +1,4 @@
-package bg.softuni.childrenkitchen.model;
+package bg.softuni.childrenkitchen.model.event;
 
 import org.springframework.context.ApplicationEvent;
 

@@ -1,6 +1,5 @@
 package bg.softuni.childrenkitchen.config;
 
-import bg.softuni.childrenkitchen.model.CustomUserDetails;
 import bg.softuni.childrenkitchen.model.entity.enums.UserRoleEnum;
 import bg.softuni.childrenkitchen.repository.UserRepository;
 import bg.softuni.childrenkitchen.service.impl.UserDetailService;
@@ -11,17 +10,10 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.context.DelegatingSecurityContextRepository;
-import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
-import org.springframework.security.web.context.RequestAttributeSecurityContextRepository;
-import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration

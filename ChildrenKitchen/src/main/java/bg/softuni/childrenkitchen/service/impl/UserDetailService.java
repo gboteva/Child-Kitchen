@@ -1,15 +1,12 @@
 package bg.softuni.childrenkitchen.service.impl;
 
-import bg.softuni.childrenkitchen.model.CustomUserDetails;
+import bg.softuni.childrenkitchen.model.userDetail.CustomUserDetails;
 import bg.softuni.childrenkitchen.model.entity.ChildEntity;
 import bg.softuni.childrenkitchen.model.entity.UserEntity;
-import bg.softuni.childrenkitchen.model.entity.enums.AgeGroupEnum;
 import bg.softuni.childrenkitchen.model.view.ChildViewModel;
 import bg.softuni.childrenkitchen.repository.UserRepository;
-import org.modelmapper.ModelMapper;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

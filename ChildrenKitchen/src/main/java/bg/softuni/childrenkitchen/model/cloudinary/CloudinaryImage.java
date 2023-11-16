@@ -1,4 +1,4 @@
-package bg.softuni.childrenkitchen.model;
+package bg.softuni.childrenkitchen.model.cloudinary;
 
 public class CloudinaryImage {
     private String url;

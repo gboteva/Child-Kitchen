@@ -1,7 +1,6 @@
 package bg.softuni.childrenkitchen.model.binding;
 
-import bg.softuni.childrenkitchen.model.entity.enums.AgeGroupEnum;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.NotBlank;
 
 import java.time.LocalDate;
 

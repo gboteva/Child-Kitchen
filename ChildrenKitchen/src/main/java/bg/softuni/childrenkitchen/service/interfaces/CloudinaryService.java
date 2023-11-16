@@ -1,6 +1,6 @@
 package bg.softuni.childrenkitchen.service.interfaces;
 
-import bg.softuni.childrenkitchen.model.CloudinaryImage;
+import bg.softuni.childrenkitchen.model.cloudinary.CloudinaryImage;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;

@@ -1,6 +1,6 @@
 package bg.softuni.childrenkitchen.service.impl;
 
-import bg.softuni.childrenkitchen.model.CustomUserDetails;
+import bg.softuni.childrenkitchen.model.userDetail.CustomUserDetails;
 import bg.softuni.childrenkitchen.model.entity.ChildEntity;
 import bg.softuni.childrenkitchen.model.entity.PointEntity;
 import bg.softuni.childrenkitchen.model.entity.RoleEntity;

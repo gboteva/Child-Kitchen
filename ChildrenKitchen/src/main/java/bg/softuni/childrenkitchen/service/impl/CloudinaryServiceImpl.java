@@ -1,6 +1,6 @@
 package bg.softuni.childrenkitchen.service.impl;
 
-import bg.softuni.childrenkitchen.model.CloudinaryImage;
+import bg.softuni.childrenkitchen.model.cloudinary.CloudinaryImage;
 import bg.softuni.childrenkitchen.service.interfaces.CloudinaryService;
 import com.cloudinary.Cloudinary;
 import org.springframework.stereotype.Service;

@@ -1,8 +1,6 @@
 package bg.softuni.childrenkitchen.web;
-import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 
-import bg.softuni.childrenkitchen.model.CloudinaryImage;
 import bg.softuni.childrenkitchen.model.entity.UserEntity;
 import bg.softuni.childrenkitchen.service.interfaces.CloudinaryService;
 import bg.softuni.childrenkitchen.util.TestDataUtil;

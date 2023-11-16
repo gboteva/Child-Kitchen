@@ -1,7 +1,7 @@
 package bg.softuni.childrenkitchen.service.impl;
 
 import bg.softuni.childrenkitchen.exception.EmailProblemException;
-import bg.softuni.childrenkitchen.model.RegistrationChildEvent;
+import bg.softuni.childrenkitchen.model.event.RegistrationChildEvent;
 import bg.softuni.childrenkitchen.service.interfaces.EmailService;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.InternetAddress;

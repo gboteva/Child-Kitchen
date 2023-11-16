@@ -1,4 +1,4 @@
-package bg.softuni.childrenkitchen.service;
+package bg.softuni.childrenkitchen.service.AOP;
 
 import bg.softuni.childrenkitchen.model.binding.UserRegisterBindingModel;
 import org.aspectj.lang.JoinPoint;
@@ -20,7 +20,7 @@ import java.util.Optional;
 @Component
 public class StatisticAOP {
 
-    private static final String BASE_PATH = ".\\src\\main\\resources\\registrations-statistic";
+    private static final String BASE_PATH = ".\\src\\main\\resources\\registrations-statistic.txt";
 
     @Pointcut("execution(* bg.softuni.childrenkitchen.service.impl.UserServiceImpl.registerUser(..))")
     void registerUser(){}

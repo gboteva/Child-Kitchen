@@ -1,6 +1,6 @@
 package bg.softuni.childrenkitchen.util;
 
-import bg.softuni.childrenkitchen.model.CustomUserDetails;
+import bg.softuni.childrenkitchen.model.userDetail.CustomUserDetails;
 import bg.softuni.childrenkitchen.model.entity.enums.AgeGroupEnum;
 import bg.softuni.childrenkitchen.model.view.ChildViewModel;
 import bg.softuni.childrenkitchen.repository.UserRepository;

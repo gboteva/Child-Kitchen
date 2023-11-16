@@ -1,6 +1,6 @@
 package bg.softuni.childrenkitchen.web;
 
-import bg.softuni.childrenkitchen.model.CustomUserDetails;
+import bg.softuni.childrenkitchen.model.userDetail.CustomUserDetails;
 import bg.softuni.childrenkitchen.model.binding.UserRegisterBindingModel;
 import bg.softuni.childrenkitchen.model.binding.UserUpdateBindingModel;
 import bg.softuni.childrenkitchen.model.entity.enums.CityEnum;

@@ -37,21 +37,21 @@
            <div class="wrapper">
                 <div class="request shadow-ctn">
                     <h3>Заявки по пунктове и по възраст</h3>
-                    <form th:action="@{/admin}" th:method="POST">
+                    <form th:action="@{/admin}" th:method="POST" th:object="${adminSearchBindingModel}">
                         <label for="date-from" >Избери дата от:</label>
-                        <input type="date" id="date-from" name="fromDate"/>
+                        <input type="date" id="date-from" name="fromDate" th:field="*{fromDate}"/>
 
                         <label for="date-to">Избери дата до:</label>
-                        <input type="date" id="date-to" name="toDate" />
+                        <input type="date" id="date-to" name="toDate" th:field="*{toDate}"/>
 
                         <label for="points">Избери пункт:</label>
-                        <select name="servicePoint" id="points" >
+                        <select name="servicePoint" id="points" th:field="*{servicePoint}">
                             <option value="All">Всички</option>
-                            <option th:each="p : ${points}" th:value="*{p}" th:text="*{p}">Детска кухня</option>
+                            <option th:each="p : ${points}" th:value="${p}" th:text="${p}">Детска кухня</option>
                         </select>
 
                         <label for="ageGroup">Избери възрастова група</label>
-                        <select name="ageGroup" id="searchedAgeGroup">
+                        <select name="ageGroup" id="searchedAgeGroup" th:field="*{ageGroup}">
                             <option value="МАЛКИ" selected>10 МЕСЕЦА - 1 ГОДИНА</option>
                             <option value="ГОЛЕМИ">1 ГОДИНА - 3 ГОДИНИ</option>
                             <option value="All" id = "allOpt">ВСИЧКИ</option>
@@ -104,9 +104,9 @@
                      <tr th:each="o : ${referenceByPointsViewModelList}">
                       <td id="fromDate" th:text="*{o.fromDate}">28.08.2023</td>
                       <td id="toDate" th:text="*{o.toDate}">28.08.2023</td>
-                      <td id="ageGroup" th:text="*{o.ageGroup}">10 МЕСЕЦА - 1 ГОДИНА</td>
+                      <td id="ageGroup" th:text="${o.ageGroup} == 'Small' ? 'МАЛКИ' : 'ГОЛЕМИ'">10 МЕСЕЦА - 1 ГОДИНА</td>
                       <td id="offer-point" th:text="*{o.point}">ДЯ Дружба</td>
-                      <td id="countOrders" th:text="*{o.countOrders}">240</td>
+                      <td id="countOrders" th:text="${o.ageGroup == 'Small' ? o.countSmallOrders : o.countBigOrders}">240</td>
                       <td id="countAllergicOrders" th:text="*{o.countAllergicOrders}"></td>
                      </tr>
 
@@ -142,10 +142,10 @@
                   </thead>
                   <tbody>
                       <tr th:each="o : ${referenceAllPointsViewModelList}">
-                          <td id="all-points" th:text="*{o.servicePoint}">Детска кухня</td>
-                          <td id="all-count-small" th:text="*{o.smallOrderCount}">120</td>
-                          <td id="all-count-big" th:text="*{o.bigOrderCount}">90</td>
-                          <td id="all-count-allergic" th:text="*{o.allergicChildren.size()}"></td>
+                          <td id="all-points" th:text="*{o.point}">Детска кухня</td>
+                          <td id="all-count-small" th:text="*{o.countSmallOrders}">120</td>
+                          <td id="all-count-big" th:text="*{o.countBigOrders}">90</td>
+                          <td id="all-count-allergic" th:text="*{o.countAllergicOrders}"></td>
                       </tr>
 
                       <tr>

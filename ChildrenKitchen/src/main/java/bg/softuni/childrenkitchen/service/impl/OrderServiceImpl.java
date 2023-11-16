@@ -1,9 +1,12 @@
 package bg.softuni.childrenkitchen.service.impl;
 
-import bg.softuni.childrenkitchen.model.binding.AdminSearchBindingModel;
-import bg.softuni.childrenkitchen.model.entity.*;
-import bg.softuni.childrenkitchen.model.entity.enums.AgeGroupEnum;
 import bg.softuni.childrenkitchen.exception.ObjectNotFoundException;
+import bg.softuni.childrenkitchen.model.view.ReferenceViewModel;
+import bg.softuni.childrenkitchen.model.binding.AdminSearchBindingModel;
+import bg.softuni.childrenkitchen.model.entity.ChildEntity;
+import bg.softuni.childrenkitchen.model.entity.OrderEntity;
+import bg.softuni.childrenkitchen.model.entity.UserEntity;
+import bg.softuni.childrenkitchen.model.entity.enums.AgeGroupEnum;
 import bg.softuni.childrenkitchen.model.view.*;
 import bg.softuni.childrenkitchen.repository.OrderRepository;
 import bg.softuni.childrenkitchen.service.interfaces.*;
@@ -58,7 +61,6 @@ public class OrderServiceImpl implements OrderService {
         fillOrderInfo(admin);
 
 
-
         orderRepository.saveAll(List.of(first, second, admin));
     }
 
@@ -75,7 +77,7 @@ public class OrderServiceImpl implements OrderService {
         order.setCoupon(order.getChild()
                              .getCoupons()
                              .stream()
-                             .filter(c -> c.getVerifiedDate() !=null)
+                             .filter(c -> c.getVerifiedDate() != null)
                              .findFirst()
                              .orElseThrow(ObjectNotFoundException::new));
 
@@ -88,234 +90,263 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<ReferenceAllPointsViewModel> getReferenceForAllPoints(AdminSearchBindingModel adminSearchBindingModel) {
+    public List<ReferenceViewModel> getAdminReference(AdminSearchBindingModel adminSearchBindingModel) {
         LocalDate fromDate = adminSearchBindingModel.getFromDate();
         LocalDate toDate = adminSearchBindingModel.getToDate();
+        List<OrderEntity> allOrderEntities = orderRepository.findAllByDateBetween(fromDate, toDate);
 
-        List<OrderEntity> orders;
+        allOrderEntities = filterByAssignment(allOrderEntities, adminSearchBindingModel.getServicePoint(), adminSearchBindingModel.getAgeGroup());
 
-        if (adminSearchBindingModel.getAgeGroup()
-                                   .equals("All")) {
-            orders = orderRepository.findAllByDateBetween(fromDate, toDate);
+        List<ReferenceViewModel> viewModel;
+
+        if (!adminSearchBindingModel.getServicePoint().equals("All")) {
+            //sort by ageGroup
+            viewModel = createListByAgeGroups(allOrderEntities, adminSearchBindingModel);
+
         } else {
-            AgeGroupEnum ageGroup = AgeGroupEnum.valueOf(adminSearchBindingModel.getAgeGroup());
-            orders = orderRepository.findAllByDateBetweenAndChildAgeGroup(fromDate, toDate, ageGroup);
+            //sort by servicePoint
+            viewModel = createListByPoints(allOrderEntities, adminSearchBindingModel);
         }
 
-        Map<String, ReferenceAllPointsViewModel> allPointsMap = getMapForAllOrders(orders);
-
-
-        return allPointsMap.values()
-                           .stream()
-                           .toList();
-
-
+        return viewModel;
     }
 
-    private Map<String, ReferenceAllPointsViewModel> getMapForAllOrders(List<OrderEntity> orders) {
-        Map<String, ReferenceAllPointsViewModel> allPointsMap = new HashMap<>();
+    private List<ReferenceViewModel> createListByPoints(List<OrderEntity> allOrderEntities, AdminSearchBindingModel adminSearchBindingModel) {
 
-        for (OrderEntity order : orders) {
-            if (allPointsMap.get(order.getServicePoint()
-                                      .getName()) == null) {
-                ReferenceAllPointsViewModel model = new ReferenceAllPointsViewModel();
+        List<String> allPointsWithOrders = allOrderEntities.stream().map(o->o.getServicePoint().getName())
+                .distinct().toList();
 
-                model.setAgeGroup(order.getChild()
-                                       .getAgeGroup());
-                model.setServicePoint(order.getServicePoint()
-                                           .getName());
-                model.setSmallOrderCount(order.getChild()
-                                              .getAgeGroup()
-                                              .equals(AgeGroupEnum.МАЛКИ) ? 1 : 0);
-                model.setBigOrderCount(order.getChild()
-                                            .getAgeGroup()
-                                            .equals(AgeGroupEnum.ГОЛЕМИ) ? 1 : 0);
+        List<ReferenceViewModel> toReturn = new ArrayList<>();
 
-                if (order.getChild().isAllergic()) {
+        allPointsWithOrders.forEach(point -> {
+            ReferenceViewModel viewModel = new ReferenceViewModel();
+            viewModel.setFromDate(adminSearchBindingModel.getFromDate());
+            viewModel.setToDate(adminSearchBindingModel.getToDate());
+            viewModel.setAgeGroup(null);
+            viewModel.setPoint(point);
+            viewModel.setCountSmallOrders(allOrderEntities.stream()
+                                                          .filter(o->o.getChild().getAgeGroup().name()
+                                                                      .equals(AgeGroupEnum.МАЛКИ.name()))
+                                                          .filter(o->o.getServicePoint().getName().equals(point))
+                                                            .toList().size());
+            viewModel.setCountBigOrders(allOrderEntities.stream()
+                                                        .filter(o->o.getChild().getAgeGroup().name()
+                                                                    .equals(AgeGroupEnum.ГОЛЕМИ.name()))
+                                                        .filter(o->o.getServicePoint().getName().equals(point))
+                                                        .toList().size());
+            viewModel.setTotalCountOrders(viewModel.getCountSmallOrders() + viewModel.getCountBigOrders());
 
-                    AllergicChildViewModel allergicChildViewModel = mapToAllergicChildViewModel(order.getChild());
+            viewModel.setCountAllergicOrders(allOrderEntities.stream()
+                                                             .filter(o->o.getServicePoint().getName().equals(point))
+                                                             .map(OrderEntity::getChild)
+                                                             .filter(ChildEntity::isAllergic)
+                                                              .toList().size());
 
-                    if (model.getAllergicChildren()
-                             .isEmpty() || model.getAllergicChildren() == null) {
-                        model.setAllergicChildren(List.of(allergicChildViewModel));
-                    } else {
-                        List<AllergicChildViewModel> allergicChildren = model.getAllergicChildren();
-                        model.setAllergicChildren(allergicChildren);
-                    }
+            toReturn.add(viewModel);
+        });
 
-                }
+        toReturn.get(0).setAllAllergicChildren(allOrderEntities.stream().map(OrderEntity::getChild)
+                .filter(ChildEntity::isAllergic)
+                        .distinct()
+                .map(this::mapToAllergicChildViewModel)
+                .collect(Collectors.toList())
+        );
 
-                allPointsMap.put(order.getServicePoint()
-                                      .getName(), model);
+        return toReturn;
+    }
 
-            } else {
-                ReferenceAllPointsViewModel saved = allPointsMap.get(order.getServicePoint()
-                                                                          .getName());
-                saved.setSmallOrderCount(order.getChild()
-                                              .getAgeGroup()
-                                              .equals(AgeGroupEnum.МАЛКИ) ? saved.getSmallOrderCount() + 1 : saved.getSmallOrderCount());
-                saved.setBigOrderCount(order.getChild()
-                                            .getAgeGroup()
-                                            .equals(AgeGroupEnum.ГОЛЕМИ) ? saved.getBigOrderCount() + 1 : saved.getBigOrderCount());
+    private List<ReferenceViewModel> createListByAgeGroups(List<OrderEntity> allOrderEntities, AdminSearchBindingModel adminSearchBindingModel) {
+        String ageGroup = adminSearchBindingModel.getAgeGroup();
 
-                if (order.getChild().isAllergic()) {
+        List<ReferenceViewModel> list;
 
-                    AllergicChildViewModel allergicChildViewModel = mapToAllergicChildViewModel(order.getChild());
+        if (ageGroup.equals("All")) {
+            //2 models
+            list = createListFromAllAgeGroups(allOrderEntities, adminSearchBindingModel);
 
-                    List<AllergicChildViewModel> allergicChildren = saved.getAllergicChildren();
-
-                    List<AllergicChildViewModel> newAllergicList = new ArrayList<>(allergicChildren);
-
-                    if (allergicChildren.isEmpty() || allergicChildren == null) {
-                        saved.setAllergicChildren(List.of(allergicChildViewModel));
-                    } else {
-                        newAllergicList.add(allergicChildViewModel);
-                        saved.setAllergicChildren(newAllergicList);
-                    }
-                }
-
-                allPointsMap.put(saved.getServicePoint(), saved);
-
-            }
+        } else {
+            //1 model
+            list = createListFromOneAgeGroup(allOrderEntities, adminSearchBindingModel);
         }
 
-        return allPointsMap;
+        return list;
     }
+
+    private List<ReferenceViewModel> createListFromOneAgeGroup(List<OrderEntity> allOrderEntities, AdminSearchBindingModel adminSearchBindingModel) {
+        String ageGroup = adminSearchBindingModel.getAgeGroup();
+        String servicePoint = adminSearchBindingModel.getServicePoint();
+        LocalDate from = adminSearchBindingModel.getFromDate();
+        LocalDate to = adminSearchBindingModel.getToDate();
+
+        List<ReferenceViewModel> list = new ArrayList<>();
+
+        ReferenceViewModel viewModel = new ReferenceViewModel();
+        viewModel.setAgeGroup(ageGroup.equals("МАЛКИ") ? "Small" : "Big");
+        viewModel.setPoint(servicePoint);
+        viewModel.setFromDate(from);
+        viewModel.setToDate(to);
+
+        if (ageGroup.equals(AgeGroupEnum.МАЛКИ.name())) {
+            viewModel.setCountBigOrders(0);
+            viewModel.setCountSmallOrders(allOrderEntities.size());
+        } else {
+            viewModel.setCountSmallOrders(0);
+            viewModel.setCountBigOrders(allOrderEntities.size());
+        }
+
+        viewModel.setTotalCountOrders(viewModel.getCountSmallOrders() + viewModel.getCountBigOrders());
+
+        viewModel.setCountAllergicOrders(allOrderEntities.stream()
+                                                         .map(OrderEntity::getChild)
+                                                         .filter(ChildEntity::isAllergic)
+                                                         .toList()
+                                                         .size()
+        );
+
+
+        viewModel.setAllAllergicChildren(allOrderEntities.stream()
+                                                         .map(OrderEntity::getChild)
+                                                         .filter(ChildEntity::isAllergic)
+                                                         .distinct()
+                                                         .map(this::mapToAllergicChildViewModel)
+                                                         .toList()
+
+        );
+
+        list.add(viewModel);
+
+        return list;
+    }
+
+    private List<ReferenceViewModel> createListFromAllAgeGroups(List<OrderEntity> allOrderEntities, AdminSearchBindingModel adminSearchBindingModel) {
+        String servicePoint = adminSearchBindingModel.getServicePoint();
+        LocalDate from = adminSearchBindingModel.getFromDate();
+        LocalDate to = adminSearchBindingModel.getToDate();
+
+        List<ReferenceViewModel> list = new ArrayList<>();
+
+        Arrays.stream(AgeGroupEnum.values()).map(AgeGroupEnum::name)
+                .forEach(age -> {
+                    ReferenceViewModel view = new ReferenceViewModel();
+                    view.setAgeGroup(age.equals("МАЛКИ") ? "Small" : "Big");
+                    view.setPoint(servicePoint);
+                    view.setFromDate(from);
+                    view.setToDate(to);
+
+                    if (age.equals(AgeGroupEnum.МАЛКИ.name())){
+                        view.setCountBigOrders(0);
+                        view.setCountSmallOrders(allOrderEntities.stream()
+                                                                 .filter(o -> o.getChild()
+                                                                               .getAgeGroup()
+                                                                               .name()
+                                                                               .equals(age))
+                                                                 .toList()
+                                                                 .size());
+                    }else{
+                        view.setCountSmallOrders(0);
+                        view.setCountBigOrders(allOrderEntities.stream()
+                                                               .filter(o -> o.getChild()
+                                                                             .getAgeGroup()
+                                                                             .name()
+                                                                             .equals(age))
+                                                               .toList()
+                                                               .size());
+                    }
+
+                    view.setTotalCountOrders(view.getCountSmallOrders() + view.getCountBigOrders());
+                    view.setCountAllergicOrders(allOrderEntities.stream()
+                                                                 .map(OrderEntity::getChild)
+                                                                 .filter(ChildEntity::isAllergic)
+                                                                 .filter(c -> c.getAgeGroup()
+                                                                               .name()
+                                                                               .equals(age))
+                                                                 .toList()
+                                                                 .size());
+
+                    view.setAllAllergicChildren(allOrderEntities.stream()
+                                                                 .map(OrderEntity::getChild)
+                                                                 .filter(ChildEntity::isAllergic)
+                                                                 .filter(c -> c.getAgeGroup()
+                                                                               .name()
+                                                                               .equals(age))
+                                                                 .distinct()
+                                                                 .map(this::mapToAllergicChildViewModel)
+                                                                 .toList());
+
+                    list.add(view);
+                });
+
+        return list;
+    }
+
+
+    private List<OrderEntity> filterByAssignment(List<OrderEntity> allOrderEntities, String servicePoint, String ageGroup) {
+
+        if (ageGroup.equals("All") && servicePoint.equals("All")) {
+            return allOrderEntities;
+        }
+
+        if (!ageGroup.equals("All") && servicePoint.equals("All")) {
+            return allOrderEntities.stream()
+                                   .filter(o -> o.getChild()
+                                                 .getAgeGroup()
+                                                 .name()
+                                                 .equals(ageGroup))
+                                   .toList();
+        }
+
+        if (ageGroup.equals("All") && !servicePoint.equals("All")) {
+            return allOrderEntities.stream()
+                                   .filter(o -> o.getServicePoint()
+                                                 .getName()
+                                                 .equals(servicePoint))
+                                   .toList();
+        }
+
+        if (!ageGroup.equals("All") && !servicePoint.equals("All")) {
+            return allOrderEntities.stream()
+                                   .filter(o -> o.getServicePoint()
+                                                 .getName()
+                                                 .equals(servicePoint)
+                                           && o.getChild()
+                                               .getAgeGroup()
+                                               .name()
+                                               .equals(ageGroup))
+                                   .toList();
+        }
+
+        return allOrderEntities;
+    }
+
 
 
     private AllergicChildViewModel mapToAllergicChildViewModel(ChildEntity allergicChild) {
-        AllergicChildViewModel allergicChildViewModel =  modelMapper.map(allergicChild, AllergicChildViewModel.class);
-        allergicChildViewModel.setServicePoint(allergicChild.getParent().getServicePoint().getName());
+        AllergicChildViewModel allergicChildViewModel = modelMapper.map(allergicChild, AllergicChildViewModel.class);
+        allergicChildViewModel.setServicePoint(allergicChild.getParent()
+                                                            .getServicePoint()
+                                                            .getName());
 
         return allergicChildViewModel;
-    }
-
-    @Override
-    public List<ReferenceByPointsViewModel> getReferenceForPoint(AdminSearchBindingModel adminSearchBindingModel) {
-        LocalDate fromDate = adminSearchBindingModel.getFromDate();
-
-        LocalDate toDate = adminSearchBindingModel.getToDate();
-
-        PointEntity pointEntity = pointService.getByName(adminSearchBindingModel.getServicePoint())
-                                              .orElseThrow(ObjectNotFoundException::new);
-
-        AgeGroupEnum ageGroup = null;
-
-        if (!adminSearchBindingModel.getAgeGroup()
-                                    .equals("All")) {
-            ageGroup = AgeGroupEnum.valueOf(adminSearchBindingModel.getAgeGroup());
-        }
-
-
-        List<OrderEntity> allOrdersPerPointAndAge = new ArrayList<>();
-
-
-        if (ageGroup == null) {
-            List<OrderEntity> allOrdersPerPoint = orderRepository.findAllByDateBetweenAndServicePoint(fromDate, toDate, pointEntity);
-
-            Map<String, ReferenceByPointsViewModel> infoForOnePointAllGroups = getInfoFromOnePointsAllGroups(fromDate, toDate, pointEntity, allOrdersPerPoint);
-
-            return infoForOnePointAllGroups.values()
-                                           .stream()
-                                           .toList();
-
-        } else {
-            allOrdersPerPointAndAge = orderRepository.findAllByDateBetweenAndServicePointAndChildAgeGroup(fromDate, toDate, pointEntity, ageGroup);
-            Map<String, ReferenceByPointsViewModel> infoForOnePointAndOneGroup = new LinkedHashMap<>();
-            ReferenceByPointsViewModel byPoint = new ReferenceByPointsViewModel();
-
-            byPoint.setFromDate(fromDate);
-            byPoint.setToDate(toDate);
-            byPoint.setAgeGroup(ageGroup.name());
-            byPoint.setPoint(pointEntity.getName());
-            byPoint.setCountOrders(allOrdersPerPointAndAge.size());
-            byPoint.setAllergicChild(getListOfAllergicChild(allOrdersPerPointAndAge));
-            byPoint.setCountAllergicOrders(byPoint.getAllergicChild()
-                                                  .size());
-            infoForOnePointAndOneGroup.put(ageGroup.name(), byPoint);
-
-            return infoForOnePointAndOneGroup.values()
-                                             .stream()
-                                             .toList();
-        }
-
-
-    }
-
-    private Map<String, ReferenceByPointsViewModel> getInfoFromOnePointsAllGroups(LocalDate fromDate, LocalDate toDate, PointEntity pointEntity, List<OrderEntity> allOrdersPerPoint) {
-        Map<String, ReferenceByPointsViewModel> infoForOnePointAllGroups = new LinkedHashMap<>();
-
-        List<OrderEntity> smallOrders = allOrdersPerPoint.stream()
-                                                         .filter(o -> o.getChild()
-                                                                       .getAgeGroup()
-                                                                       .name()
-                                                                       .equals("МАЛКИ"))
-                                                         .collect(Collectors.toList());
-
-        ReferenceByPointsViewModel byPointSmall = new ReferenceByPointsViewModel();
-        byPointSmall.setFromDate(fromDate);
-        byPointSmall.setToDate(toDate);
-        byPointSmall.setAgeGroup(AgeGroupEnum.МАЛКИ.name());
-        byPointSmall.setPoint(pointEntity.getName());
-        byPointSmall.setCountOrders(smallOrders.size());
-
-
-        byPointSmall.setAllergicChild(getListOfAllergicChild(smallOrders.stream()
-                                                                        .filter(o -> o.getChild().isAllergic())
-                                                                        .collect(Collectors.toList())));
-
-        byPointSmall.setCountAllergicOrders(byPointSmall.getAllergicChild()
-                                                        .size());
-
-        infoForOnePointAllGroups.put("МАЛКИ", byPointSmall);
-
-        //_________________________________BIG__________________________________________
-
-        infoForOnePointAllGroups.put(AgeGroupEnum.ГОЛЕМИ.name(), null);
-
-        List<OrderEntity> bigOrders = allOrdersPerPoint.stream()
-                                                       .filter(o -> o.getChild()
-                                                                     .getAgeGroup()
-                                                                     .name()
-                                                                     .equals("ГОЛЕМИ"))
-                                                       .collect(Collectors.toList());
-
-        ReferenceByPointsViewModel byPointBig = new ReferenceByPointsViewModel();
-        byPointBig.setFromDate(fromDate);
-        byPointBig.setToDate(toDate);
-        byPointBig.setAgeGroup(AgeGroupEnum.ГОЛЕМИ.name());
-        byPointBig.setPoint(pointEntity.getName());
-        byPointBig.setCountOrders(bigOrders.size());
-
-
-        byPointBig.setAllergicChild(getListOfAllergicChild(bigOrders.stream()
-                                                                    .filter(o ->o.getChild().isAllergic())
-                                                                    .collect(Collectors.toList())));
-
-        byPointBig.setCountAllergicOrders(byPointBig.getAllergicChild()
-                                                    .size());
-
-        infoForOnePointAllGroups.put("ГОЛЕМИ", byPointBig);
-
-        return infoForOnePointAllGroups;
     }
 
 
     @Override
     public OrderViewModel makeOrder(LocalDate date, String servicePointName, String userEmail, String childFullName, String loggedInUserEmail) {
 
-        UserEntity loggedInUser = userService.getByEmail(loggedInUserEmail).orElseThrow(ObjectNotFoundException::new);
+        UserEntity loggedInUser = userService.getByEmail(loggedInUserEmail)
+                                             .orElseThrow(ObjectNotFoundException::new);
 
         UserEntity userToAddOrder = loggedInUser;
 
-        if(!userEmail.equals(loggedInUserEmail)){
-            userToAddOrder = userService.getByEmail(userEmail).orElseThrow(ObjectNotFoundException::new);
+        if (!userEmail.equals(loggedInUserEmail)) {
+            userToAddOrder = userService.getByEmail(userEmail)
+                                        .orElseThrow(ObjectNotFoundException::new);
         }
 
         //only admin may add more than one order per day
-        if (!userService.isAdmin(loggedInUser)){
+        if (!userService.isAdmin(loggedInUser)) {
             List<OrderEntity> allByDate = orderRepository.findAllByDateAndChildFullName(date, childFullName);
-            if (!allByDate.isEmpty()){
+            if (!allByDate.isEmpty()) {
                 return null;
             }
         }
@@ -343,12 +374,17 @@ public class OrderServiceImpl implements OrderService {
         orderViewModel.setDate(saved.getDate()
                                     .format(formatter));
 
-       MenuViewModel menuViewModel = menuService.getMenuViewModelByDateAndAgeGroup(orderEntity.getDate(), orderEntity.getChild().getAgeGroup());
-       orderViewModel.setMenuViewModel(menuViewModel);
+        MenuViewModel menuViewModel = menuService.getMenuViewModelByDateAndAgeGroup(orderEntity.getDate(), orderEntity.getChild()
+                                                                                                                      .getAgeGroup());
+        orderViewModel.setMenuViewModel(menuViewModel);
 
-       orderViewModel.setRemainingCouponsCount(saved
-               .getChild().getCoupons().stream()
-               .filter(c -> c.getVerifiedDate()==null).toList().size());
+        orderViewModel.setRemainingCouponsCount(saved
+                .getChild()
+                .getCoupons()
+                .stream()
+                .filter(c -> c.getVerifiedDate() == null)
+                .toList()
+                .size());
 
         return orderViewModel;
     }
@@ -371,12 +407,15 @@ public class OrderServiceImpl implements OrderService {
             throw new ObjectNotFoundException();
         }
 
-        if (ordersToDelete.size() == 1){
-            couponService.unverifiedCoupon(ordersToDelete.get(0).getCoupon().getId());
+        if (ordersToDelete.size() == 1) {
+            couponService.unverifiedCoupon(ordersToDelete.get(0)
+                                                         .getCoupon()
+                                                         .getId());
             orderRepository.delete(ordersToDelete.get(0));
-        }else {
-            OrderEntity toDelete = ordersToDelete.get(ordersToDelete.size()-1);
-            couponService.unverifiedCoupon(toDelete.getCoupon().getId());
+        } else {
+            OrderEntity toDelete = ordersToDelete.get(ordersToDelete.size() - 1);
+            couponService.unverifiedCoupon(toDelete.getCoupon()
+                                                   .getId());
             orderRepository.delete(toDelete);
         }
 
@@ -422,10 +461,11 @@ public class OrderServiceImpl implements OrderService {
     @Scheduled(cron = "00 00 00 20 02 *")
     public void yearlyDeleteOrdersOlderThanOneYear() {
         List<OrderEntity> olderThanOneYear = orderRepository.findAll()
-                                                              .stream()
-                                                              .filter(order -> order.getCoupon().getVerifiedDate()
-                                                                            .isBefore(LocalDate.now()))
-                                                              .collect(Collectors.toList());
+                                                            .stream()
+                                                            .filter(order -> order.getCoupon()
+                                                                                  .getVerifiedDate()
+                                                                                  .isBefore(LocalDate.now()))
+                                                            .collect(Collectors.toList());
 
         orderRepository.deleteAll(olderThanOneYear);
     }
@@ -453,14 +493,6 @@ public class OrderServiceImpl implements OrderService {
         orderViewModel.setMenuViewModel(menuViewModel);
 
         return orderViewModel;
-    }
-
-    private List<AllergicChildViewModel> getListOfAllergicChild(List<OrderEntity> allOrdersPerServicePoint) {
-        return allOrdersPerServicePoint.stream()
-                                       .map(OrderEntity::getChild)
-                                       .filter(ChildEntity::isAllergic)
-                                       .map(this::mapToAllergicChildViewModel)
-                                       .collect(Collectors.toList());
     }
 
 

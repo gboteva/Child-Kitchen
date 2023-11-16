@@ -1,4 +1,4 @@
-package bg.softuni.childrenkitchen.model;
+package bg.softuni.childrenkitchen.model.userDetail;
 
 import bg.softuni.childrenkitchen.exception.ObjectNotFoundException;
 import bg.softuni.childrenkitchen.model.view.ChildViewModel;
