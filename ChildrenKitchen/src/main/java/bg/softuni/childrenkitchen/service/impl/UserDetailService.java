@@ -74,6 +74,8 @@ public class UserDetailService implements UserDetailsService {
                 int thisYearMonthsCount = LocalDate.now().getMonth().getValue();
                 months = lastYearMonthsCount + thisYearMonthsCount;
                 age = months + " мес.";
+            }else {
+                age = months + " мес.";
             }
         }
 

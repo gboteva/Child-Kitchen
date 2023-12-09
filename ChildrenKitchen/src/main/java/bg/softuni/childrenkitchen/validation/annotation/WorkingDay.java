@@ -1,6 +1,5 @@
 package bg.softuni.childrenkitchen.validation.annotation;
 
-import bg.softuni.childrenkitchen.validation.UniqueEmailValidator;
 import bg.softuni.childrenkitchen.validation.WorkingDayValidator;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;

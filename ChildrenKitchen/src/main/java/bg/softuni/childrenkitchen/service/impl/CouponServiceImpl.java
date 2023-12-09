@@ -208,7 +208,7 @@ public class CouponServiceImpl implements CouponService {
         return coupons;
     }
 
-
+    //At 00:30 on day-of-month 20 in February.
     @Scheduled(cron = "00 30 00 20 02 *")
     public void yearlyDeleteCoupons(){
 

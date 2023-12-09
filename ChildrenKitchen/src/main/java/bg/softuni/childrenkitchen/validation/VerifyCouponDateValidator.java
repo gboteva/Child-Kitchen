@@ -14,7 +14,7 @@ public class VerifyCouponDateValidator implements ConstraintValidator<DateVerify
             return false;
         }
 
-        // TODO: 16.9.2023 г. this is must be uncomment!
+        // TODO: 16.9.2023 г. this must be uncomment!
 //        if (LocalDate.now().getDayOfWeek().name().equals("SATURDAY") || LocalDate.now().getDayOfWeek().name().equals("SUNDAY")){
 //            return false;
 //        }

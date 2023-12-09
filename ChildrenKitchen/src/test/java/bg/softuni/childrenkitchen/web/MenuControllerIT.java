@@ -115,7 +115,7 @@ public class MenuControllerIT {
             userDetailsServiceBeanName = "testUserDataService")
     void testAddMenuMustSuccess() throws Exception {
         mockMvc.perform(post("/admin/add-menu")
-                       .param("date", LocalDate.now().toString())
+                       .param("date", LocalDate.of(2023, 12, 8).toString())
                        .param("ageGroup", AgeGroupEnum.ГОЛЕМИ.name())
                        .param("soup", "SOUP")
                        .param("main", "MAIN")

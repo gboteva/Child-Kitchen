@@ -125,7 +125,7 @@ public class EKitchenControllerIT {
 
         mockMvc.perform(patch("/e-kitchen")
                        .param("childName", "TestChild2")
-                       .param("verifyDate", LocalDate.now().plusDays(7).toString())
+                       .param("verifyDate", LocalDate.of(2023, 12, 12).toString())
                        .with(csrf())
                )
                 .andExpect(MockMvcResultMatchers.flash()
@@ -140,7 +140,7 @@ public class EKitchenControllerIT {
     void testVerifyCouponsMustThrowNoAvailableCoupons() throws Exception {
         mockMvc.perform(patch("/e-kitchen")
                        .param("childName", "TestChild2")
-                       .param("verifyDate", LocalDate.now().plusDays(7).toString())
+                       .param("verifyDate", LocalDate.of(2023, 12, 12).toString())
                        .with(csrf())
                )
                .andExpect(view().name("no-available-coupons"))
